@@ -811,7 +811,7 @@ function pageBoard(){
         return '<a data-act="go" data-arg="'+f[0]+'">'+f[1]+'</a>'+(i<flow.length-1?'<span class="st">›</span>':'');
       }).join('')+'</div>'+
     '</div>'+
-    '<div class="tilegrid">'+tiles.map(function(t2){
+    '<div class="tilegrid" style="margin-top:6px">'+tiles.map(function(t2){
       return '<div class="tile" data-act="go" data-arg="'+t2[4]+'">'+
         '<div class="tgo">进去 ›</div>'+
         '<div class="tno">'+t2[0]+'</div>'+
@@ -819,7 +819,6 @@ function pageBoard(){
         '<div class="tstat">'+esc(t2[2])+'</div>'+
         '<div class="tdesc">'+esc(t2[3])+'</div></div>';
     }).join('')+'</div>'+
-    '<p class="tiny" style="margin-top:56px;padding-top:26px;border-top:1px solid var(--line2)">数据只存在你这台电脑的浏览器里。换电脑、或者想交给别人，先点右上角「备份」。</p>'+
   '</div>';
 }
 
