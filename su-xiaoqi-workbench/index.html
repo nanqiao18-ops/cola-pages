@@ -27,7 +27,7 @@ a{color:var(--blue);text-decoration:none}
 .navrow{display:flex;align-items:center;gap:22px;height:54px}
 .brand{font-size:15px;font-weight:600;letter-spacing:-.01em;color:var(--ink);white-space:nowrap;cursor:pointer}
 .brand em{color:var(--ink3);font-style:normal;font-weight:400;margin-left:7px;font-size:13px}
-.tabs{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
+.tabs{display:flex;gap:4px;flex:1;overflow-x:auto;scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 .tabs a{font-size:13.5px;color:var(--ink2);padding:7px 13px;border-radius:999px;white-space:nowrap;cursor:pointer;transition:color .2s,background .2s}
 .tabs a:hover{color:var(--ink)}
@@ -133,6 +133,26 @@ label.f{display:block;font-size:13px;color:var(--ink2);margin:0 0 7px}
 .li .n{font-size:12.5px;color:var(--ink3);padding-top:2px}
 .li .h{font-size:15.5px;font-weight:500;margin:0 0 4px}
 .li .d{font-size:14px;color:var(--ink2);margin:0}
+
+/* ---------- 看板 ---------- */
+.boardhead{padding:96px 0 0}
+.boardhead h1{margin-bottom:16px}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:28px 0 36px;font-size:13.5px;color:var(--ink2)}
+.flow a{cursor:pointer;color:var(--ink2);padding:6px 13px;border-radius:999px;background:var(--bg2);transition:background .2s,color .2s}
+.flow a:hover{background:#ECECEF;color:var(--ink)}
+.flow .st{color:var(--line);font-size:12px}
+.tilegrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.tile{position:relative;background:#fff;border-radius:26px;padding:32px 30px 28px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.03),0 14px 40px rgba(0,0,0,.045);transition:transform .22s,box-shadow .22s}
+.tile:hover{transform:translateY(-2px);box-shadow:0 2px 6px rgba(0,0,0,.05),0 24px 60px rgba(0,0,0,.075)}
+.tile .tno{font-size:13px;letter-spacing:.16em;color:#C7C7CC;font-weight:500}
+.tile .tname{font-size:16px;font-weight:600;margin:16px 0 0;letter-spacing:-.01em;color:var(--ink2)}
+.tile .tstat{font-size:30px;font-weight:600;letter-spacing:-.03em;margin:8px 0 8px;line-height:1.15;color:var(--ink)}
+.tile .tdesc{font-size:13px;color:#86868B;line-height:1.65;min-height:43px;padding-right:10px}
+.tile .tgo{position:absolute;top:30px;right:30px;font-size:12.5px;color:#C7C7CC;transition:color .2s}
+.tile:hover .tgo{color:var(--blue)}
+.backbar{padding:22px 0 0}
+.backbar .link{font-size:13px;color:var(--ink2);cursor:pointer}
+.backbar .link:hover{color:var(--ink)}
 
 footer{border-top:1px solid var(--line2);margin-top:40px;padding:32px 0 60px;font-size:12.5px;color:var(--ink3)}
 footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
@@ -744,10 +764,10 @@ function addedCount(){ return S.mine.length; }
 
 /* ---------------- chrome ---------------- */
 var PAGES = [
-  ['home','首页'],['quiz','赛道自测'],['daily','每日选题'],
+  ['board','看板'],['quiz','赛道自测'],['daily','每日选题'],
   ['vault','爆款知识库'],['script','脚本工坊'],['comment','评论区洞察'],['money','商业变现']
 ];
-var CUR = 'home';
+var CUR = 'board';
 
 function renderTabs(){
   document.getElementById('tabs').innerHTML = PAGES.map(function(p){
@@ -756,12 +776,51 @@ function renderTabs(){
 }
 
 function go(page){
+  if(page === 'home') page = 'board';
   CUR = page;
   renderTabs();
-  var f = {home:pageHome, quiz:pageQuiz, daily:pageDaily, comment:pageComment, vault:pageVault, money:pageMoney, script:pageScript}[page] || pageHome;
-  document.getElementById('app').innerHTML = f();
+  var f = {board:pageBoard, home:pageBoard, quiz:pageQuiz, daily:pageDaily, comment:pageComment, vault:pageVault, money:pageMoney, script:pageScript}[page] || pageBoard;
+  var back = (page === 'board') ? '' : '<div class="wrap backbar"><span class="link" data-act="go" data-arg="board">‹ 返回看板</span></div>';
+  document.getElementById('app').innerHTML = back + f();
   if(page === 'daily') renderLib();
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ---------------- board ---------------- */
+function pageBoard(){
+  var t = S.track ? TRACKS[S.track].name : '还没测';
+  var pend = S.list.filter(function(x){ return !x.done; }).length;
+  var cmtN = S.cmt.trim() ? classify().lines.length : 0;
+  var draftN = S.drafts.length;
+  var tiles = [
+    ['01','赛道自测', t, S.track ? '三个可切的角度、六个别踩的坑、30 天路线' : '8 道题，两分钟，出一句话定位', 'quiz'],
+    ['02','每日选题', todays().length + ' 条', '今天给你三条' + (pend ? '；待拍还积了 '+pend+' 条' : '；也能从 '+POOL.length+' 条里自己筛'), 'daily'],
+    ['03','爆款知识库', S.vault.length + ' 条拆解', STRUCTS.length + ' 个结构 · ' + HOOKS.length + ' 种开头 · ' + TITLES.length + ' 个标题', 'vault'],
+    ['04','脚本工坊', (SCRIPTS_LIB.length + draftN) + ' 份稿', '现成稿拿来就念，或输入选题一键出六段骨架', 'script'],
+    ['05','评论区洞察', cmtN ? (cmtN + ' 条评论') : '未粘贴', '粘进来自动分四类，每条都能变成下一条选题', 'comment'],
+    ['06','商业变现', S.money ? '已体检' : '待体检', '三阶段 · 定价表 · 收钱前必过五关', 'money']
+  ];
+  var flow = [['quiz','① 测赛道'],['daily','② 选题'],['vault','③ 拆爆款'],['script','④ 写脚本'],['comment','⑤ 看评论'],['money','⑥ 变现']];
+  return ''+
+  '<div class="wrap">'+
+    '<div class="boardhead">'+
+      '<p class="kicker">苏小七 · 内容工作台</p>'+
+      '<h1>今天的事，都在这一页。</h1>'+
+      '<p class="lead" style="margin-bottom:0">六个格子，每个格子告诉你现在到哪一步。点进去只做那一件事，做完点左上角回看板。</p>'+
+      '<div class="flow">'+flow.map(function(f,i){
+        return '<a data-act="go" data-arg="'+f[0]+'">'+f[1]+'</a>'+(i<flow.length-1?'<span class="st">›</span>':'');
+      }).join('')+'</div>'+
+    '</div>'+
+    '<div class="tilegrid">'+tiles.map(function(t2){
+      return '<div class="tile" data-act="go" data-arg="'+t2[4]+'">'+
+        '<div class="tgo">进去 ›</div>'+
+        '<div class="tno">'+t2[0]+'</div>'+
+        '<div class="tname">'+t2[1]+'</div>'+
+        '<div class="tstat">'+esc(t2[2])+'</div>'+
+        '<div class="tdesc">'+esc(t2[3])+'</div></div>';
+    }).join('')+'</div>'+
+    '<p class="tiny" style="margin-top:56px;padding-top:26px;border-top:1px solid var(--line2)">数据只存在你这台电脑的浏览器里。换电脑、或者想交给别人，先点右上角「备份」。</p>'+
+  '</div>';
 }
 
 /* ---------------- home ---------------- */
@@ -1623,7 +1682,7 @@ document.addEventListener('input', function(e){
 });
 
 renderTabs();
-go('home');
+go('board');
 </script>
 </body>
 </html>
