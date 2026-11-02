@@ -601,10 +601,11 @@ function init(){
     }
     save();
   }
-  ['topics','records','hot','tear','mats','todos','schedule','budget'].forEach(function(k){
+  ['topics','records','hot','tear','mats','drafts','todos','schedule','budget'].forEach(function(k){
     if(!S[k]) S[k] = (k==='todos'||k==='schedule'||k==='budget') ? {} : [];
   });
   if(!S.recoTaken) S.recoTaken = [];
+  S.hot.forEach(function(h){ if(!h.stage) h.stage = 'pool'; if(!h.refs) h.refs = []; });
   if(!S.budget[todayKey()]){
     S.budget[todayKey()] = DEFAULT_BUDGET.map(function(b){ return {k:b.k, v:b.v}; });
     save();
@@ -652,7 +653,7 @@ function badges(){
   $('#nHot').textContent = S.hot.filter(function(x){ return x.status==='待用'; }).length;
   $('#nTear').textContent = S.tear.length;
   $('#nTopic').textContent = S.topics.filter(function(x){ return x.status==='待拍'; }).length;
-  $('#nScript').textContent = SCRIPTS.length;
+  $('#nScript').textContent = SCRIPTS.length + (S.drafts ? S.drafts.length : 0);
   $('#nMat').textContent = S.mats.length;
   $('#nRec').textContent = S.records.length;
 }
@@ -810,13 +811,82 @@ function pageHome(b){
 /* ============================================================
    盯热点
 ============================================================ */
+var STAGE = {pool:'① 待挑', ref:'③ 找爆款中', topic:'④ 已进选题库'};
+var SECLABS = ['① 一句话结论','② 场景痛点','③ 给痛点命名','④ 案例 / 比喻','⑤ 金句','⑥ 召唤'];
+
+function pipeHTML(){
+  var steps = ['① 我盯','② 你挑','③ 找低粉爆款','④ 进选题库','⑤ 写脚本'];
+  return '<div class="panel" style="padding:14px 18px">'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">'+
+      steps.map(function(s, i){
+        return '<span style="font-size:12.5px;color:#3F5952;background:#F1F6F3;border-radius:999px;padding:5px 12px">'+s+'</span>'+
+          (i<steps.length-1 ? '<span style="color:#BFD5CC">→</span>' : '');
+      }).join('')+
+    '</div>'+
+    '<div class="hint" style="margin-top:8px">每一步只做一件事，做完点下一步。你只需要做「挑」和「拍」，其它我推。</div>'+
+  '</div>';
+}
+
+function findHTML(finding){
+  if(!finding.length){
+    return '<div class="panel" id="findBox"><h4><span class="dot"></span>③ 找低粉爆款</h4>'+
+      '<div class="empty">还没有走到这一步的题。先在池子里点「不错，找爆款」。</div></div>';
+  }
+  return '<div class="panel" id="findBox"><h4><span class="dot"></span>③ 找低粉爆款（'+finding.length+' 条在找）</h4>'+
+    '<div class="hint" style="margin-bottom:6px">找 1-3 条「粉丝少但播放高」的同题视频，把他的第一句和数据记下来。抄结构，不抄台词。</div>'+
+    finding.map(function(h){
+      var refs = h.refs || [];
+      return '<div class="script" style="margin-top:10px">'+
+        '<h5 style="margin:0 0 6px">'+esc(h.title)+'</h5>'+
+        (refs.length ? refs.map(function(r, i){
+          return '<div class="row" style="padding:8px 0"><div class="t"><b style="font-size:12.8px">'+(i+1)+'. '+esc(r.acc||'未填账号')+'</b>'+
+            '<div class="m">粉丝 '+esc(r.fans||'—')+'　·　播放 '+esc(r.play||'—')+'</div>'+
+            '<div class="m" style="color:#3FA98B">第一句：'+esc(r.hook||'—')+'</div></div>'+
+            '<button class="btn xs ghost" data-refdel="'+h.id+'|'+i+'">删</button></div>';
+        }).join('') : '<div class="empty" style="padding:4px 0">还没记参考。</div>')+
+        '<div class="form" style="margin-top:8px">'+
+          '<div><label>账号 / 名字</label><input data-rf="acc" data-hid="'+h.id+'" placeholder="比如：某某小号"></div>'+
+          '<div><label>粉丝量</label><input data-rf="fans" data-hid="'+h.id+'" placeholder="800"></div>'+
+          '<div><label>播放量</label><input data-rf="play" data-hid="'+h.id+'" placeholder="12 万"></div>'+
+          '<div class="wide"><label>他的第一句（逐字拄）</label><input data-rf="hook" data-hid="'+h.id+'" placeholder="只拄第一句，不拄整段"></div>'+
+        '</div>'+
+        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">'+
+          '<button class="btn sm ghost" data-refadd="'+h.id+'">存下这条参考</button>'+
+          '<button class="btn sm" data-totopic="'+h.id+'">参考够了，转成选题</button>'+
+        '</div>'+
+      '</div>';
+    }).join('')+
+  '</div>';
+}
+
 function pageHot(b){
   var list = S.hot.slice().reverse();
+  var pool = S.hot.filter(function(h){ return (h.stage||'pool')==='pool'; });
+  var finding = S.hot.filter(function(h){ return h.stage==='ref'; });
+
   b.innerHTML =
     trendHTML()+
-    livePanelHTML()+
+    pipeHTML()+
     '<div class="panel">'+
-      '<h4><span class="dot"></span>扔一条进来</h4>'+
+      '<h4><span class="dot"></span>② 热点池（'+pool.length+' 条待挑 / 共 '+S.hot.length+' 条）</h4>'+
+      '<div class="hint" style="margin-bottom:6px">看着顺眼的点右边「不错，找爆款」，它就会往下走一步。</div>'+
+      (list.length ? list.map(function(h){
+        var st = h.stage || 'pool';
+        var btn;
+        if(st==='pool') btn = '<button class="btn xs" data-next="'+h.id+'">不错，找爆款</button>';
+        else if(st==='ref') btn = '<button class="btn xs ghost" data-scroll="1">在下面找</button>';
+        else btn = '<span class="pill p2">已进选题库</span>';
+        return '<div class="row">'+
+          '<div class="t">'+esc(h.title)+
+            '<div class="m">'+esc(STAGE[st])+'　·　'+esc(h.platform)+'　·　'+esc(h.why||'')+'</div>'+
+          '</div>'+ btn +
+          '<button class="btn xs ghost" data-hdel="'+h.id+'">删</button>'+
+        '</div>';
+      }).join('') : '<div class="empty">池子还空着。上面那 8 条，看着顺眼的点「存进热点池」。</div>')+
+    '</div>'+
+    findHTML(finding)+
+    '<div class="panel">'+
+      '<h4><span class="dot"></span>自己扔一条进来</h4>'+
       '<div class="form">'+
         '<div class="wide"><label>热点 / 灵感</label><input id="hTitle" placeholder="比如：年后跳槽季，副业焦虑"></div>'+
         '<div><label>平台</label><select id="hPlat"><option>抖音</option><option>视频号</option><option>小红书</option><option>全平台</option></select></div>'+
@@ -825,32 +895,60 @@ function pageHot(b){
       '<button class="btn" id="hAdd">收进热点池</button>'+
       '<div class="hint" style="margin-top:10px">规矩：跟人设对不上的热点别硬蹭；人和事都只讲方法层，不点名。</div>'+
     '</div>'+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>热点池（'+S.hot.length+'）</h4>'+
-      (list.length ? list.map(function(h){
-        var on = h.status==='待用';
-        return '<div class="row">'+
-          '<div class="t">'+esc(h.title)+
-            '<div class="m">'+esc(h.platform)+'　·　'+esc(h.why||'')+'</div>'+
-          '</div>'+
-          '<span class="pill '+(on?'p1':'p0')+'" data-use="'+h.id+'">'+(on?'待用':'用过')+'</span>'+
-          '<button class="btn sm ghost" data-hdel="'+h.id+'">删</button>'+
-        '</div>';
-      }).join('') : '<div class="empty">池子还空着。刷到有感觉的，先扔进来。</div>')+
-    '</div>';
+    livePanelHTML();
 
   $('#hAdd').onclick = function(){
     var t = $('#hTitle').value.trim();
     if(!t){ alert('先写一下这条热点是什么'); return; }
-    S.hot.push({id:Date.now(), title:t, platform:$('#hPlat').value, why:$('#hWhy').value.trim(), status:'待用'});
+    S.hot.push({id:Date.now(), title:t, platform:$('#hPlat').value, why:$('#hWhy').value.trim(), status:'待用', stage:'pool', refs:[]});
     save(); badges(); pageHot(b);
   };
-  b.querySelectorAll('[data-use]').forEach(function(el){
+  b.querySelectorAll('[data-next]').forEach(function(el){
     el.onclick = function(){
-      var id = +el.getAttribute('data-use');
-      var h = S.hot.filter(function(x){ return x.id===id; })[0];
-      h.status = h.status==='待用' ? '用过' : '待用';
+      var id = el.getAttribute('data-next');
+      var h = S.hot.filter(function(x){ return String(x.id)===id; })[0];
+      h.stage = 'ref'; h.refs = h.refs || [];
       save(); badges(); pageHot(b);
+    };
+  });
+  b.querySelectorAll('[data-scroll]').forEach(function(el){
+    el.onclick = function(){
+      var fb = document.getElementById('findBox');
+      if(fb) fb.scrollIntoView({behavior:'smooth', block:'start'});
+    };
+  });
+  b.querySelectorAll('[data-refadd]').forEach(function(el){
+    el.onclick = function(){
+      var id = el.getAttribute('data-refadd');
+      var card = el.closest('.script');
+      var get = function(k){ var i = card.querySelector('[data-rf="'+k+'"][data-hid="'+id+'"]'); return i ? i.value.trim() : ''; };
+      var r = {acc:get('acc'), fans:get('fans'), play:get('play'), hook:get('hook')};
+      if(!r.acc && !r.hook){ alert('至少填账号或他的第一句'); return; }
+      var h = S.hot.filter(function(x){ return String(x.id)===id; })[0];
+      h.refs = h.refs || []; h.refs.push(r);
+      save(); pageHot(b);
+    };
+  });
+  b.querySelectorAll('[data-refdel]').forEach(function(el){
+    el.onclick = function(){
+      var p = el.getAttribute('data-refdel').split('|');
+      var h = S.hot.filter(function(x){ return String(x.id)===p[0]; })[0];
+      if(h && h.refs){ h.refs.splice(+p[1], 1); save(); pageHot(b); }
+    };
+  });
+  b.querySelectorAll('[data-totopic]').forEach(function(el){
+    el.onclick = function(){
+      var id = el.getAttribute('data-totopic');
+      var h = S.hot.filter(function(x){ return String(x.id)===id; })[0];
+      if(!(h.refs && h.refs.length) && !confirm('还没记参考，直接进选题库？')) return;
+      var maxId = 0; S.topics.forEach(function(t){ if(t.id>maxId) maxId = t.id; });
+      var logic = (h.refs && h.refs.length) ? ('低粉爆款参考：'+h.refs.map(function(r){ return (r.acc||'某号')+'（'+(r.fans||'?')+'粉 / '+(r.play||'?')+'播放）'; }).join('；')) : '从热点池转过来';
+      var nt = {id:maxId+1, unit:'起号常见死法', title:h.title, logic:logic, pit:(h.why||'—'), status:'待拍'};
+      S.topics.push(nt);
+      h.stage = 'topic'; h.topicId = nt.id; h.status = '用过';
+      save(); badges();
+      alert('已进选题库，编号 '+nt.id+'。下一步：去选题库点这条的「写脚本」。');
+      pageHot(b);
     };
   });
   b.querySelectorAll('[data-hdel]').forEach(function(el){
@@ -1070,6 +1168,7 @@ function pageTopics(b){
           '<div class="t">'+t.id+'. '+esc(t.title)+
             '<div class="m">'+esc(t.unit)+'　·　逻辑：'+esc(t.logic)+'　·　避坑点：'+esc(t.pit)+'</div>'+
           '</div>'+
+          '<button class="btn xs" data-mkscript="'+t.id+'">写脚本</button>'+
           '<span class="pill '+cls+'" data-id="'+t.id+'">'+t.status+'</span>'+
         '</div>';
       }).join('')+
@@ -1086,6 +1185,19 @@ function pageTopics(b){
       save(); badges(); pageTopics(b);
     };
   });
+  b.querySelectorAll('[data-mkscript]').forEach(function(el){
+    el.onclick = function(){
+      var id = +el.getAttribute('data-mkscript');
+      var t = S.topics.filter(function(x){ return x.id===id; })[0];
+      if(!t) return;
+      var exist = S.drafts.filter(function(d){ return d.topicId===id; })[0];
+      if(!exist){
+        S.drafts.push({id:Date.now(), topicId:id, title:t.title, s:[t.title, '', '', '', '', '']});
+        save(); badges();
+      }
+      go('script');
+    };
+  });
   $('#nAdd').onclick = function(){
     var title = $('#nTitle').value.trim();
     if(!title){ alert('先写标题'); return; }
@@ -1100,10 +1212,27 @@ function pageTopics(b){
    脚本创作
 ============================================================ */
 function pageScript(b){
+  var drafts = S.drafts || [];
   b.innerHTML =
+    '<div class="panel" style="border-color:#CFEDE3">'+
+      '<h4><span class="dot"></span>⑤ 我的草稿（'+drafts.length+'）</h4>'+
+      '<div class="hint">从选题库点「写脚本」，这里就开一张。六段一格，填完点「进提词器」就能录。</div>'+
+      (drafts.length ? drafts.slice().reverse().map(function(d){
+        return '<div class="script" style="margin-top:10px">'+
+          '<div class="top"><span class="tag">新草稿</span>'+
+            '<button class="btn xs ghost" style="margin-left:auto" data-ddel="'+d.id+'">删本草稿</button></div>'+
+          '<h5 style="margin:8px 0">'+esc(d.title)+'</h5>'+
+          SECLABS.map(function(lb, i){
+            return '<div style="margin-bottom:8px"><label style="font-size:11.5px;color:#5F716C">'+lb+'</label>'+
+              '<textarea class="inline" data-df="'+d.id+'" data-ds="'+i+'" style="min-height:62px;margin-top:4px;line-height:1.7">'+esc(d.s[i]||'')+'</textarea></div>';
+          }).join('')+
+          '<div class="acts"><button class="btn sm" data-dpt="'+d.id+'">进提词器</button></div>'+
+        '</div>';
+      }).join('') : '<div class="empty" style="margin-top:8px">还没有草稿。去选题库点一条的「写脚本」，这里就开一张。</div>')+
+    '</div>'+
     '<div class="panel">'+
       '<h4><span class="dot"></span>六段结构自查</h4>'+
-      '<div class="hint">① 一句话结论（前 5 秒就说完）　② 场景痛点（你是不是也这样）　③ 给痛点命名（一看就懂的名字）　④ 2–3 个案例（只用"朋友/普遍现象"）　⑤ 金句（能被截图那句）　⑥ 召唤（勾下一条 + 咱一起，少走弯路）</div>'+
+      '<div class="hint">① 一句话结论（前 5 秒就说完）　② 场景痛点（你是不是也这样）　③ 给痛点命名（一看就懂的名字）　④ 2–3 个案例（只用“朋友/普遍现象”）　⑤ 金句（能被截图那句）　⑥ 召唤（勾下一条 + 咱一起，少走弯路）</div>'+
     '</div>'+
     SCRIPTS.map(function(s){
       return '<div class="script">'+
@@ -1126,15 +1255,50 @@ function pageScript(b){
   b.querySelectorAll('[data-pt]').forEach(function(el){
     el.onclick = function(){ openPrompter(el.getAttribute('data-pt')); };
   });
+  b.querySelectorAll('[data-df]').forEach(function(el){
+    el.onchange = function(){
+      var id = el.getAttribute('data-df'), si = +el.getAttribute('data-ds');
+      var d = S.drafts.filter(function(x){ return String(x.id)===id; })[0];
+      if(!d) return;
+      d.s[si] = el.value;
+      save();
+    };
+  });
+  b.querySelectorAll('[data-dpt]').forEach(function(el){
+    el.onclick = function(){ openPrompterDraft(el.getAttribute('data-dpt')); };
+  });
+  b.querySelectorAll('[data-ddel]').forEach(function(el){
+    el.onclick = function(){
+      var id = el.getAttribute('data-ddel');
+      if(!confirm('删掉这张草稿？')) return;
+      S.drafts = S.drafts.filter(function(x){ return String(x.id)!==id; });
+      save(); badges(); pageScript(b);
+    };
+  });
 }
 
 var ptFont = 30, ptTimer = null;
-function openPrompter(ver){
-  var s = SCRIPTS.filter(function(x){ return x.ver===ver; })[0];
-  $('#ptxt').innerHTML = s.body.map(function(l){ return l==='' ? '<div style="height:18px"></div>' : '<p style="margin:0 0 2px">'+esc(l)+'</p>'; }).join('');
+function openPrompterLines(lines){
+  $('#ptxt').innerHTML = lines.map(function(l){ return l==='' ? '<div style="height:18px"></div>' : '<p style="margin:0 0 2px">'+esc(l)+'</p>'; }).join('');
   $('#prompter').classList.add('on');
   $('#ptxt').style.fontSize = ptFont+'px';
   $('#prompter').scrollTop = 0;
+}
+function openPrompter(ver){
+  var s = SCRIPTS.filter(function(x){ return x.ver===ver; })[0];
+  openPrompterLines(s.body);
+}
+function openPrompterDraft(id){
+  var d = S.drafts.filter(function(x){ return String(x.id)===String(id); })[0];
+  if(!d) return;
+  var lines = [];
+  d.s.forEach(function(txt, i){
+    if(!txt) return;
+    if(lines.length) lines.push('');
+    txt.split(/\n+/).forEach(function(x){ if(x.trim()) lines.push(x.trim()); });
+  });
+  if(!lines.length) lines = [d.title];
+  openPrompterLines(lines);
 }
 $('#ptExit').onclick = function(){
   $('#prompter').classList.remove('on');
