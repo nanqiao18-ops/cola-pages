@@ -503,6 +503,21 @@ var RECO = [
    why:'适合当“起步四连”的收尾，给刚发完第一条的人一个不放弃的理由'}
 ];
 
+/* ================= 实时热榜（公开接口，浏览器直接拉） ================= */
+var HOT_API = 'https://api.codelife.cc/api/top/list?lang=cn&id=';
+var HOT_PLATFORMS = [
+  {k:'抖音', id:'DpQvNABoNE'},
+  {k:'微博', id:'KqndgxeLl9'},
+  {k:'头条', id:'toutiao'},
+  {k:'知乎', id:'mproPpoq6O'},
+  {k:'百度', id:'Jb0vmloB1G'},
+  {k:'B站',  id:'74KvxwokxM'}
+];
+var HOT_KEYS = ['AI','人工智能','机器人','大模型','智能体','算法','副业','兼职','自媒体','短视频','直播','口播','剪辑','涨粉','博主','网红','带货','小红书','抖音','视频号','搞钱','赚钱','存钱','省钱','消费','职场','打工','上班','裁员','就业','面试','创业','开店','摆摊','宝妈','带娃','焦虑','知识','技能','学习','考公','退休','中年','工资','房租'];
+var HOT_PLAT = '抖音';
+var hotOnlyMine = true;
+var HOT_CACHE = {}, HOT_LAST = {}, LIVE_SHOWN = [], HOT_SHOWN_AT = 0;
+
 var SEED_TEAR = [
   {id:1, src:'自己的 A 版（就当练手）', hook:'你以为你的口播没人看，是因为声音不好听…都不是。',
    pain:'录了两小时，最后按删除键', name:'报户口式开头', cases:'饭店服务员先自我介绍不递菜单',
@@ -684,7 +699,7 @@ function pageHome(b){
   var recoHtml =
     '<div class="panel" style="border-color:#CFEDE3;background:linear-gradient(120deg,#FFFDF6,#F3FBF8)">'+
       '<h4><span class="dot"></span>我替你盯的（'+reco.length+' 条待挑）</h4>'+
-      '<div class="hint" style="margin-bottom:4px">这一轮盯出来的，每条都写了<b>为什么现在拍</b>和<b>第一句怎么说</b>。你只需要挑一条。</div>'+
+      '<div class="hint" style="margin-bottom:4px">这一轮是我 <b>11 月 2 日</b> 盯的，每条都写了<b>为什么现在拍</b>和<b>第一句怎么说</b>。往后每周日晚上自动换一批；想看<b>当下</b>的榜，去左栏「盯热点」。你只需要挑一条。</div>'+
       (reco.length ? reco.map(function(r,i){
         return '<div class="row" style="align-items:flex-start">'+
           '<div class="t"><b style="font-size:13.8px">'+(i+1)+'. '+esc(r.title)+'</b>'+
@@ -778,6 +793,7 @@ function pageHome(b){
 function pageHot(b){
   var list = S.hot.slice().reverse();
   b.innerHTML =
+    livePanelHTML()+
     '<div class="panel">'+
       '<h4><span class="dot"></span>扔一条进来</h4>'+
       '<div class="form">'+
@@ -821,6 +837,97 @@ function pageHot(b){
       var id = +el.getAttribute('data-hdel');
       S.hot = S.hot.filter(function(x){ return x.id!==id; });
       save(); badges(); pageHot(b);
+    };
+  });
+
+  wireLive(b);
+  renderLive();
+}
+
+function wireLive(b){
+  b.querySelectorAll('[data-plat]').forEach(function(el){
+    el.onclick = function(){
+      HOT_PLAT = el.getAttribute('data-plat');
+      b.querySelectorAll('[data-plat]').forEach(function(x){ x.classList.toggle('on', x===el); });
+      HOT_SHOWN_AT = 0;
+      renderLive();
+    };
+  });
+  var lf = b.querySelector('#liveFilter');
+  if(lf) lf.onclick = function(){
+    hotOnlyMine = !hotOnlyMine;
+    lf.classList.toggle('on', hotOnlyMine);
+    paintLive();
+  };
+}
+
+function hms(d){ return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds()); }
+
+function livePanelHTML(){
+  return '<div class="panel" style="border-color:#CFEDE3">'+
+    '<h4><span class="dot"></span>平台实时热榜'+
+      '<span id="liveTime" style="margin-left:auto;font-size:11px;color:#9AAAA5;font-weight:400"></span></h4>'+
+    '<div class="chips" id="livePlats">'+HOT_PLATFORMS.map(function(p){
+      return '<button class="chip'+(p.k===HOT_PLAT?' on':'')+'" data-plat="'+p.k+'">'+p.k+'</button>';
+    }).join('')+'</div>'+
+    '<div class="chips"><button class="chip'+(hotOnlyMine?' on':'')+'" id="liveFilter">只看我这方向</button></div>'+
+    '<div id="hotLive"><div class="empty">正在抓…</div></div>'+
+    '<div class="hint" style="margin-top:8px">抓的是平台公开热榜，浏览器直接拉，不是等我一轮。没抓到时点一下重抓。</div>'+
+  '</div>';
+}
+
+function renderLive(){
+  var box = document.getElementById('hotLive');
+  if(!box) return;
+  if(HOT_CACHE[HOT_PLAT] && (Date.now() - HOT_SHOWN_AT) < 60000){ paintLive(); return; }
+  var p = HOT_PLATFORMS.filter(function(x){ return x.k===HOT_PLAT; })[0];
+  box.innerHTML = '<div class="empty">正在抓 '+HOT_PLAT+' 的热榜…</div>';
+  fetch(HOT_API + p.id, {cache:'no-store'})
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      HOT_CACHE[p.k] = (j && j.data) || [];
+      HOT_LAST[p.k] = new Date();
+      HOT_SHOWN_AT = Date.now();
+      paintLive();
+    })
+    .catch(function(){
+      box.innerHTML = '<div class="empty">这个接口这会儿没返回（网络或者它自己抽风）。重抓一次试试。</div><button class="btn sm ghost" id="liveRetry">重抓</button>';
+      var rt = document.getElementById('liveRetry');
+      if(rt) rt.onclick = function(){ HOT_SHOWN_AT = 0; renderLive(); };
+    });
+}
+
+function paintLive(){
+  var box = document.getElementById('hotLive');
+  if(!box) return;
+  var items = HOT_CACHE[HOT_PLAT] || [];
+  var list = hotOnlyMine ? items.filter(function(it){
+    var t = it.title || '';
+    return HOT_KEYS.some(function(k){ return t.indexOf(k) >= 0; });
+  }) : items;
+  LIVE_SHOWN = list.slice(0, 20);
+  var tEl = document.getElementById('liveTime');
+  if(tEl && HOT_LAST[HOT_PLAT]) tEl.textContent = '更新于 ' + hms(HOT_LAST[HOT_PLAT]);
+  if(!LIVE_SHOWN.length){
+    box.innerHTML = '<div class="empty">这会儿 '+esc(HOT_PLAT)+' 榜上没有明显对口你方向的题目。点「只看我这方向」切到全部看看，或者换个平台。</div>';
+    return;
+  }
+  box.innerHTML = LIVE_SHOWN.map(function(it, i){
+    return '<div class="row">'+
+      '<div class="t"><span style="color:#9AAAA5;font-size:12px;margin-right:6px">'+esc(it.index||(i+1))+'</span>'+esc(it.title||'')+
+        '<div class="m">'+esc(HOT_PLAT)+'　·　热度 '+esc(it.hotValue||'—')+'</div></div>'+
+      '<button class="btn xs ghost" data-live="'+i+'">存进热点池</button>'+
+    '</div>';
+  }).join('') + (list.length < items.length ?
+    '<div class="hint" style="padding-top:8px">另外 '+(items.length-list.length)+' 条没对上关键词（榜上偏娱乐的多）。想看全部，把「只看我这方向」关掉。</div>' : '');
+  box.querySelectorAll('[data-live]').forEach(function(el){
+    el.onclick = function(){
+      var it = LIVE_SHOWN[+el.getAttribute('data-live')];
+      if(!it) return;
+      S.hot.push({id:Date.now(), title:it.title, platform:HOT_PLAT, why:'实时榜 · 热度 '+(it.hotValue||'—'), status:'待用'});
+      save(); badges();
+      el.textContent = '已存';
+      el.disabled = true;
     };
   });
 }
