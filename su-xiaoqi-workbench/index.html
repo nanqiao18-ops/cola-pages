@@ -1,1747 +1,852 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>苏小七 · 自媒体工作台</title>
+<title>苏小七 · 内容工作台</title>
 <style>
 :root{
-  --mint:#5BC8A8; --mint-d:#3FA98B; --mint-l:#E9F8F2;
-  --cream:#FFFDF6; --yellow:#FFC96B; --yellow-l:#FFF4DB;
-  --coral:#FF8A7A; --coral-l:#FFEDE9;
-  --sky:#7EC8E3; --sky-l:#E8F6FB;
-  --lilac:#BFB3F0; --lilac-l:#F1EEFC;
-  --ink:#2E3D39; --ink2:#5F716C; --ink3:#85968F;
-  --line:#E6EFEA; --card:#FFFFFF;
-  --side:#33423D; --side2:#2A3733;
-  --shadow:0 10px 24px rgba(91,200,168,.10), 0 2px 6px rgba(46,61,57,.05);
+  --bg:#FFFFFF; --bg2:#F5F5F7; --bg3:#FAFAFC;
+  --ink:#1D1D1F; --ink2:#6E6E73; --ink3:#86868B;
+  --line:#D2D2D7; --line2:#E8E8ED;
+  --blue:#0071E3; --blue-d:#0062C4;
+  --r:20px;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
 body{
-  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
-  color:var(--ink);
-  background:
-    radial-gradient(900px 500px at 6% -10%, #E9F8F2 0%, rgba(233,248,242,0) 62%),
-    radial-gradient(760px 440px at 100% 0%, #FFF4DB 0%, rgba(255,244,219,0) 58%),
-    #FBFDFB;
-  min-height:100vh; -webkit-font-smoothing:antialiased;
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro SC","PingFang SC","Helvetica Neue","Microsoft YaHei",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased; line-height:1.72; font-size:16px;
 }
-::selection{background:var(--mint-l)}
+a{color:var(--blue);text-decoration:none}
+.wrap{max-width:1020px;margin:0 auto;padding:0 24px}
 
-/* ================= 布局 ================= */
-.app{display:flex;align-items:flex-start;min-height:100vh}
+/* ---------- top nav ---------- */
+.topbar{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.78);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--line2)}
+.navrow{display:flex;align-items:center;gap:22px;height:54px}
+.brand{font-size:15px;font-weight:600;letter-spacing:-.01em;color:var(--ink);white-space:nowrap;cursor:pointer}
+.brand em{color:var(--ink3);font-style:normal;font-weight:400;margin-left:7px;font-size:13px}
+.tabs{display:flex;gap:2px;flex:1;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs a{font-size:13.5px;color:var(--ink2);padding:7px 13px;border-radius:999px;white-space:nowrap;cursor:pointer;transition:color .2s,background .2s}
+.tabs a:hover{color:var(--ink)}
+.tabs a.on{background:var(--ink);color:#fff}
+.mini{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 15px;font-size:12.5px;color:var(--ink2);cursor:pointer;white-space:nowrap}
+.mini:hover{color:var(--ink);border-color:var(--ink3)}
 
-/* ================= 左栏 ================= */
-.side{
-  width:266px;flex:0 0 266px;height:100vh;position:sticky;top:0;overflow-y:auto;
-  background:linear-gradient(168deg,#3B4F49 0%,var(--side) 45%,var(--side2) 100%);
-  color:#E6F2EC;padding:22px 14px 26px;border-radius:0 30px 30px 0;
-  box-shadow:8px 0 26px rgba(46,61,57,.10)
-}
-.side::-webkit-scrollbar{width:6px}
-.side::-webkit-scrollbar-thumb{background:rgba(255,255,255,.16);border-radius:9px}
-.who{display:flex;align-items:center;gap:11px;padding:0 6px 4px}
-.who .ava{
-  width:46px;height:46px;border-radius:16px;flex:0 0 auto;display:grid;place-items:center;
-  background:linear-gradient(140deg,#B8EBDC,#5BC8A8);color:#0F3A30;font-weight:800;font-size:19px;
-  box-shadow:0 8px 18px rgba(91,200,168,.32);transform:rotate(-5deg)
-}
-.who h1{margin:0;font-size:15.5px;letter-spacing:.4px;color:#fff}
-.who p{margin:3px 0 0;font-size:10.5px;color:#93AEA6;letter-spacing:.6px}
-.grp{font-size:10.5px;color:#89A39B;letter-spacing:2px;margin:20px 0 8px;padding-left:12px}
-.nav a{
-  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;
-  font-size:13.5px;color:#D5E5DE;cursor:pointer;transition:.16s;margin-bottom:2px;text-decoration:none
-}
-.nav a svg{flex:0 0 auto;opacity:.85}
-.nav a:hover{background:rgba(255,255,255,.08);color:#fff;transform:translateX(2px)}
-.nav a.on{
-  background:linear-gradient(100deg,#6FD3B5,#48B79A);color:#0E332A;font-weight:700;
-  box-shadow:0 8px 18px rgba(91,200,168,.26)
-}
-.nav a.on svg{opacity:1}
-.nav em{font-style:normal;margin-left:auto;font-size:10.5px;background:rgba(255,255,255,.14);padding:1px 7px;border-radius:9px;color:#CFE6DE}
-.nav a.on em{background:rgba(14,51,42,.16);color:#0E332A}
-.side-foot{margin-top:22px;padding:0 4px;display:flex;gap:8px;flex-wrap:wrap}
-.side-foot button{
-  flex:1;min-width:96px;border:1.5px dashed rgba(255,255,255,.22);background:rgba(255,255,255,.05);
-  color:#CFE2DB;font-size:12px;padding:9px 8px;border-radius:13px;cursor:pointer;font-family:inherit;transition:.16s
-}
-.side-foot button:hover{border-color:var(--mint);color:#fff;background:rgba(91,200,168,.16)}
+/* ---------- type ---------- */
+.kicker{font-size:12.5px;letter-spacing:.12em;color:var(--blue);font-weight:600;margin:0 0 14px}
+h1{font-size:clamp(36px,5.4vw,58px);line-height:1.18;letter-spacing:-.028em;font-weight:600;margin:0 0 24px;text-wrap:balance}
+h2{font-size:clamp(25px,3.4vw,36px);line-height:1.15;letter-spacing:-.022em;font-weight:600;margin:0 0 16px}
+h3{font-size:19px;letter-spacing:-.01em;font-weight:600;margin:0 0 10px}
+.lead{font-size:20px;line-height:1.55;color:var(--ink2);max-width:660px;margin:0 0 34px}
+.sub{font-size:14.5px;line-height:1.75;color:var(--ink2)}
+.tiny{font-size:12.5px;line-height:1.7;color:var(--ink3)}
+section{padding:96px 0}
+section.tight{padding:48px 0}
+.hr{height:1px;background:var(--line2);margin:0}
 
-/* ================= 主区 ================= */
-.main{flex:1;min-width:0;padding:26px 30px 80px}
-.phead{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:20px;flex-wrap:wrap}
-.phead h2{margin:0;font-size:22px;display:flex;align-items:center;gap:10px}
-.phead h2::before{content:"";width:5px;height:22px;border-radius:4px;background:linear-gradient(180deg,#B8EBDC,#5BC8A8);display:inline-block}
-.phead .sub{margin:4px 0 0;font-size:12.5px;color:var(--ink2);padding-left:15px}
-.search{
-  display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);
-  border-radius:14px;padding:9px 13px;min-width:210px
-}
-.search input{border:0;outline:0;font-size:13px;font-family:inherit;width:100%;color:var(--ink);background:transparent}
-.search input::placeholder{color:var(--ink3)}
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;gap:6px;border:none;border-radius:999px;padding:11px 24px;font-size:14.5px;font-weight:500;cursor:pointer;font-family:inherit;transition:transform .15s,background .2s}
+.btn:active{transform:scale(.98)}
+.btn.p{background:var(--blue);color:#fff}
+.btn.p:hover{background:var(--blue-d)}
+.btn.g{background:var(--bg2);color:var(--ink)}
+.btn.g:hover{background:#EDEDF0}
+.btn.t{background:transparent;color:var(--blue);padding:8px 0;font-size:14px}
+.btn.t:hover{text-decoration:underline}
+.btn.sm{padding:7px 15px;font-size:13px}
+.link{color:var(--blue);cursor:pointer;font-size:14px}
+.link:hover{text-decoration:underline}
 
-/* ================= 通用 ================= */
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-@media (max-width:1180px){.grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:680px){.grid{grid-template-columns:1fr}}
-.tile{
-  text-align:left;background:var(--card);border:2px solid var(--line);border-radius:24px;padding:18px 18px 16px;
-  cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s;font-family:inherit;
-  box-shadow:0 4px 14px rgba(46,61,57,.04);position:relative;overflow:hidden;display:block;width:100%
-}
-.tile:hover{transform:translateY(-4px) rotate(-.4deg);border-color:var(--mint);box-shadow:0 16px 26px rgba(91,200,168,.18)}
-.tile .ic{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;margin-bottom:12px;transform:rotate(-5deg)}
-.tile h3{margin:0 0 5px;font-size:14.5px}
-.tile .sub2{font-size:11.5px;color:#7C8D87}
-.tile .num{font-size:11px;color:var(--mint-d);background:var(--mint-l);border-radius:999px;padding:2px 9px;position:absolute;right:14px;top:14px}
-.i-y{background:var(--yellow-l)} .i-m{background:var(--mint-l)} .i-s{background:var(--sky-l)}
-.i-c{background:var(--coral-l)} .i-l{background:var(--lilac-l)} .i-g{background:#EAF6EE}
+/* ---------- cards ---------- */
+.grid{display:grid;gap:20px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{background:var(--bg2);border-radius:24px;padding:30px 30px 28px}
+.card.w{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.03),0 18px 50px rgba(0,0,0,.045)}
+.card h3{margin-bottom:8px}
+.card p{margin:0;font-size:14.8px;line-height:1.75;color:var(--ink2)}
+.entry{background:#fff;border-radius:24px;padding:32px 32px 30px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.03),0 16px 44px rgba(0,0,0,.04);transition:transform .25s,box-shadow .25s}
+.entry:hover{transform:translateY(-3px);box-shadow:0 2px 4px rgba(0,0,0,.04),0 26px 60px rgba(0,0,0,.075)}
+.modgrid{display:flex;flex-wrap:wrap;gap:20px;justify-content:center}
+.modgrid>.entry{flex:1 1 290px;max-width:calc(33.333% - 14px)}
+.entry .no{font-size:11.5px;color:var(--ink3);letter-spacing:.14em;margin-bottom:18px}
+.entry h3{font-size:21px;margin-bottom:8px}
+.entry p{margin:0;font-size:14.5px;line-height:1.7;color:var(--ink2)}
+.entry .go{margin-top:22px;font-size:13px;color:var(--blue)}
 
-.panel{background:#fff;border:2px solid var(--line);border-radius:22px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
-.panel h4{margin:0 0 12px;font-size:14px;display:flex;align-items:center;gap:8px}
-.panel h4 .dot{width:7px;height:7px;border-radius:50%;background:var(--mint)}
-.hint{font-size:12.5px;color:#7E8F89;line-height:1.75}
-.hint b{color:var(--mint-d)}
-.row{display:flex;align-items:center;gap:10px;padding:12px 2px;border-bottom:1px dashed var(--line)}
-.row:last-child{border-bottom:0}
-.row .t{flex:1;font-size:13.5px;line-height:1.55;min-width:0}
-.row .m{font-size:11.5px;color:var(--ink3);margin-top:3px;line-height:1.6}
-.btn{
-  border:0;background:var(--mint);color:#fff;border-radius:14px;padding:11px 18px;font-size:13px;
-  cursor:pointer;font-family:inherit;font-weight:600;transition:.18s;box-shadow:0 6px 14px rgba(91,200,168,.26)
-}
-.btn:hover{background:var(--mint-d);transform:translateY(-1px)}
-.btn.ghost{background:#fff;color:var(--ink2);border:2px solid var(--line);box-shadow:none}
-.btn.ghost:hover{color:var(--mint-d);border-color:var(--mint)}
-.btn.sm{padding:7px 12px;font-size:12px;border-radius:11px}
-.btn.xs{padding:5px 10px;font-size:11.5px;border-radius:10px;box-shadow:none}
-.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.chip{
-  border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:12.5px;
-  color:var(--ink2);cursor:pointer;font-family:inherit;transition:.15s
-}
-.chip.on{background:var(--mint);border-color:var(--mint);color:#fff;font-weight:600}
-.pill{font-size:11px;border-radius:999px;padding:3px 10px;cursor:pointer;user-select:none;border:1px solid transparent;white-space:nowrap}
-.p0{background:#F2F5F3;color:var(--ink2)} .p1{background:var(--yellow-l);color:#9A6B00}
-.p2{background:var(--sky-l);color:#2A7E9C} .p3{background:var(--coral-l);color:#B14E3E}
-.form{display:grid;grid-template-columns:repeat(auto-fill,minmax(146px,1fr));gap:10px;margin-bottom:12px}
-.form label{font-size:11.5px;color:var(--ink2);display:block;margin-bottom:5px}
-.form input,.form select,.form textarea,.inline{
-  width:100%;border:1.5px solid var(--line);border-radius:12px;padding:9px 11px;font-size:13px;
-  font-family:inherit;color:var(--ink);background:#FCFEFD;outline:none
-}
-.form textarea{min-height:70px;resize:vertical;line-height:1.7}
-.form input:focus,.form select:focus,.form textarea:focus,.inline:focus{border-color:var(--mint);background:#fff}
-.wide{grid-column:1/-1}
-.hidden{display:none!important}
-.empty{font-size:12.5px;color:var(--ink3);padding:10px 0}
+/* ---------- hero ---------- */
+.hero{padding:120px 0 84px;text-align:center}
+.hero h1{margin-left:auto;margin-right:auto;max-width:820px}
+.hero .lead{margin-left:auto;margin-right:auto;text-align:center;max-width:600px}
+.hero .acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
-/* ================= 首页 ================= */
-.hero{
-  background:linear-gradient(120deg,#FFFFFF 0%,#FFFDF6 100%);border:2px solid var(--line);border-radius:26px;
-  padding:20px 22px;margin-bottom:18px;box-shadow:var(--shadow);position:relative;overflow:hidden
-}
-.hero:before{content:"";position:absolute;right:-46px;top:-46px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,#FFF4DB,rgba(255,244,219,0) 70%)}
-.hero h3{margin:0 0 6px;font-size:16px}
-.hero p{margin:0;font-size:13px;color:var(--ink2);line-height:1.75}
-.hero b{color:var(--mint-d)}
-.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:18px}
-.kpi{background:#fff;border:2px solid var(--line);border-radius:20px;padding:14px 16px;box-shadow:0 4px 12px rgba(46,61,57,.04)}
-.kpi .n{font-size:22px;font-weight:800;color:var(--mint-d);letter-spacing:.5px}
-.kpi .l{font-size:11.5px;color:var(--ink3);margin-top:4px}
-.todo{display:flex;align-items:center;gap:12px;padding:11px 2px;border-bottom:1px dashed var(--line);cursor:pointer}
-.todo:last-child{border-bottom:0}
-.box{width:20px;height:20px;border-radius:7px;border:2px solid var(--line);flex:0 0 auto;display:grid;place-items:center;transition:.15s}
-.todo.done .box{background:var(--mint);border-color:var(--mint)}
-.todo.done .box:after{content:"";width:6px;height:10px;border-right:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(45deg) translateY(-1px)}
-.todo.done span{color:var(--ink3);text-decoration:line-through}
-.progress{height:9px;border-radius:999px;background:#EFF5F1;overflow:hidden;margin:8px 0 12px}
-.progress i{display:block;height:100%;background:linear-gradient(90deg,#B8EBDC,#5BC8A8);border-radius:999px;transition:width .35s}
+/* ---------- quiz ---------- */
+.qbox{background:var(--bg2);border-radius:24px;padding:34px}
+.qnum{font-size:12.5px;color:var(--ink3);letter-spacing:.1em;margin-bottom:10px}
+.qtext{font-size:22px;font-weight:600;letter-spacing:-.015em;margin:0 0 20px;line-height:1.35}
+.opts{display:grid;gap:10px}
+.opt{background:#fff;border:1px solid var(--line2);border-radius:14px;padding:15px 18px;cursor:pointer;font-size:15px;color:var(--ink);text-align:left;font-family:inherit;transition:border-color .18s,background .18s}
+.opt:hover{border-color:var(--ink3)}
+.opt.on{border-color:var(--ink);background:#fff;box-shadow:inset 0 0 0 1px var(--ink)}
+.bar{height:4px;background:var(--line2);border-radius:4px;overflow:hidden;margin:24px 0 0}
+.bar i{display:block;height:100%;background:var(--ink);border-radius:4px;transition:width .3s}
 
-/* ================= 脚本 ================= */
-.script{border:2px solid var(--line);border-radius:20px;padding:16px 18px;margin-bottom:12px;background:#fff}
-.script .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.tag{font-size:11px;border-radius:999px;padding:3px 10px;background:var(--mint-l);color:var(--mint-d)}
-.script h5{margin:8px 0 4px;font-size:14.5px}
-.script p{margin:4px 0 0;font-size:12.5px;color:var(--ink2);line-height:1.6}
-.script .acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-.script .full{margin-top:12px;font-size:13px;line-height:1.9}
+/* ---------- form ---------- */
+textarea,input[type=text]{width:100%;border:1px solid var(--line2);background:#fff;border-radius:14px;padding:14px 16px;font-size:14.5px;font-family:inherit;color:var(--ink);line-height:1.6;resize:vertical}
+textarea:focus,input[type=text]:focus{outline:none;border-color:var(--ink3)}
+textarea{min-height:150px}
+label.f{display:block;font-size:13px;color:var(--ink2);margin:0 0 7px}
+.field{margin-bottom:16px}
 
-/* ================= 提词器 ================= */
-.prompter{position:fixed;inset:0;background:#111A18;color:#F3F7F4;display:none;z-index:90;overflow-y:auto;padding:40px 24px 130px}
-.prompter.on{display:block}
-.ptxt{max-width:720px;margin:0 auto;font-size:30px;line-height:2;letter-spacing:.6px;font-weight:500}
-.prompter .pbar{position:fixed;right:20px;bottom:24px;display:flex;gap:8px;background:rgba(255,255,255,.10);border-radius:16px;padding:8px;backdrop-filter:blur(6px)}
-.prompter .pbar button{border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:11px;padding:9px 13px;font-size:13px;cursor:pointer;font-family:inherit}
-.prompter .pbar button:hover{background:rgba(255,255,255,.26)}
+/* ---------- list rows ---------- */
+.row{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid var(--line2)}
+.row:last-child{border-bottom:none}
+.chk{width:20px;height:20px;border:1.5px solid var(--line);border-radius:50%;cursor:pointer;flex:none;margin-top:3px;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;transition:.18s}
+.chk.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.row .t{font-size:15.5px;line-height:1.5}
+.row .m{font-size:12.5px;color:var(--ink3);margin-top:3px}
+.row.done .t{color:var(--ink3);text-decoration:line-through}
+.x{font-size:12.5px;color:var(--ink3);cursor:pointer;background:none;border:none;font-family:inherit;padding:0}
+.x:hover{color:var(--ink)}
 
-/* ================= 图表 ================= */
-.chart{display:flex;align-items:flex-end;gap:14px;height:150px;padding:8px 4px 0;border-bottom:2px solid var(--line)}
-.barwrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end;min-width:0}
-.bar{width:100%;max-width:44px;border-radius:10px 10px 4px 4px;background:linear-gradient(180deg,#B8EBDC,#5BC8A8);min-height:3px;transition:.3s}
-.bar.b2{background:linear-gradient(180deg,#FFE1B8,#FFC96B)}
-.barlab{font-size:10.5px;color:var(--ink3);text-align:center;line-height:1.3}
-.legend{display:flex;gap:14px;font-size:11.5px;color:var(--ink2);margin-top:10px;flex-wrap:wrap}
-.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px}
+/* ---------- pick card ---------- */
+.pick{background:#fff;border-radius:24px;padding:28px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 12px 34px rgba(0,0,0,.05)}
+.pick .tag{display:inline-block;font-size:11.5px;color:var(--ink2);border:1px solid var(--line2);border-radius:999px;padding:3px 11px;margin-bottom:14px}
+.pick h3{font-size:20px;line-height:1.4;margin:0 0 14px}
+.pick .lbl{font-size:12px;color:var(--ink3);letter-spacing:.08em;margin:14px 0 4px}
+.pick .val{font-size:14.5px;color:var(--ink2);margin:0}
+.pick .acts{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
 
-/* ================= 注意力预算 ================= */
-.budget-row{display:flex;align-items:center;gap:12px;padding:10px 2px;border-bottom:1px dashed var(--line)}
-.budget-row .nm{flex:0 0 108px;font-size:13px}
-.budget-row .track{flex:1;height:12px;border-radius:999px;background:#F1F6F3;overflow:hidden}
-.budget-row .track i{display:block;height:100%;border-radius:999px}
-.budget-row .mn{flex:0 0 92px;display:flex;align-items:center;gap:6px;justify-content:flex-end}
-.budget-row .mn button{width:24px;height:24px;border-radius:9px;border:1.5px solid var(--line);background:#fff;color:var(--ink2);cursor:pointer;font-size:13px;line-height:1;font-family:inherit}
-.budget-row .mn input{width:44px;text-align:center;border:1.5px solid var(--line);border-radius:9px;padding:4px 2px;font-size:12.5px;font-family:inherit}
+/* ---------- chips / stats ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font-size:12.5px;color:var(--ink2);background:var(--bg2);border-radius:999px;padding:5px 12px}
+.stat{display:flex;gap:26px;flex-wrap:wrap}
+.stat div{font-size:13px;color:var(--ink2)}
+.stat b{display:block;font-size:26px;font-weight:600;color:var(--ink);letter-spacing:-.02em}
 
-@media (max-width:920px){
-  .app{display:block}
-  .side{width:auto;flex:none;height:auto;position:static;border-radius:0 0 28px 28px;padding:18px 14px 16px}
-  .grp{display:none}
-  .nav{display:flex;overflow-x:auto;gap:6px;padding-bottom:4px}
-  .nav a{white-space:nowrap;background:rgba(255,255,255,.06);margin-bottom:0}
-  .nav a em{display:none}
-  .main{padding:18px 14px 60px}
-  .ptxt{font-size:24px}
+/* ---------- table-ish ---------- */
+.li{display:grid;grid-template-columns:26px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--line2)}
+.li:last-child{border:none}
+.li .n{font-size:12.5px;color:var(--ink3);padding-top:2px}
+.li .h{font-size:15.5px;font-weight:500;margin:0 0 4px}
+.li .d{font-size:14px;color:var(--ink2);margin:0}
+
+footer{border-top:1px solid var(--line2);margin-top:40px;padding:32px 0 60px;font-size:12.5px;color:var(--ink3)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.hide{display:none!important}
+@media(max-width:680px){
+  .wrap{padding:0 18px}
+  section{padding:56px 0}
+  section.tight{padding:36px 0}
+  .hero{padding:64px 0 40px}
+  .lead{font-size:17.5px}
+  .qbox{padding:22px}
+  .card,.pick,.entry{padding:22px;border-radius:20px}
+  .navrow{gap:14px}
 }
 </style>
 </head>
 <body>
-<div class="app">
 
-  <!-- ============ 左栏 ============ -->
-  <aside class="side">
-    <div class="who">
-      <div class="ava">七</div>
-      <div>
-        <h1>苏小七</h1>
-        <p>CONTENT CREATOR WORKBENCH</p>
-      </div>
-    </div>
-
-    <div class="navwrap">
-      <div class="grp">总览</div>
-      <nav class="nav">
-        <a data-page="home"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1z"/></svg>首页</a>
-      </nav>
-
-      <div class="grp">内容</div>
-      <nav class="nav">
-        <a data-page="hot"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3 4 5 6 5 9a5 5 0 01-10 0c0-1 .5-2 1-3"/><path d="M12 21a3 3 0 01-3-3c0-2 3-4 3-4s3 2 3 4a3 3 0 01-3 3z"/></svg>盯热点<em id="nHot">0</em></a>
-        <a data-page="tear"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h6l-1 8 9-12h-6z"/></svg>拆爆款<em id="nTear">0</em></a>
-        <a data-page="topics"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4M12 3a6 6 0 00-3 11v2h6v-2a6 6 0 00-3-11z"/></svg>建选题库<em id="nTopic">0</em></a>
-        <a data-page="script"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5"/></svg>脚本创作<em id="nScript">0</em></a>
-        <a data-page="mats"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6a2 2 0 012-2h9l5 5v9a2 2 0 01-2 2H6a2 2 0 01-2-2z"/><path d="M9 12h6M9 16h4"/></svg>管资料<em id="nMat">0</em></a>
-      </nav>
-
-      <div class="grp">运营</div>
-      <nav class="nav">
-        <a data-page="review"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>做复盘<em id="nRec">0</em></a>
-        <a data-page="insight"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-6 4 3 4-6 5 4"/><path d="M3 21h18"/></svg>洞察复盘</a>
-        <a data-page="plan"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v3M17 3v3M4 8h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z"/></svg>发布排期</a>
-        <a data-page="focus"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>注意力预算</a>
-      </nav>
-
-      <div class="grp">底盘</div>
-      <nav class="nav">
-        <a data-page="rule"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4v6c0 4-3 7-8 8-5-1-8-4-8-8V7l8-4z"/><path d="M9 12l2 2 4-4"/></svg>定位与铁律</a>
-      </nav>
-    </div>
-
-    <div class="side-foot">
-      <button id="btnExport">导出备份</button>
-      <button id="btnImport">导入备份</button>
-      <input type="file" id="fileImport" accept=".json" class="hidden">
-    </div>
-  </aside>
-
-  <!-- ============ 主区 ============ -->
-  <main class="main">
-    <div class="phead">
-      <div>
-        <h2 id="pTitle">首页</h2>
-        <p class="sub" id="pSub"></p>
-      </div>
-      <label class="search">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#9AAAA5" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
-        <input id="q" placeholder="搜选题 / 金句 / 素材">
-      </label>
-    </div>
-    <div id="pageBody"></div>
-  </main>
-</div>
-
-<!-- ============ 提词器 ============ -->
-<div class="prompter" id="prompter">
-  <div class="ptxt" id="ptxt"></div>
-  <div class="pbar">
-    <button id="ptMinus">A－</button>
-    <button id="ptPlus">A＋</button>
-    <button id="ptAuto">自动滚动</button>
-    <button id="ptExit">退出</button>
+<header class="topbar">
+  <div class="wrap navrow">
+    <div class="brand" data-act="go" data-arg="home">苏小七<em>内容工作台</em></div>
+    <nav class="tabs" id="tabs"></nav>
+    <button class="mini" data-act="export">备份</button>
   </div>
-</div>
+</header>
+
+<main id="app"></main>
+
+<footer><div class="wrap">
+  <span>苏小七 · 内容工作台　v3</span>
+  <span>数据只存在你这台电脑的浏览器里，换电脑前先点右上角「备份」</span>
+</div></footer>
 
 <script>
 /* ============================================================
-   基础
-============================================================ */
-var $ = function(s){ return document.querySelector(s); };
-var KEY = 'suXiaoQi_workbench_v2';
-var OLDKEY = 'suXiaoQi_workbench_v1';
-var S = null;
-function pad(n){ return n<10 ? '0'+n : ''+n; }
-function todayKey(){ var d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
-function todayCN(){
-  var d=new Date();
-  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())+' '+'周'+'日一二三四五六'[d.getDay()];
-}
-function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){ console.warn('保存失败',e); } }
+   苏小七 · 内容工作台 v3
+   五块：赛道自测 / 每日选题 / 评论区洞察 / 爆款知识库 / 商业变现
+   ============================================================ */
+var KEY = 'suXiaoQi_workbench_v3';
 
-/* ============================================================
-   种子数据
-============================================================ */
-var SEED_TOPICS = [
-  {id:1,  unit:'起步四连', title:'删了第 8 条口播，前 7 条全栽在同一个坑里', logic:'开头不是表达，是交付', pit:'报户口式开头＝赶人', status:'待拍'},
-  {id:2,  unit:'起步四连', title:'你不是没定位，你是拍太少——定位是拍出来的', logic:'反馈大于脑子', pit:'坐那想三天，不如先拍三条', status:'待拍'},
-  {id:3,  unit:'起步四连', title:'你不是不会做，你是闭卷硬考——先抄到 60 分', logic:'开卷考试逻辑', pit:'硬原创就是自嗨', status:'待拍'},
-  {id:4,  unit:'起步四连', title:'你不是不会做，你是一次改太多——先发"烂的"', logic:'执行大于完美', pit:'同时改三个变量，数据必崩', status:'待拍'},
-  {id:5,  unit:'起号常见死法', title:'口播开头必死的 3 种说法，很多人第一条就中了', logic:'价值前置', pit:'别报户口、别道歉、别铺垫背景', status:'待拍'},
-  {id:6,  unit:'起号常见死法', title:'新手找对标别找大博主——低粉爆款才是参考答案', logic:'逆向拆解', pit:'大博主有粉丝底子，数据不纯', status:'待拍'},
-  {id:7,  unit:'起号常见死法', title:'抄爆款不是照搬，是换血不换骨', logic:'像素级复刻结构、换案例', pit:'原封不动搬＝被判搬运', status:'待拍'},
-  {id:8,  unit:'起号常见死法', title:'你不是没选题，你是没养一个"素材号"', logic:'让算法替你挑素材', pit:'靠脑子想选题，三天就空', status:'待拍'},
-  {id:9,  unit:'账号标签与流量', title:'你号做不起来，可能是"一鱼多吃"害的', logic:'一个号只做一个赛道', pit:'今天职场明天育儿，标签乱', status:'待拍'},
-  {id:10, unit:'账号标签与流量', title:'流量忽高忽低？你卡在"不够深也不够泛"', logic:'泛钩子＋垂落点', pit:'两头不靠', status:'待拍'},
-  {id:11, unit:'账号标签与流量', title:'你发的东西，"垂"的成分不能是 0', logic:'纯泛内容会污染人设', pit:'刷着爽，带不来精准人群', status:'待拍'},
-  {id:12, unit:'账号标签与流量', title:'三个置顶视频不拍，等于门店没招牌', logic:'主页承接', pit:'流量进来没处落', status:'待拍'},
-  {id:13, unit:'账号标签与流量', title:'价值观不对的爆款，再火也是负资产', logic:'底色', pit:'跟人设对不上的热点别蹭', status:'待拍'},
-  {id:14, unit:'AI 降门槛', title:'AI 写的稿为啥像机器念的？因为你把"先写"省了', logic:'先发散后蒸馏', pit:'让 AI 先写，你就被框死', status:'待拍'},
-  {id:15, unit:'AI 降门槛', title:'普通人怎么用 AI 一天出 3 条口播稿，还不像机器念', logic:'喂三个信息：我是谁、讲给谁、一个点', pit:'稿子通顺但没人味', status:'待拍'},
-  {id:16, unit:'AI 降门槛', title:'AI 生图总翻车？不是提示词不行，是你没给参考图', logic:'一图胜万言', pit:'写一百个形容词，不如一张标杆图', status:'待拍'},
-  {id:17, unit:'AI 降门槛', title:'搭知识库最容易犯的错：还没用就先搭一堆文件夹', logic:'知识库是长出来的', pit:'贪大求全，最后不用', status:'待拍'},
-  {id:18, unit:'AI 降门槛', title:'做自媒体每天只要 2-4 小时，剩下的让 AI 扛', logic:'把机械活丢出去', pit:'自己扛全部，三天就累垮', status:'待拍'},
-  {id:19, unit:'变现与闭环', title:'想赚钱前先问一句：你手里有什么能跟人交换', logic:'价值交换', pit:'空谈变现，没想清能提供啥', status:'待拍'},
-  {id:20, unit:'变现与闭环', title:'普通人变现，从闲鱼卖闲置开始', logic:'先练定价和成交的手感', pit:'一上来就想卖课', status:'待拍'},
-  {id:21, unit:'变现与闭环', title:'你的内容为啥没人转？你没给人"尝一口就信你"的东西', logic:'每条先给一口能马上用的', pit:'只讲道理，不给动作', status:'待拍'},
-  {id:22, unit:'变现与闭环', title:'怎么判断一个副业值不值得做', logic:'副业避坑', pit:'要你先交钱、拉人头、画大饼', status:'待拍'},
-  {id:23, unit:'变现与闭环', title:'你焦虑"视频没火"，是因为你把短视频当终点了', logic:'短视频是起点', pit:'盯着播放量，忘了后面的事', status:'待拍'},
-  {id:24, unit:'变现与闭环', title:'怎么选副业：用"最想做、离结果近、已跑通"三把尺', logic:'副业聚焦', pit:'四个方向都舍不得砍', status:'待拍'},
-  {id:25, unit:'变现与闭环', title:'数据差别乱改——先看闭环断在哪一环', logic:'闭环诊断', pit:'完播低和关注低，问题不在同一处', status:'待拍'},
-  {id:26, unit:'心法与底层', title:'你有没有过"拆一条拆不明白"——新手只想拆 60 秒', logic:'拆爆款要拆得进去也装得回来', pit:'拆得太碎，学不到骨架', status:'待拍'},
-  {id:27, unit:'心法与底层', title:'你不是不会抄，你是每次都缺了一步', logic:'换场景、换人群、换形式', pit:'五样一样都没换就先别发', status:'待拍'},
-  {id:28, unit:'心法与底层', title:'先别聊"认知升级"——你先把第一条发出去', logic:'10 分永远大于 0 分', pit:'等准备好了再发，永远发不出去', status:'待拍'}
+var TRACKS = {
+  '口播': {
+    name:'干货口播',
+    one:'一个人对着镜头，把一件事讲透。',
+    desc:'你的优势是「有话可讲」和现成的经验。不需要场景、不需要道具、不需要搭档，一部手机就能开工。',
+    money:'先做信任 → 一对一诊断 → 小班或陪跑',
+    tip:'口播最怕的不是没人看，是开头在报户口。第一句话就直接给结论。'
+  },
+  '生活': {
+    name:'生活记录',
+    one:'把你的日常，拍成别人能照着过的样本。',
+    desc:'你的优势是时间和场景都在自己手上，拍的是真事，不用演、不用编。',
+    money:'先做陪伴感 → 品牌合作 → 社群',
+    tip:'日常没人看，是因为只拍了「发生了什么」，没给「跟我有什么关系」。'
+  },
+  '测评': {
+    name:'好物测评',
+    one:'替别人先花一遍钱。',
+    desc:'你的优势是现成的使用经验和判断力，东西就在手边，随手就能拍。',
+    money:'带货佣金 → 品牌合作 → 帮人挑东西',
+    tip:'别做「全能推荐」，做「只解决一个问题」的那一件。'
+  },
+  '剧情': {
+    name:'剧情演绎',
+    one:'把大家说不出口的话，演出来。',
+    desc:'你的优势是表现力和共情。一个人演多个角色，也能成立。',
+    money:'流量分成 → 品牌植入 → 定制内容',
+    tip:'剧情最贵的成本是「拍完」。设备越简单，越撑得久。'
+  }
+};
+
+var POOL = [
+  /* ---- 口播 ---- */
+  {id:'p01',track:'口播',unit:'起步四连',title:'你第一条视频不需要爆，需要「能被存下来」',why:'新号阶段平台先看收藏和完播，不看粉丝多少。先做值得存的内容，比追爆款实在。',hook:'你的第一条视频，别想着爆，先想一件事：凭什么让人存下来。'},
+  {id:'p02',track:'口播',unit:'起号常见死法',title:'视频发完就关手机的人，把已经来的人都丢了',why:'发布后那半小时的互动，决定后来的人看到什么。这是最容易补、最少人做的一环。',hook:'视频发完就关手机的人，其实把已经来的人都丢了。'},
+  {id:'p03',track:'口播',unit:'账号标签与流量',title:'「没流量」和「被限流」，怎么一眼分清',why:'大量人把「没人看」误判成「被限流」，然后开始乱改，越改越差。先把两件事分开。',hook:'先别急着改，你大概率不是被限流，是压根没推出去。'},
+  {id:'p04',track:'口播',unit:'起号常见死法',title:'你的口播没人看完，问题常出在第三句',why:'第一句留人，第三句决定要不要继续。多数人第三句开始绕。',hook:'你的视频不是开头劝退的，是第三句把人送走的。'},
+  {id:'p05',track:'口播',unit:'账号标签与流量',title:'主页三件套：头像、简介、置顶，缺一个都留不住人',why:'内容和主页是两件事。内容负责让人来，主页负责让人留下。',hook:'他看完你的视频点进主页，然后三秒就走了——问题不在视频。'},
+  {id:'p06',track:'口播',unit:'心法与底层',title:'一天拍三条，不如一条讲透',why:'新号最常犯的量产错觉：用数量掩盖「没讲清」。一条讲透能带来看完、收藏、关注三样。',hook:'一天发三条的人，通常三条都没讲完一件事。'},
+  {id:'p07',track:'口播',unit:'心法与底层',title:'抄爆款抄的是结构，不是句子',why:'抄句子会变成洗稿，抄结构才叫方法。同一个结构换个题就能拍。',hook:'抄爆款最容易犯的错，是把别人的话抄下来了。'},
+  {id:'p08',track:'口播',unit:'起步四连',title:'选题不用找，评论区里都是现成的',why:'你被问过的每个问题，都是别人也想问的。评论区是最省力的选题库。',hook:'你缺的不是选题，是把评论区翻一遍的十分钟。'},
+
+  /* ---- 生活 ---- */
+  {id:'p11',track:'生活',unit:'心法与底层',title:'一个妈妈早上六点的那半小时，我拍了三个月',why:'固定时段、固定动作，是最容易坚持也最容易形成记忆点的日常拍法。',hook:'我每天最早的那半小时，比后面一整天都值钱。'},
+  {id:'p12',track:'生活',unit:'心法与底层',title:'我不做时间管理，我只做任务合并',why:'反常识的方法最容易被转发：不管理时间，改成合并动作。',hook:'别再学时间管理了，先把能一起干的事合起来。'},
+  {id:'p13',track:'生活',unit:'心法与底层',title:'家里最该扔的三样东西，扔完效率翻倍',why:'清单体 + 生活场景，看完就想动手，收藏率天然高。',hook:'家里这三样东西，越早扔越省事。'},
+  {id:'p14',track:'生活',unit:'心法与底层',title:'一个人带娃的一天，我只留了三个动作',why:'「只留三个」是减法叙事，观众想抄的是那三个动作。',hook:'一天下来我什么都没干成，但我保住了三件事。'},
+  {id:'p15',track:'生活',unit:'变现与闭环',title:'30 岁以后，我把「忙」换成了「排期」',why:'把情绪词换成方法词，容易涨粉也容易接到合作。',hook:'忙不是勋章，忙是没排期。'},
+
+  /* ---- 测评 ---- */
+  {id:'p21',track:'测评',unit:'心法与底层',title:'一百块和一千块的差别，肉眼能看出来吗',why:'价格对比自带好奇心，且不需要专业设备，手机拍得出差别。',hook:'同一个东西，一百块和一千块，差别到底在哪。'},
+  {id:'p22',track:'测评',unit:'心法与底层',title:'我买过最不后悔的三样东西，都用超过两年',why:'「用了两年」是最强的信任状，比任何参数都管用。',hook:'这三样东西我用了两年以上，一样都没坏，一样都还在用。'},
+  {id:'p23',track:'测评',unit:'心法与底层',title:'别买「全能」的，买「只做一件事」的',why:'给判断标准，比给推荐清单更值钱，也更容易被收藏。',hook:'凡是说自己全能的，通常一件事都做不好。'},
+  {id:'p24',track:'测评',unit:'心法与底层',title:'同类产品我只留一个：我的选品减法',why:'减法式内容天然有观点，观众会拿它当自己的标准。',hook:'同一类东西，我家里永远只有一件。'},
+  {id:'p25',track:'测评',unit:'变现与闭环',title:'平价替代到底值不值，我按使用次数算了一遍',why:'把主观感受换成可算的账，可信度立刻不同。',hook:'这东西值不值，别问价格，问你会用多少次。'},
+
+  /* ---- 剧情 ---- */
+  {id:'p31',track:'剧情',unit:'心法与底层',title:'被问「你这行赚钱吗」，你会怎么回',why:'人人被问过、都不知怎么答，天然带共鸣和讨论。',hook:'每次被问这句，我都想笑又想哭。'},
+  {id:'p32',track:'剧情',unit:'心法与底层',title:'「我先看看」背后的四种意思',why:'把一句常见话拆出多层含义，一个人也能演出四个人。',hook:'「我先看看」这四个字，至少有四种意思。'},
+  {id:'p33',track:'剧情',unit:'心法与底层',title:'演一遍：老板说「年轻人要多锻炼」',why:'职场共同记忆，演出来比讲道理更容易传。',hook:'每次听到这句话，我就知道今天要加班。'},
+  {id:'p34',track:'剧情',unit:'变现与闭环',title:'三段对话，演出「被砍价」的尴尬',why:'有冲突、有反转、有立场，是剧情类最容易起量的结构。',hook:'他一开口砍价，我就知道这单没戏了。'},
+
+  /* ---- 通用 ---- */
+  {id:'p41',track:'通用',unit:'起步四连',title:'你不是没内容，你是没把「每天做的一件事」当内容',why:'绝大多数人卡住的原因不是没素材，是不认为自己的日常算素材。',hook:'你不是没东西可拍，你是不觉得那也算。'},
+  {id:'p42',track:'通用',unit:'心法与底层',title:'一条视频只讲一件事，多了就是没讲',why:'信息量不是加法。讲三件事等于什么都没讲，这是新手最常踩的坑。',hook:'一条视频讲三件事，观众一件都记不住。'},
+  {id:'p43',track:'通用',unit:'起号常见死法',title:'开头三秒别介绍自己，说他要的好处',why:'自我介绍是你的表达欲，先说好处是他的需求。第一句换掉，数据就变。',hook:'第一句话里，把「我」换成「你」。'},
+  {id:'p44',track:'通用',unit:'心法与底层',title:'拍之前先写最后一句，前面就不会跑偏',why:'先定落点再倒推，是最好用的脚本方法，任何赛道都能用。',hook:'先想清楚最后一句说什么，中间自然就顺了。'},
+  {id:'p45',track:'通用',unit:'心法与底层',title:'你想「输出价值」，观众只想知道「跟我有什么关系」',why:'认知差的一句话。价值是给别人的，关系是自己感受到的。',hook:'你说得都对，但跟我有什么关系。'},
+  {id:'p46',track:'通用',unit:'AI 降门槛',title:'别追工具，追工具解决的那件麻烦事',why:'工具会过时，麻烦不会。以麻烦为起点的人，不会跟着工具换代。',hook:'工具三天一换，你的麻烦十年没变。'},
+  {id:'p47',track:'通用',unit:'账号标签与流量',title:'数据不好不是内容差，是「人不对」',why:'先分清是内容问题还是人群问题，不然改半天改错方向。',hook:'播放低不等于内容差，可能是推给了不看的人。'},
+  {id:'p48',track:'通用',unit:'起步四连',title:'先做 10 条再谈定位：定位是拍出来的，不是想出来的',why:'新人最大的时间黑洞就是空想定位。做十条比想十天有用。',hook:'定位不是想出来的，是拍到第十条那天自己浮出来的。'},
+  {id:'p49',track:'通用',unit:'AI 降门槛',title:'AI 写稿为什么越写越像机器：顺序搞反了',why:'先让 AI 写，再改成人话，永远像机器。顺序反过来才对。',hook:'AI 写的稿子一眼能认出来，问题不在 AI。'},
+  {id:'p50',track:'通用',unit:'变现与闭环',title:'没流量的时候先做产品，做出来也没人买',why:'变现顺序错了，努力全白费。先有人问，再谈卖。',hook:'你现在做产品，等于给空房间卖票。'}
 ];
 
-var SCRIPTS = [
-  { ver:'A', name:'场景故事流', dur:'约 2 分 30 秒', when:'第一优先，先发这条', title:'删了第 8 条口播，前 7 条全栽在同一个坑里', body:[
-    '你以为你的口播没人看，是因为声音不好听、长得不上镜、平台不推你。',
-    '都不是。',
-    '是因为你开口的头五个字，正在赶人。',
-    '',
-    '你是不是也这样——',
-    '晚上十点坐下，提词器打开，录到十一点半，剪了两个小时，',
-    '最后手指停在删除键上，按了。',
-    '那是第 8 条。前面 7 条，你自己都不好意思再看一遍。',
-    '',
-    '然后你开始怀疑三件事：是不是我声音不好听？是不是我不上镜？是不是平台不给我推？',
-    '三个都不是。',
-    '',
-    '你错在开头那五个字："大家好我是"。',
-    '这种开头，说白了就是先报户口。',
-    '你去饭店点菜，服务员上来第一句不是递菜单，是——"我叫某某，我在这儿上班三年了，我家还有俩孩子。"',
-    '你心里是不是在想：关我啥事，菜单给我。',
-    '"大家好我是"，就是报户口。而观众等的，是你把菜单递过去。',
-    '',
-    '因为刷到你的人，前五秒只判断一件事：这条跟我有没有关系。',
-    '"大家好我是"回答的是"我是谁"。可他压根不关心你是谁。',
-    '他手指一划，你准备了两小时的内容，一句都没进他耳朵。',
-    '',
-    '改法只有一句话：把"我是谁"，换成"你能拿走什么"。',
-    '原来的开头："大家好我是某某，今天想跟你们分享一个我最近觉得挺好的副业。"',
-    '改成："下班累成狗还想搞副业，结果越搞越穷？我踩过的那些坑，今天告诉你哪几个别踩。"',
-    '后面一个字都不用动。同一台手机，同一个你，同一张脸。变的只是他第一秒听到的那句话。',
-    '',
-    '观众点你进来，不是来认识你的，是来捡东西的。',
-    '自我介绍是你想被认识，先说好处是他想被满足。',
-    '他不欠你一个认识你的机会，你欠他一个听下去的理由。',
-    '',
-    '你上一次删掉的那条，开头第一句是什么？打在评论区，我帮你看是不是在报户口。',
-    '下期咱聊——拍了一堆视频越拍越空，怎么把卡壳那一下，变成下一条视频。',
-    '咱一起，少走弯路。'
+var QUIZ = [
+  {q:'对着镜头讲两分钟，你的感觉是？',o:[
+    ['有话想讲，能连着说下去',{口播:2,生活:1}],
+    ['不自在，但硬着头皮能讲',{口播:1,剧情:1}],
+    ['我更适合拍东西给别人看',{测评:2,生活:1}],
+    ['我更喜欢演、演别人',{剧情:2}]
   ]},
-  { ver:'B', name:'干货清单流', dur:'约 2 分 20 秒', when:'第 3 天发，别和 A 同一天', title:'口播开头必死的 3 种说法，很多人第一条就中了', body:[
-    '口播开头，有三种说法，一说出来人就走。今天一次讲完，看完直接改，今天就能重录。',
-    '',
-    '第一种，一开口先报户口。',
-    '"大家好我是某某，我做电商五年了，今天想跟你们聊聊选品……"',
-    '为什么死？观众刷到你的那一下，只想知道这条跟他有没有关系。"某某"是谁、干了几年——他不关心。',
-    '你先报了一遍自己，他才反应过来：这跟我没关系。手指就抬起来了。',
-    '比如改成："选品选到脑壳疼还不出单？我五年踩过的坑，今天告诉你哪几个别踩。"',
-    '',
-    '第二种，一开口先道歉。',
-    '"不好意思啊今天有点感冒，声音有点哑，你们多担待……"',
-    '为什么死？你不是来探病的，你是来拿东西的。他不在乎你哑不哑，他在乎第一句有没有他要的。',
-    '你一道歉，等于先告诉他：这条可以往后放。往后放，就是不会再看了。',
-    '比如改成："声音是有点哑，但这条你听完——三个让你白花钱的副业坑。"',
-    '',
-    '第三种，一开口先铺垫背景。',
-    '"我带娃每天只有两小时，为了家里能多一份收入，我决定开始做自媒体……"',
-    '为什么死？铺垫三十秒才进正题，人已经走完了。你的处境，等他认识你以后自然会知道。',
-    '第一次见面，他不想知道你家几口人，只想知道你能帮他什么。',
-    '比如改成："带娃每天只有两小时，怎么搞副业不被割？三个信号，帮你筛掉九成的坑。"',
-    '',
-    '说到这儿你会发现，这三种其实是同一件事。',
-    '报户口是讲自己，道歉是讲自己，铺垫背景还是讲自己。开口第一句全是"我"，不是"你"。',
-    '所以只记一条就够了：第一句话里，把"我"换成"你"。',
-    '',
-    '别报户口，别道歉，别铺垫背景。第一句就给他能拿走的东西。',
-    '你第一条视频的第一句是什么？打在评论区，我帮你看是不是在讲自己。',
-    '下期咱聊——拍了一堆视频越拍越空，怎么把卡壳那一下，变成下一条视频。',
-    '咱一起，少走弯路。'
+  {q:'你手上现成已经有的是？',o:[
+    ['一个行业里的经验，和踩过的坑',{口播:2}],
+    ['每天重复的家常日子',{生活:2}],
+    ['买过用过的一堆东西',{测评:2}],
+    ['会模仿、爱演、有点表现欲',{剧情:2}]
   ]},
-  { ver:'C', name:'数据自查流', dur:'约 2 分 10 秒', when:'有 3 条以上数据后再发', title:'你的口播为什么没人看，后台这三个数早就告诉你了', body:[
-    '你的口播为什么没人看，后台早就告诉你了。不用问别人，三个数，今晚花两分钟就能看。',
-    '',
-    '第一个，5 秒完播率。多少人在你这五秒里没划走。',
-    '这个数低，问题只可能在一个地方——开头。你开口那五个字，没让他觉得这事跟他有关。',
-    '',
-    '第二个，完播率。多少人从头看到尾。',
-    '5 秒完播率还行、完播率很低，说明开头留住了，中段把人放跑了。',
-    '通常就是中间开始讲道理、讲背景、讲自己怎么想的。',
-    '',
-    '第三个，关注转化。看完的人里，有多少个愿意点关注。',
-    '这个数低，说明内容还行，可他不知道关注你能得到什么。',
-    '问题不在视频里，在你的主页、你的简介、在你没告诉他下一条讲什么。',
-    '',
-    '三个数，对应三个动作，别搞混：',
-    '5 秒完播率低——改开头。完播率低——砍中段。关注少——补主页。',
-    '一次只动一个。改完发一条，再看数。三个一起改，数变了你也说不清是哪一步起的作用。',
-    '',
-    '还有个坑：别拿不同时长的视频比。一条三十秒，一条三分钟，完播率没法直接比。比自己同类时长的那些，才有意义。',
-    '',
-    '今晚花两分钟，打开后台，把这三个数看一眼。看一眼你就知道下一条该改哪儿。',
-    '你的 5 秒完播率大概多少？打在评论区，报个数，我帮你看卡在哪一环。',
-    '下期咱聊——拍了一堆视频越拍越空，怎么把卡壳那一下，变成下一条视频。',
-    '咱一起，少走弯路。'
+  {q:'每天能稳定拿出多少时间？',o:[
+    ['一小时以上',{口播:1,测评:1}],
+    ['半小时左右',{口播:1,生活:1}],
+    ['只有碎片时间',{测评:1,剧情:1}],
+    ['只有周末能集中拍',{剧情:1,测评:1}]
   ]},
-  { ver:'D', name:'热点延伸 · 发完就跑', dur:'约 2 分 30 秒', when:'从「小眼睛低于 100，是因为你发完笔记直接走了」这条热题来的',
-    refs:['小红书「评论区权重最高，别只看点赞了」· 1276 赞','小红书「小眼睛低于 200？你可能忽略了首页推荐机制」· 288 赞','小红书「小红书多久才开始推流」· 116 赞（讲 0-30 分钟该干什么）'],
-    title:'我发完就关手机，第二天才明白亏在哪',
-    cover:['发完就关手机','亏的不是流量'], body:[
-    '视频发完就关手机的人，其实把已经来的人都丢了。',
-    '',
-    '你是不是也这样——',
-    '剪到半夜，改完字幕，点发布。然后把提词器关掉，剪辑软件关掉，手机扣在桌上。',
-    '那一刻你觉得今天的事做完了。',
-    '其实你只做完了前半段。',
-    '',
-    '第二天早上打开后台——播放八十七，评论零。',
-    '你心想：又白干了。',
-    '',
-    '这不叫运气差。这叫「发完就跑」。',
-    '',
-    '我第一次发也是。点完发送就去洗衣服了，第二天起来看，八十七个播放，评论一条没有。',
-    '后来我只改了一个动作：发完不关手机，先自己在评论区写一句——「你上一次发视频，是几点钟？」',
-    '十分钟后，来了七个人回我。',
-    '我有个朋友更狠，她发完就守着，评论一来就回，回了半小时。她说那半小时，比剪两个小时有用。',
-    '',
-    '为什么？因为视频发出去的头半小时，系统会先给一小撮人看。',
-    '这一小撮人看完，会不会点开评论、会不会说一句，很大程度取决于评论区里有没有东西可看。',
-    '评论区空着，后来的人看一眼就走；底下有对话，他就多停两秒。',
-    '所以不是平台不给你流量，是你没接住已经来的那几个人。',
-    '',
-    '发布不是终点，是开场。你不在场，观众凭什么留下来。',
-    '评论区也不是观众说话的地方，是你把陌生人变成熟人的地方。',
-    '',
-    '今晚发完，别急着关手机。两个动作：',
-    '第一，自己在评论区问一句，给后来的人一个说话的由头；',
-    '第二，把一条能代表你态度的话置顶，让人一进来就知道你是谁。',
-    '然后守三十分钟。有人说话你就回，一个字的也算。',
-    '',
-    '不知道该问什么？把你那条的第一句打评论区，我帮你看是不是在赶人。',
-    '下期咱聊——「没流量」和「被限流」，怎么一眼分清，别一急就狂改。',
-    '咱一起，少走弯路。'
+  {q:'你愿意正脸出镜吗？',o:[
+    ['愿意，正脸没问题',{口播:2,生活:1}],
+    ['可以露，但不想一直露',{生活:1,测评:1}],
+    ['只想露手和东西',{测评:2}],
+    ['愿意演别人，不想演自己',{剧情:2}]
+  ]},
+  {q:'你想赚谁的钱？',o:[
+    ['想学我这行的人',{口播:2}],
+    ['品牌方，接合作',{剧情:1,测评:1}],
+    ['买东西的人，赚佣金',{测评:2}],
+    ['平台的流量分成',{生活:1,剧情:1}]
+  ]},
+  {q:'你最能一直聊下去的话题是？',o:[
+    ['工作方法、做事经验',{口播:2}],
+    ['家庭、日常、情绪',{生活:2}],
+    ['消费、体验、买什么值',{测评:2}],
+    ['人际、冲突、人性',{剧情:2}]
+  ]},
+  {q:'你最受不了拍哪种？',o:[
+    ['一个人对着镜头讲',{口播:-2}],
+    ['拍自己的生活',{生活:-2}],
+    ['硬广、带货',{测评:-2}],
+    ['演、煽情',{剧情:-2}]
+  ]},
+  {q:'账号想给人的第一印象是？',o:[
+    ['专业、可信',{口播:2}],
+    ['真实、可亲',{生活:2}],
+    ['会挑、会买',{测评:2}],
+    ['有意思、想看下去',{剧情:2}]
   ]}
 ];
 
-var RULES = [
-  ['一句话定位','帮想做自媒体 / 搞副业的普通人避坑——讲"哪些坑别踩、为什么、怎么绕"。'],
-  ['人设姿态','避坑博主，不是老师。同路人：关注我，少走弯路。'],
-  ['受众','想做自媒体 / 想搞副业、但一直卡住的上班族、宝妈。'],
-  ['三大卡点','① 不知道自己该做什么定位 ② 不知道发什么 ③ 第一条口播迈不出去'],
-  ['内容双支柱','① 自媒体从零到一 ② 用 AI 降门槛'],
-  ['脚本六段','一句话结论 → 场景痛点 → 给坑命名 → 2-3 个案例 → 金句 → 召唤行动'],
-  ['六条准则','场景化 / 活人感 / 普通人视角 / 代入感 / 大白话 / 避坑叙事 / 同路人姿态'],
-  ['禁词','教、教学、老师、教你、教会你 → 换成"一起避坑、少走弯路、你试试看"'],
-  ['隐私铁律','绝不出负债、家庭、学历、失业、逆袭等私人处境；案例只用"朋友/同事"或"某某"'],
-  ['判据','这句"我以前"讲的是做内容的方法 → 可以讲；讲的是我的人生 → 删掉'],
-  ['形式','短视频口播，抖音 + 视频号；单条 ≥ 2 分钟；小红书图文同步'],
-  ['现阶段变现','不卖货、无产品；先跑通发布和内容反馈，变现是结果不是起点']
+var VAULT0 = [
+  {id:'v1',title:'先给结论 + 讲机制 + 两个动作',src:'发完就跑那条',
+   hook:'视频发完就关手机的人，其实把已经来的人都丢了。',
+   why:'第一句就是结论，直接点名观众正在犯的错，人会立刻对号入座；接着讲为什么（头半小时那一小撮人），最后给两个今晚就能做的动作。结论—归因—动作，是最好复用的一种。',
+   copy:'你不在场，观众凭什么留下来。',
+   st:['一句话结论','场景','给痛点命名','讲机制','给动作','金句 + 下期钩子']},
+  {id:'v2',title:'清单体：数字给出确定性',src:'口播开头三种死法',
+   hook:'口播开头必死的 3 种说法，很多人第一条就中了。',
+   why:'数字让观众知道要看几条、什么时候结束，「必死」制造损失感，人就会停。清单体最适合新手，因为结构替你写好了，你只需要填内容。',
+   copy:'第一句话里，把「我」换成「你」。',
+   st:['数字承诺','逐条讲死法','归纳共同点','给替代方案','一句收口']},
+  {id:'v3',title:'反常识：先否掉一个共识，再补前提',src:'零粉也能爆那条',
+   hook:'「零粉也能爆」这句话骗了不少人：它只在一个前提下成立。',
+   why:'先否掉一个大家爱听的说法，观众会停下来想知道「什么前提」。后半段给条件，反而比硬吹更可信——因为你先站在了他那一边。',
+   copy:'不是平台不给你流量，是你没接住已经来的那几个人。',
+   st:['否定共识','点出代价','给出前提','举证','收口']},
+  {id:'v4',title:'数据自查体：把后台变成诊断工具',src:'三个数那条',
+   hook:'你的口播为什么没人看，后台这三个数早就告诉你了。',
+   why:'把「没人看」这种模糊感受，换成三个可查的数字，观众看完能立刻去后台对号。给工具，比给观点更容易被收藏。',
+   copy:'看三个数就知道该改哪，不用猜。',
+   st:['三个数开场','逐个解释','对号入座','给对应动作','一次只动一个']}
 ];
 
-var TODO_ITEMS = [
-  '定今天拍哪一条（从选题库挑）',
-  '把脚本改成自己的话，念顺',
-  '录制 1 条（原相机 / 竖屏 / 一镜到底）',
-  '剪辑 + 上字幕（改错别字）',
-  '发布（晚 8:00 前后）',
-  '发完 30 分钟内守评论区',
-  '记三个数：5 秒完播率 / 完播率 / 新增关注'
-];
-
-var SEED_HOT = [
-  {id:1, title:'开学 / 节后返工：想搞副业又没时间', platform:'抖音', why:'情绪最集中的时间窗，提前两周备', status:'待用'},
-  {id:2, title:'AI 又出了新工具：普通人怎么用上', platform:'全平台', why:'热点期搜索量大，讲"能用来干啥"比讲参数有用', status:'待用'},
-  {id:3, title:'某大博主翻车：只讲方法层，不点名', platform:'抖音', why:'蹭的是话题，不是人；对不上人设的别碰', status:'待用'},
-  {id:4, title:'年终总结：今年最值得做的一件小事', platform:'视频号', why:'年底复盘话题常青，适合做收尾单元', status:'待用'}
-];
-
-var RECO = [
-  {id:'r1', unit:'AI 降门槛', title:'有人半个月涨 65 万粉，靠的是“Vibe 知识”—— 但有一步你千万别跟着学',
-   logic:'AI 把知识可视化的成本打下来了，但火的还是内容密度', pit:'以为换个花哨形式就能火，内容还是空的',
-   hook:'有人半个月涨了 65 万粉，用的工具你手机里可能就有。但他有一件事，你千万别跟着学。',
-   why:'“Vibe 知识”正被抖音、B 站、小红书一起推，新号也能起，这波流量现在最热'},
-  {id:'r2', unit:'账号标签与流量', title:'平台现在看“收藏”，不看你粉丝多少 —— 你的选题能不能被存下来',
-   logic:'收藏率高→平台判定有用→推给精准的人', pit:'只给情绪不给方法，看完就忘',
-   hook:'你的视频没人收藏，不是拍得差，是你只给了情绪，没给能存下来以后用的东西。',
-   why:'平台规则往“长效价值”改，收藏率权重变高，现在讲正好赶上大家的焦虑点'},
-  {id:'r3', unit:'起号常见死法', title:'“零粉也能爆”这句话骗了不少人：它只在一个前提下成立',
-   logic:'零粉能爆的前提是前五秒不赶人', pit:'拿“零粉也能爆”当不准备的借口',
-   hook:'都说零粉也能爆。没人告诉你，它只在你前五秒不赶人的时候才成立。',
-   why:'算法越来越不看粉丝基数，这句话传得很歪，正是澄清的好时机'},
-  {id:'r4', unit:'AI 降门槛', title:'AI 替你出镜、AI 替你探店，省下来的时间够你失去一个账号',
-   logic:'省时间不等于建立信任，真人感是现在的稀缺资源', pit:'全量交给 AI，观众第一眼就觉得“这不是人”',
-   hook:'用 AI 替你出镜，确实省时间。但省下来的那些时间，可能刚好够你丢掉一个账号。',
-   why:'AI 探店、数字人口播最近集中冒头，大厂工具扎堆上线，正好讲“边界在哪”'},
-  {id:'r5', unit:'心法与底层', title:'工具已经能一个人干完一个剧组，但它替不了你开口那一下',
-   logic:'“一人剧组”把技术门槛降到零，剩下的门槛变成“你敢不敢说”', pit:'等技术完美，结果一条没发',
-   hook:'现在的工具，一个人就能干完一个剧组的活。可它替不了你一件事：你敢开口说第一句。',
-   why:'“从一键成片到一人剧组”成了今年 AI 大会的主线话题，大家都盯工具，没人讲人这一环'},
-  {id:'r6', unit:'起号常见死法', title:'同样是讲知识，他 3 秒留住人，你 30 秒还没进正题——差在哪一步',
-   logic:'知识类内容拼的不是信息量，是前五秒给不给结论', pit:'从头铺垫背景，把结论放最后',
-   hook:'同样是讲知识，他三秒就把人留住了，你三十秒还没进正题。差的不是水平，是一个顺序。',
-   why:'知识赛道新号暴增，同质化来得快，现在讲“怎么不被划走”最有人听'},
-  {id:'r7', unit:'AI 降门槛', title:'AI 写稿为啥越写越像机器？因为你把顺序搞反了',
-   logic:'先自己写一版烂的，再让 AI 改；反过来就废', pit:'一上来让 AI 从零写，人味全丢',
-   hook:'AI 写的稿子像机器念的，不是它不行，是你把它放错了位置。',
-   why:'用 AI 写稿的人越来越多，满屏一个腔调，现在讲“顺序”差异化最大'},
-  {id:'r8', unit:'账号标签与流量', title:'能被收藏的选题，都有三个共同点（能照做、有清单、带一点反常识）',
-   logic:'收藏是平台判断“有用”的最硬信号', pit:'选题太大，看完不知道下一步干什么',
-   hook:'能被收藏的选题，看完都有一个共同点：他知道自己下一步要干什么。',
-   why:'与收藏率权重上升同步，既能蹭机制又能给方法，属于可反复用的常青题'},
-  {id:'r9', unit:'AI 降门槛', title:'别追工具，追工具解决的那件麻烦事',
-   logic:'工具一周出三个，追不完；麻烦事十年不变', pit:'天天试新工具，一条视频没发',
-   hook:'新工具一周出三个，你追得完吗？追不完。但你只要盯住一件事就够。',
-   why:'今年大厂 AI 创作工具扎堆发布，普通人最容易陷进去的就是“试用疲劳”'},
-  {id:'r10', unit:'起步四连', title:'你第一条视频不需要爆，需要“能被存下来”',
-   logic:'第一条的任务是被人记住，不是被人转发', pit:'拿播放量当唯一标准，三条就放弃了',
-   hook:'你第一条视频不用爆。它只需要做到一件事：让人愿意把它存起来。',
-   why:'适合当“起步四连”的收尾，给刚发完第一条的人一个不放弃的理由'}
-];
-
-/* ================= 实时热榜（公开接口，浏览器直接拉） ================= */
-var HOT_API = 'https://api.codelife.cc/api/top/list?lang=cn&id=';
-var HOT_PLATFORMS = [
-  {k:'抖音', id:'DpQvNABoNE'},
-  {k:'微博', id:'KqndgxeLl9'},
-  {k:'头条', id:'toutiao'},
-  {k:'知乎', id:'mproPpoq6O'},
-  {k:'百度', id:'Jb0vmloB1G'},
-  {k:'B站',  id:'74KvxwokxM'}
-];
-var HOT_KEYS = ['AI','人工智能','大模型','智能体','算法','副业','兼职','自媒体','短视频','口播','剪辑','涨粉','博主','网红','带货','搞钱','赚钱','存钱','省钱','消费','职场','打工','上班','裁员','失业','就业','面试','跳槽','转行','创业','开店','摆摊','宝妈','带娃','焦虑','工资','房租','中年','退休','考公','学历','经济'];
-var HOT_PLAT = '抖音';
-var hotOnlyMine = true;
-var HOT_CACHE = {}, HOT_LAST = {}, LIVE_SHOWN = [], HOT_SHOWN_AT = 0;
-
-/* ================= 赛道热题（我人工盯的垂类，不是泛榜） ================= */
-var TREND = [
-  {t:'小眼睛低于 100，是因为你发完笔记直接走了', p:'小红书', stat:'约 1.1 万赞 · 甜心茯苓',
-   angle:'同一个理换成口播：发完就关手机的人，等于自己放弃了第一波推流。你的题：发完那 30 分钟到底该干什么。'},
-  {t:'3 步让系统认为你是优质内容', p:'小红书', stat:'约 8800 赞 · 小七不摆烂了',
-   angle:'平台认不认你，看你有没有能被看完的内容。你的六段结构就是干这个的。'},
-  {t:'你没流量，是因为你日更了', p:'小红书', stat:'约 1600 赞 · 洁西带你聊IP',
-   angle:'日更等于把一条没跑通的内容重复十次。你的题：先跑通一条，再谈频率。'},
-  {t:'账号没流量，用好这 3 个阴招', p:'小红书', stat:'约 2600 赞 · 阿竹商业ip运营',
-   angle:'不学他的招，反着讲：「阴招」能给你一次流量，给不了下一个粉丝。'},
-  {t:'抖音被限流还可以这样恢复', p:'小红书', stat:'约 4900 赞 · 小媛',
-   angle:'限流焦虑是巨大的搜索需求。你的题：先分清「没流量」和「被限流」，别一急就狂改。'},
-  {t:'人一旦开窍，做自媒体真的很容易', p:'小红书', stat:'约 4700 赞 · 7ian要努力',
-   angle:'开窍那一刻多半就一件事：把「我想说」换成「他能拿走」。'},
-  {t:'小红书再无红利：50% 流量给千粉以下，严打 AI 生成与搬运', p:'行业报道', stat:'2026 年多家媒体在讲',
-   angle:'你的题：AI 能帮你写，但平台正在打击 AI 味——用工具不等于交工具。'},
-  {t:'每天坚持创作，但平台不给流量，你还会坚持吗', p:'知乎', stat:'持续高赞讨论',
-   angle:'不是要不要坚持，是要不要换开头。坚持一个错的开头十年也没用。'}
-];
-
-var SEED_TEAR = [
-  {id:1, src:'自己的 A 版（就当练手）', hook:'你以为你的口播没人看，是因为声音不好听…都不是。',
-   pain:'录了两小时，最后按删除键', name:'报户口式开头', cases:'饭店服务员先自我介绍不递菜单',
-   line:'自我介绍是你想被认识，先说好处是他想被满足', call:'你上次删掉那条，第一句是什么？打评论区',
-   reuse:'先否定三个常见误解 → 给痛点起名 → 一个生活比喻 → 改法对比'}
-];
-
-var SEED_MATS = [
-  {id:1, cat:'金句', text:'自我介绍是你想被认识，先说好处是他想被满足。'},
-  {id:2, cat:'金句', text:'他手指一划，你准备了两小时的内容，一句都没进他耳朵。'},
-  {id:3, cat:'金句', text:'观众点你进来，不是来认识你的，是来捡东西的。'},
-  {id:4, cat:'金句', text:'10 分永远大于 0 分。'},
-  {id:5, cat:'案例', text:'有个朋友，第一条视频拍了 8 遍，最后发出去的是最"不完美"那版——结果评论最多。'},
-  {id:6, cat:'案例', text:'见到的普遍现象：卡在第一条的人，多半不是不会拍，是开口前五个字在讲自己。'},
-  {id:7, cat:'回复模板', text:'你这条开头在报户口——把"大家好我是"换成"你能拿走什么"，再录一遍试试。'},
-  {id:8, cat:'回复模板', text:'5 秒完播低说明开头没抓住，先只改开头，别动选题，一次改一个。'},
-  {id:9, cat:'回复模板', text:'完播率还行但没人关注，是主页没接住：简介写清"关注你能得到什么"。'},
-  {id:10, cat:'数据口径', text:'抖音后台没有"3 秒跳出率"这种字段，真实能看的是：2 秒跳出率、5 秒完播率、完播率、平均播放时长。'},
-  {id:11, cat:'数据口径', text:'别拿不同时长的视频比完播率，只比自己同类时长的。'},
-  {id:12, cat:'自我提醒', text:'发之前四问：第一句是不是"我"打头？有没有"教/老师"？有没有提家庭负债学历？结尾有没有勾下一条？'}
-];
-
-var DEFAULT_BUDGET = [
-  {k:'录制', v:40, c:'#5BC8A8'},
-  {k:'剪辑上字幕', v:45, c:'#FFC96B'},
-  {k:'找选题素材', v:25, c:'#7EC8E3'},
-  {k:'互动回复', v:20, c:'#FF8A7A'},
-  {k:'学习拆解', v:20, c:'#BFB3F0'}
-];
-
-/* ============================================================
-   初始化 / 迁移
-============================================================ */
-function init(){
-  var raw = null;
-  try{ raw = localStorage.getItem(KEY); }catch(e){}
-  if(raw){ try{ S = JSON.parse(raw); }catch(e){ S = null; } }
-
-  if(!S){
-    var old = null;
-    try{ old = localStorage.getItem(OLDKEY); }catch(e){}
-    S = {
-      topics: SEED_TOPICS.map(function(x){ return Object.assign({},x); }),
-      records: [],
-      todos: {},
-      schedule: {},
-      hot: SEED_HOT.map(function(x){ return Object.assign({},x); }),
-      tear: SEED_TEAR.map(function(x){ return Object.assign({},x); }),
-      mats: SEED_MATS.map(function(x){ return Object.assign({},x); }),
-      budget: {},
-      startedAt: todayKey()
-    };
-    if(old){
-      try{
-        var o = JSON.parse(old);
-        if(o.topics && o.topics.length) S.topics = o.topics;
-        if(o.records) S.records = o.records;
-        if(o.todos) S.todos = o.todos;
-        if(o.schedule) S.schedule = o.schedule;
-      }catch(e){}
-    }
-    save();
-  }
-  ['topics','records','hot','tear','mats','drafts','todos','schedule','budget'].forEach(function(k){
-    if(!S[k]) S[k] = (k==='todos'||k==='schedule'||k==='budget') ? {} : [];
-  });
-  if(!S.recoTaken) S.recoTaken = [];
-  S.hot.forEach(function(h){ if(!h.stage) h.stage = 'pool'; if(!h.refs) h.refs = []; });
-  if(!S.budget[todayKey()]){
-    S.budget[todayKey()] = DEFAULT_BUDGET.map(function(b){ return {k:b.k, v:b.v}; });
-    save();
-  }
+/* ---------------- state ---------------- */
+function fresh(){
+  return {quiz:null, answers:[], track:null, off:0, list:[], mine:[], vault:VAULT0.slice(), cmt:'', money:null};
 }
+var S = (function(){
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(!raw) return fresh();
+    var o = JSON.parse(raw), d = fresh();
+    for(var k in d){ if(!(k in o)) o[k] = d[k]; }
+    if(!o.vault || !o.vault.length) o.vault = VAULT0.slice();
+    return o;
+  }catch(e){ return fresh(); }
+})();
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 
-/* ============================================================
-   小工具
-============================================================ */
-function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-function todoState(){ var k=todayKey(); if(!S.todos[k]) S.todos[k]={}; return S.todos[k]; }
-function todoDone(){ var s=todoState(), n=0; for(var i=0;i<TODO_ITEMS.length;i++){ if(s[i]) n++; } return n; }
-function avg(arr, key){ if(!arr.length) return 0; var t=0,c=0; arr.forEach(function(r){ var v=parseFloat(r[key]); if(!isNaN(v)){ t+=v; c++; } }); return c? Math.round(t/c*10)/10 : 0; }
-function diag(r){
-  if(r.s5===''||r.s5==null||isNaN(parseFloat(r.s5))) return {t:'还没填 5 秒完播率', c:'#6B7C77'};
-  if(parseFloat(r.s5)<25) return {t:'开头还在赶人：改头五个字，别改选题', c:'#B14E3E'};
-  if(r.fin!==''&&parseFloat(r.fin)<10) return {t:'中段太拖：把中间砍掉三分之一', c:'#9A6B00'};
-  if(parseFloat(r.fans||0)===0) return {t:'内容行、承接不行：先补主页简介和三置顶', c:'#2A7E9C'};
-  return {t:'结构没问题：保持这个开头方式', c:'#3FA98B'};
+function esc(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+function today(){
+  var d = new Date();
+  return d.getFullYear() + '年' + (d.getMonth()+1) + '月' + d.getDate() + '日';
+}
+function poolFor(){
+  var t = S.track;
+  return POOL.filter(function(p){ return !t || p.track === t || p.track === '通用'; });
+}
+function todays(){
+  var a = poolFor(), out = [], n = Math.min(3, a.length);
+  for(var i=0;i<n;i++) out.push(a[(S.off + i*7) % a.length]);
+  return out;
+}
+function addedCount(){ return S.mine.length; }
 
-/* ============================================================
-   页面注册
-============================================================ */
-var PAGES = {
-  home:    {t:'首页',      s:'今天该干什么，一眼看完',            r:pageHome},
-  hot:     {t:'盯热点',    s:'看到就先扔进来，别指望脑子记住',    r:pageHot},
-  tear:    {t:'拆爆款',    s:'拆骨架，不拆皮毛；拆完能装回自己身上', r:pageTear},
-  topics:  {t:'建选题库',  s:'按单元走，别跳着发',                r:pageTopics},
-  script:  {t:'脚本创作',  s:'六段结构 + 提词器，念顺了再录',      r:pageScript},
-  mats:    {t:'管资料',    s:'金句、案例、回复模板、数据口径',    r:pageMats},
-  review:  {t:'做复盘',    s:'一条一条填，填完它告诉你怎么改',    r:pageReview},
-  insight: {t:'洞察复盘',  s:'把散的数据拧成一句话结论',          r:pageInsight},
-  plan:    {t:'发布排期',  s:'别自己跟自己抢流量',                r:pagePlan},
-  focus:   {t:'注意力预算',s:'每天就那么点精力，先分配好',        r:pageFocus},
-  rule:    {t:'定位与铁律',s:'拍之前扫一眼，尤其是禁词那条',      r:pageRule},
-  search:  {t:'搜索结果',  s:'选题 / 热点 / 素材一起搜',          r:pageSearch}
-};
+/* ---------------- chrome ---------------- */
+var PAGES = [
+  ['home','首页'],['quiz','赛道自测'],['daily','每日选题'],
+  ['comment','评论区洞察'],['vault','爆款知识库'],['money','商业变现']
+];
 var CUR = 'home';
-var topicFilter = '全部';
-var matFilter = '全部';
-var searchQ = '';
 
-function badges(){
-  $('#nHot').textContent = S.hot.filter(function(x){ return x.status==='待用'; }).length;
-  $('#nTear').textContent = S.tear.length;
-  $('#nTopic').textContent = S.topics.filter(function(x){ return x.status==='待拍'; }).length;
-  $('#nScript').textContent = SCRIPTS.length + (S.drafts ? S.drafts.length : 0);
-  $('#nMat').textContent = S.mats.length;
-  $('#nRec').textContent = S.records.length;
+function renderTabs(){
+  document.getElementById('tabs').innerHTML = PAGES.map(function(p){
+    return '<a data-act="go" data-arg="'+p[0]+'" class="'+(CUR===p[0]?'on':'')+'">'+p[1]+'</a>';
+  }).join('');
 }
 
-function go(key){
-  CUR = key;
-  var p = PAGES[key];
-  if(!p) return;
-  document.querySelectorAll('.nav a').forEach(function(a){
-    a.classList.toggle('on', a.getAttribute('data-page')===key);
-  });
-  $('#pTitle').textContent = p.t;
-  $('#pSub').textContent = p.s;
-  badges();
-  p.r($('#pageBody'));
-  window.scrollTo(0,0);
+function go(page){
+  CUR = page;
+  renderTabs();
+  var f = {home:pageHome, quiz:pageQuiz, daily:pageDaily, comment:pageComment, vault:pageVault, money:pageMoney}[page] || pageHome;
+  document.getElementById('app').innerHTML = f();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-document.addEventListener('click', function(e){
-  var a = e.target.closest('[data-page]');
-  if(a){ e.preventDefault(); go(a.getAttribute('data-page')); }
-});
-
-/* ============================================================
-   首页
-============================================================ */
-function pageHome(b){
-  var t = S.schedule[todayKey()];
-  var tShow = (t||'').replace(/^#\d+\s*/,'');
-  var done = todoDone();
-  var s = todoState();
-  var pct = Math.round(done / TODO_ITEMS.length * 100);
-  var posted = S.topics.filter(function(x){ return x.status==='已发'||x.status==='爆了'; }).length;
-  var bestS5 = S.records.length ? Math.max.apply(null, S.records.map(function(r){ return parseFloat(r.s5)||0; })) : 0;
-
-  var budgetToday = S.budget[todayKey()] || DEFAULT_BUDGET;
-  var budgetMin = 0; budgetToday.forEach(function(x){ budgetMin += (+x.v||0); });
-  var sumS5 = 0;
-  S.records.forEach(function(r){ sumS5 += parseFloat(r.s5)||0; });
-  var avgS5 = S.records.length ? Math.round(sumS5 / S.records.length * 10)/10 : 0;
-
-  var tiles = [
-    {k:'hot',     n:S.hot.filter(function(x){return x.status==='待用';}).length+' 条待用', t:'盯热点',     d:'看到就先扔进来', ic:'i-y',
-      svg:'M12 3c3 4 5 6 5 9a5 5 0 01-10 0c0-1 .5-2 1-3'},
-    {k:'tear',    n:S.tear.length+' 条',  t:'拆爆款',     d:'拆骨架，能装回自己身上', ic:'i-c',
-      svg:'M13 2L4 14h6l-1 8 9-12h-6z'},
-    {k:'topics',  n:S.topics.length+' 条',t:'建选题库',   d:'按单元走，标状态', ic:'i-m',
-      svg:'M9 18h6M10 21h4M12 3a6 6 0 00-3 11v2h6v-2a6 6 0 00-3-11z'},
-    {k:'script',  n:'3 版',               t:'脚本创作',   d:'A / B / C 定稿 + 提词器', ic:'i-s',
-      svg:'M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5'},
-    {k:'mats',    n:S.mats.length+' 条',  t:'管资料',     d:'金句、案例、回复模板', ic:'i-l',
-      svg:'M4 6a2 2 0 012-2h9l5 5v9a2 2 0 01-2 2H6a2 2 0 01-2-2zM9 12h6M9 16h4'},
-    {k:'review',  n:S.records.length+' 条',t:'做复盘',    d:'填三个数，自动诊断', ic:'i-g',
-      svg:'M4 20V10M10 20V4M16 20v-7M22 20H2'},
-    {k:'insight', n:(avgS5 ? avgS5+'% 均' : '暂无'),             t:'洞察复盘',   d:'把数据拧成一句结论', ic:'i-m',
-      svg:'M3 17l5-6 4 3 4-6 5 4M3 21h18'},
-    {k:'plan',    n:'7 天',               t:'发布排期',   d:'这周发哪条，一目了然', ic:'i-s',
-      svg:'M7 3v3M17 3v3M4 8h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z'},
-    {k:'focus',   n:(budgetMin/60).toFixed(1)+' 小时', t:'注意力预算', d:'每天精力先分配好', ic:'i-y',
-      svg:'M12 3a9 9 0 100 18 9 9 0 000-18zM12 7v5l3 2'}
+/* ---------------- home ---------------- */
+function pageHome(){
+  var t = S.track ? TRACKS[S.track].name : '还没测';
+  var d = todays();
+  var cards = [
+    ['01','赛道自测','不知道做什么赛道。八道题，出一句话定位、三条起步题。','quiz'],
+    ['02','每日选题','不知道今天拍什么。每天给你三条，带「为什么现在拍」和第一句。','daily'],
+    ['03','评论区洞察','把评论粘进来，自动分出四类，每条都能变成选题。','comment'],
+    ['04','爆款知识库','不知道怎么拆爆款。拆结构，不抄句子，拆完能直接用。','vault'],
+    ['05','商业变现','什么时候能收钱，先卖什么。按阶段给动作，不画饼。','money']
   ];
-
-  var reco = RECO.filter(function(r){ return S.recoTaken.indexOf(r.id)<0; });
-  var recoHtml =
-    '<div class="panel" style="border-color:#CFEDE3;background:linear-gradient(120deg,#FFFDF6,#F3FBF8)">'+
-      '<h4><span class="dot"></span>我替你盯的（'+reco.length+' 条待挑）</h4>'+
-      '<div class="hint" style="margin-bottom:4px">这一轮是我 <b>11 月 2 日</b> 盯的，每条都写了<b>为什么现在拍</b>和<b>第一句怎么说</b>。往后每周日晚上自动换一批；想看<b>当下</b>的榜，去左栏「盯热点」。你只需要挑一条。</div>'+
-      (reco.length ? reco.map(function(r,i){
-        return '<div class="row" style="align-items:flex-start">'+
-          '<div class="t"><b style="font-size:13.8px">'+(i+1)+'. '+esc(r.title)+'</b>'+
-            '<div class="m" style="color:#5F716C">为什么现在：'+esc(r.why)+'</div>'+
-            '<div class="m" style="color:#3FA98B">第一句：'+esc(r.hook)+'</div>'+
-          '</div>'+
-          '<div style="display:flex;gap:6px;flex:0 0 auto">'+
-            '<button class="btn xs" data-recotoday="'+r.id+'">就拍这条</button>'+
-            '<button class="btn xs ghost" data-reco="'+r.id+'">先存着</button>'+
-          '</div>'+
-        '</div>';
-      }).join('') : '<div class="empty">这批全被你收走了。下一轮我再盯。</div>')+
-    '</div>';
-
-  b.innerHTML =
+  return ''+
+  '<div class="wrap">'+
     '<div class="hero">'+
-      '<h3>'+(tShow ? '今天要发：'+esc(tShow) : '今天还没定拍哪条')+'</h3>'+
-      '<p>'+todayCN()+'　·　待办 <b>'+done+' / '+TODO_ITEMS.length+'</b>　·　已发 <b>'+posted+'</b> 条　·　还剩 <b>'+S.topics.filter(function(x){return x.status==='待拍';}).length+'</b> 条没拍</p>'+
+      '<p class="kicker">苏小七 · 内容工作台</p>'+
+      '<h1>不知道拍什么，<br>是因为你还没先答清楚「拍给谁看」。</h1>'+
+      '<p class="lead">这里不给你一堆理论。五块，一块只解决一个问题：先测出你的赛道，再每天给你三条能开机的题，拍完知道去哪看数据，看懂了知道怎么收钱。</p>'+
+      '<div class="acts">'+
+        '<button class="btn p" data-act="go" data-arg="quiz">开始赛道自测</button>'+
+        '<button class="btn g" data-act="go" data-arg="daily">看今天拍什么</button>'+
+      '</div>'+
+      '<div class="stat" style="justify-content:center;margin-top:66px">'+
+        '<div><b>'+esc(t)+'</b>你现在的赛道</div>'+
+        '<div><b>'+d.length+'</b>今天给你留的题</div>'+
+        '<div><b>'+addedCount()+'</b>已存进待拍</div>'+
+      '</div>'+
     '</div>'+
-    '<div class="kpis">'+
-      '<div class="kpi"><div class="n">'+S.topics.filter(function(x){return x.status==='待拍';}).length+'</div><div class="l">待拍选题</div></div>'+
-      '<div class="kpi"><div class="n">'+posted+'</div><div class="l">已发布</div></div>'+
-      '<div class="kpi"><div class="n">'+(bestS5?bestS5+'%':'—')+'</div><div class="l">最高 5 秒完播</div></div>'+
-      '<div class="kpi"><div class="n">'+S.hot.filter(function(x){return x.status==='待用';}).length+'</div><div class="l">热点待用</div></div>'+
+    '<section class="tight" style="padding-top:8px"><div class="modgrid">'+
+      cards.map(function(c){
+        return '<div class="entry" data-act="go" data-arg="'+c[3]+'">'+
+          '<div class="no">'+c[0]+'</div><h3>'+c[1]+'</h3><p>'+c[2]+'</p>'+
+          '<div class="go">进去看看 →</div></div>';
+      }).join('')+
+    '</div></section>'+
+    '<section><div class="hr" style="margin-bottom:44px"></div>'+
+      '<h2>一条视频是怎么从「没想法」变成「能开机」的</h2>'+
+      '<p class="lead">这五块不是并列的，是一条链子。你不用每天想创意，按顺序往下走就行。</p>'+
+      '<div class="grid g3">'+
+        '<div class="card"><h3>① 先定赛道</h3><p>赛道不定，选题就没有方向。测完你会拿到一句话定位，和三条今晚就能拍的题。</p></div>'+
+        '<div class="card"><h3>② 每天有题</h3><p>每天三条，带「为什么现在拍」和第一句该怎么开口。挑一条，点「今天拍这条」。</p></div>'+
+        '<div class="card"><h3>③ 没题就翻评论</h3><p>评论区的每一句抱怨和追问，都是下一条视频。粘进来，自动归类。</p></div>'+
+        '<div class="card"><h3>④ 拍之前先拆</h3><p>拆爆款只拆结构：钩子、节奏、落点。抄结构不算抄，抄句子才叫洗稿。</p></div>'+
+        '<div class="card"><h3>⑤ 有人问再收钱</h3><p>没流量时先做产品等于给空房间卖票。什么时候能收、先卖什么，看第五块。</p></div>'+
+        '<div class="card w"><h3>每天只做三件事</h3><p>挑一条题、拍完发出去、守半小时评论。其他都不用管。</p></div>'+
+      '</div>'+
+    '</div></section>'+
+  '</div>';
+}
+
+/* ---------------- quiz ---------------- */
+function pageQuiz(){
+  if(S.quiz){
+    var t = S.quiz, tr = TRACKS[t];
+    var seeds = POOL.filter(function(p){ return p.track===t; }).slice(0,3);
+    return ''+
+    '<div class="wrap"><section>'+
+      '<p class="kicker">你的赛道</p>'+
+      '<h1>'+esc(tr.name)+'</h1>'+
+      '<p class="lead">'+esc(tr.one)+'</p>'+
+      '<div class="grid g2" style="margin-top:34px">'+
+        '<div class="card w"><h3>为什么是你</h3><p>'+esc(tr.desc)+'</p></div>'+
+        '<div class="card"><h3>钱从哪来</h3><p>'+esc(tr.money)+'</p></div>'+
+        '<div class="card"><h3>最容易踩的坑</h3><p>'+esc(tr.tip)+'</p></div>'+
+        '<div class="card w"><h3>一句话定位（可直接放进主页简介）</h3><p>一个讲「'+esc(tr.name)+'」的人：'+esc(tr.one)+'</p></div>'+
+      '</div>'+
+      '<h2 style="margin-top:56px">今晚就能拍的三条</h2>'+
+      '<p class="lead">按你的赛道挑的。点「加进待拍」，它就会出现在第二块里。</p>'+
+      '<div class="grid g3">'+
+        seeds.map(function(p){
+          return '<div class="card w"><h3 style="font-size:16.5px;line-height:1.45">'+esc(p.title)+'</h3>'+
+            '<p style="margin:8px 0 14px">'+esc(p.hook)+'</p>'+
+            '<button class="btn sm g" data-act="take" data-arg="'+p.id+'">加进待拍</button></div>';
+        }).join('')+
+      '</div>'+
+      '<div style="margin-top:40px"><button class="btn t" data-act="resetQuiz">重新测一次</button></div>'+
+    '</section></div>';
+  }
+  var i = S.answers.length;
+  if(i >= QUIZ.length) i = QUIZ.length - 1;
+  var q = QUIZ[i];
+  var pct = Math.round(S.answers.length / QUIZ.length * 100);
+  return ''+
+  '<div class="wrap"><section>'+
+    '<p class="kicker">赛道自测</p>'+
+    '<h1>先搞清楚你适合拍什么。</h1>'+
+    '<p class="lead">八道题，两分钟。选你现在真实的样子，不要选你「希望自己是」的样子——测出来的是能坚持的那条路，不是最好看的那条。</p>'+
+    '<div class="qbox" style="margin-top:30px">'+
+      '<div class="qnum">第 '+(i+1)+' / '+QUIZ.length+' 题</div>'+
+      '<p class="qtext">'+esc(q.q)+'</p>'+
+      '<div class="opts">'+
+        q.o.map(function(o,k){
+          var on = S.answers[i] === k ? ' on' : '';
+          return '<button class="opt'+on+'" data-act="ans" data-arg="'+i+':'+k+'">'+esc(o[0])+'</button>';
+        }).join('')+
+      '</div>'+
+      '<div class="bar"><i style="width:'+pct+'%"></i></div>'+
+      '<div style="margin-top:18px;display:flex;justify-content:space-between;align-items:center">'+
+        '<span class="tiny">已答 '+S.answers.length+' 题</span>'+
+        (S.answers.length>0 ? '<button class="btn t" data-act="resetQuiz">重新开始</button>' : '')+
+      '</div>'+
     '</div>'+
-    recoHtml+
-    '<div class="grid" style="margin-bottom:16px">'+
-      tiles.map(function(c){
-        return '<button class="tile" data-page="'+c.k+'">'+
-          '<span class="num">'+c.n+'</span>'+
-          '<div class="ic '+c.ic+'"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3FA98B" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="'+c.svg+'"/></svg></div>'+
-          '<h3>'+c.t+'</h3><div class="sub2">'+c.d+'</div></button>';
+  '</section></div>';
+}
+
+function answerQuiz(i,k){
+  S.answers[i] = k;
+  save();
+  if(i === QUIZ.length-1){
+    var sc = {'口播':0,'生活':0,'测评':0,'剧情':0};
+    S.answers.forEach(function(v,qi){
+      var w = QUIZ[qi].o[v][1];
+      for(var kk in w) sc[kk] = (sc[kk]||0) + w[kk];
+    });
+    var best = '口播', bv = -999;
+    for(var kk2 in sc){ if(sc[kk2] > bv){ bv = sc[kk2]; best = kk2; } }
+    S.quiz = best; S.track = best;
+    save();
+    go('quiz');
+  }else{
+    go('quiz');
+  }
+}
+
+/* ---------------- daily ---------------- */
+function pageDaily(){
+  var d = todays();
+  var tr = S.track ? TRACKS[S.track].name : '全部赛道（还没自测）';
+  return ''+
+  '<div class="wrap"><section>'+
+    '<p class="kicker">每日选题 · '+esc(today())+'</p>'+
+    '<h1>今天拍这三条里的一条。</h1>'+
+    '<p class="lead">当前赛道：'+esc(tr)+'。每条都写了「为什么现在拍」和第一句怎么开口，你只需要点一条，然后开机。</p>'+
+    '<div class="grid g3" style="margin-top:34px">'+
+      d.map(function(p){
+        return '<div class="pick">'+
+          '<span class="tag">'+esc(p.unit)+'</span>'+
+          '<h3>'+esc(p.title)+'</h3>'+
+          '<div class="lbl">为什么现在拍</div><p class="val">'+esc(p.why)+'</p>'+
+          '<div class="lbl">第一句</div><p class="val">「'+esc(p.hook)+'」</p>'+
+          '<div class="acts">'+
+            '<button class="btn sm p" data-act="take" data-arg="'+p.id+'">今天拍这条</button>'+
+            '<button class="btn sm g" data-act="keep" data-arg="'+p.id+'">先存着</button>'+
+          '</div>'+
+        '</div>';
       }).join('')+
     '</div>'+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>今天的节奏</h4>'+
-      '<div class="progress"><i style="width:'+pct+'%"></i></div>'+
-      '<div class="hint">完成 '+done+' / '+TODO_ITEMS.length+'　·　点一下就是打勾</div>'+
-      '<div style="margin-top:10px">'+TODO_ITEMS.map(function(x,i){
-        return '<div class="todo'+(s[i]?' done':'')+'" data-todo="'+i+'"><div class="box"></div><span>'+x+'</span></div>';
-      }).join('')+'</div>'+
+    '<div style="margin-top:26px;display:flex;gap:12px;flex-wrap:wrap;align-items:center">'+
+      '<button class="btn g" data-act="reroll">换一批</button>'+
+      '<span class="tiny">换一批会给你另外三条，存过的不会丢。</span>'+
     '</div>'+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>今天发什么</h4>'+
-      '<div class="hint" style="margin-bottom:10px">从选题库挑一条，选了会同步到发布排期。</div>'+
-      '<select class="inline" id="pickTopic">'+
-        '<option value="">— 还没选 —</option>'+
-        S.topics.map(function(x){
-          var sel = S.schedule[todayKey()]===('#'+x.id+' '+x.title) ? ' selected' : '';
-          return '<option value="'+x.id+'"'+sel+'>'+x.id+'. '+esc(x.title)+'</option>';
-        }).join('')+
-      '</select>'+
+  '</section>'+
+  '<section class="tight"><div class="hr" style="margin-bottom:40px"></div>'+
+    '<h2>待拍清单（'+S.list.filter(function(x){return !x.done;}).length+' 条没过期）</h2>'+
+    (S.list.length ? '<div style="margin-top:22px">'+S.list.map(function(x){
+      return '<div class="row'+(x.done?' done':'')+'">'+
+        '<div class="chk'+(x.done?' on':'')+'" data-act="done" data-arg="'+x.id+'">✓</div>'+
+        '<div style="flex:1"><div class="t">'+esc(x.title)+'</div>'+
+          '<div class="m">'+esc(x.unit||'')+' · 来自'+esc(x.from||'选题池')+'</div></div>'+
+        '<button class="x" data-act="del" data-arg="'+x.id+'">删掉</button>'+
+      '</div>';
+    }).join('')+'</div>' : '<p class="sub" style="margin-top:16px">还没有存过题。上面三条挑一条点「今天拍这条」，它就会出现在这里。</p>')+
+  '</section></div>';
+}
+
+function findPool(id){
+  for(var i=0;i<POOL.length;i++) if(POOL[i].id===id) return POOL[i];
+  return null;
+}
+function takeTopic(id, from){
+  var p = findPool(id);
+  if(!p) return;
+  var exists = S.list.some(function(x){ return x.title === p.title; });
+  if(!exists){
+    S.list.push({id:'t'+Date.now(), title:p.title, unit:p.unit, from:from||'选题池', done:false});
+  }
+  save(); go('daily');
+}
+
+/* ---------------- comment ---------------- */
+var CM = {
+  '求方法':['怎么','如何','教我','求','想要','方法','步骤','能不能','可以吗','怎么办','咋','技巧','思路'],
+  '说自己':['我也是','同款','一模一样','说的就是我','我就是','泪目','太真实','我是这样','跟我一样','我也'],
+  '反对质疑':['不对','不同意','谁说的','扯','没用','假的','骗','搞笑','夸张','胡说','未必','凭什么'],
+  '要资源':['链接','在哪买','多少','价格','多少钱','分享','模板','清单','资料','表格','教程','书']
+};
+var STOP = ['我就','就是','这个','那个','什么','怎么','可以','一个','没有','不是','自己','我们','你们','他们','真的','感觉','觉得','时候','现在','但是','所以','因为','已经','还是','东西','知道','这样','这种','其实','然后','如果','一下','有点','还有','不能','不会','都是','比较','一次','一直','而且','或者','不过','很多人','哈哈哈'];
+
+function classify(){
+  var lines = S.cmt.split(/\n+/).map(function(s){ return s.trim(); }).filter(function(s){ return s.length>1; });
+  var out = {'求方法':[], '说自己':[], '反对质疑':[], '要资源':[]};
+  lines.forEach(function(l){
+    var hit = null;
+    for(var k in CM){
+      for(var i=0;i<CM[k].length;i++){
+        if(l.indexOf(CM[k][i]) >= 0){ hit = k; break; }
+      }
+      if(hit) break;
+    }
+    if(hit) out[hit].push(l);
+  });
+  var freq = {};
+  lines.forEach(function(l){
+    var zh = l.replace(/[^\u4e00-\u9fa5]/g,' ');
+    zh.split(/\s+/).forEach(function(seg){
+      for(var i=0;i<seg.length-1;i++){
+        var g = seg.substr(i,2);
+        if(STOP.indexOf(g) >= 0) continue;
+        freq[g] = (freq[g]||0)+1;
+      }
+    });
+  });
+  var words = Object.keys(freq).filter(function(w){ return freq[w]>=2; })
+    .sort(function(a,b){ return freq[b]-freq[a]; }).slice(0,8);
+  return {lines:lines, groups:out, words:words};
+}
+var IDEA = {
+  '求方法':'被问最多的那个「怎么做」，拆成三步讲一遍，一条只讲一步。',
+  '说自己':'说「说的就是我」的人最多——把他们的处境用原话念出来当开头。',
+  '反对质疑':'挑最刺的那条反对意见当标题，正面答一次，别删别躲。',
+  '要资源':'把你现成的东西整理成一份清单，一条视频只给一份。'
+};
+
+function pageComment(){
+  var r = S.cmt.trim() ? classify() : null;
+  var html = ''+
+  '<div class="wrap"><section>'+
+    '<p class="kicker">评论区洞察</p>'+
+    '<h1>你缺的选题，全在评论区里。</h1>'+
+    '<p class="lead">把你视频下面、别人视频下面的评论粘进来，一行一条。它不会联网，只在这台电脑上帮你分四类、挑高频词，然后把每一类变成一条能拍的题。</p>'+
+    '<div class="field" style="margin-top:30px">'+
+      '<label class="f">评论（一行一条，粘三十条以上更准）</label>'+
+      '<textarea id="cmt" placeholder="例：&#10;我也是一发就没流量，不知道哪错了&#10;这条讲得太对了，能出个模板吗&#10;求个链接，在哪买的&#10;说白了就是没内容，扯这么多">'+esc(S.cmt)+'</textarea>'+
+    '</div>'+
+    '<div style="display:flex;gap:12px;flex-wrap:wrap">'+
+      '<button class="btn p" data-act="run">帮我归类</button>'+
+      '<button class="btn g" data-act="sample">塞个例子试试</button>'+
     '</div>';
 
-  b.querySelectorAll('[data-todo]').forEach(function(el){
-    el.onclick = function(){
-      var i = el.getAttribute('data-todo'), s2 = todoState();
-      s2[i] = !s2[i]; save(); pageHome(b);
-    };
-  });
-  var pick = b.querySelector('#pickTopic');
-  if(pick) pick.onchange = function(){
-    var id = pick.value;
-    if(!id){ delete S.schedule[todayKey()]; save(); return; }
-    var x = S.topics.filter(function(t){ return String(t.id)===String(id); })[0];
-    S.schedule[todayKey()] = '#'+x.id+' '+x.title; save(); pageHome(b);
-  };
-
-  function takeReco(id, today){
-    var r = RECO.filter(function(x){ return x.id===id; })[0];
-    if(!r) return;
-    var maxId = 0;
-    S.topics.forEach(function(t){ if(t.id>maxId) maxId = t.id; });
-    var nt = {id:maxId+1, unit:r.unit, title:r.title, logic:r.logic, pit:r.pit, status:'待拍'};
-    S.topics.push(nt);
-    if(S.recoTaken.indexOf(id)<0) S.recoTaken.push(id);
-    if(today) S.schedule[todayKey()] = '#'+nt.id+' '+nt.title;
-    save(); badges(); pageHome(b);
+  if(r){
+    var total = r.lines.length, used = 0;
+    for(var k in r.groups) used += r.groups[k].length;
+    html += '<div class="hr" style="margin:44px 0"></div>'+
+      '<div class="stat"><div><b>'+total+'</b>条评论</div><div><b>'+used+'</b>条能直接用</div><div><b>'+r.words.length+'</b>个高频词</div></div>'+
+      (r.words.length ? '<div style="margin-top:24px"><div class="lbl tiny" style="margin-bottom:10px">出现两次以上的词</div><div class="chips">'+
+        r.words.map(function(w){ return '<span class="chip">'+esc(w)+'</span>'; }).join('')+'</div></div>' : '')+
+      '<div class="grid g2" style="margin-top:34px">'+
+        Object.keys(r.groups).map(function(g){
+          var arr = r.groups[g];
+          return '<div class="card w"><h3>'+g+' · '+arr.length+' 条</h3>'+
+            (arr.length ? '<div style="margin:10px 0 14px">'+arr.slice(0,3).map(function(x){
+                return '<p style="font-size:13.5px;color:var(--ink2);margin:0 0 6px">「'+esc(x.slice(0,40))+'」</p>';
+              }).join('')+'</div>'+
+              '<div class="tiny" style="margin-bottom:14px">能这么用：'+esc(IDEA[g])+'</div>'+
+              '<button class="btn sm g" data-act="fromCmt" data-arg="'+g+'">这类转成一条选题</button>'
+              : '<p style="margin-top:8px">这批里没有这一类。</p>')+
+          '</div>';
+        }).join('')+
+      '</div>';
+    if(total === 0){
+      html += '<p class="sub" style="margin-top:20px">没读出内容，检查一下是不是每行一条。</p>';
+    }
   }
-  b.querySelectorAll('[data-reco]').forEach(function(el){
-    el.onclick = function(){ takeReco(el.getAttribute('data-reco'), false); };
-  });
-  b.querySelectorAll('[data-recotoday]').forEach(function(el){
-    el.onclick = function(){ takeReco(el.getAttribute('data-recotoday'), true); };
-  });
+  html += '</section></div>';
+  return html;
 }
 
-/* ============================================================
-   盯热点
-============================================================ */
-var STAGE = {pool:'① 待挑', ref:'③ 找爆款中', topic:'④ 已进选题库'};
-var SECLABS = ['① 一句话结论','② 场景痛点','③ 给痛点命名','④ 案例 / 比喻','⑤ 金句','⑥ 召唤'];
-
-function pipeHTML(){
-  var steps = ['① 我盯','② 你挑','③ 找低粉爆款','④ 进选题库','⑤ 写脚本'];
-  return '<div class="panel" style="padding:14px 18px">'+
-    '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">'+
-      steps.map(function(s, i){
-        return '<span style="font-size:12.5px;color:#3F5952;background:#F1F6F3;border-radius:999px;padding:5px 12px">'+s+'</span>'+
-          (i<steps.length-1 ? '<span style="color:#BFD5CC">→</span>' : '');
+/* ---------------- vault ---------------- */
+function pageVault(){
+  return ''+
+  '<div class="wrap"><section>'+
+    '<p class="kicker">爆款知识库</p>'+
+    '<h1>只拆结构，不抄句子。</h1>'+
+    '<p class="lead">看到一个爆的，别急着学它怎么说，先看它怎么排。钩子是什么、几分钟给一次信息、最后落在哪。抄结构叫方法，抄句子叫洗稿。</p>'+
+    '<div class="grid g3" style="margin-top:34px">'+
+      '<div class="card"><h3>六段口播骨架</h3><p>一句话结论 → 场景 → 给痛点命名 → 案例或机制 → 金句 → 召唤。<br><br><span class="tiny">任何题都能套，卡住时先填第 1 段和第 6 段。</span></p></div>'+
+      '<div class="card"><h3>三秒钩子公式</h3><p>先给结论 / 点名他正在犯的错 / 否掉一个共识 / 报一个具体数字。<br><br><span class="tiny">别用自我介绍开场，那是报户口。</span></p></div>'+
+      '<div class="card"><h3>清单体的三个好处</h3><p>数字给出边界，观众知道何时结束；有损失感；结构自带完成度。<br><br><span class="tiny">新手最省力的写法。</span></p></div>'+
+    '</div>'+
+  '</section>'+
+  '<section class="tight"><div class="hr" style="margin-bottom:40px"></div>'+
+    '<div style="display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap">'+
+      '<h2 style="margin:0">已拆的 '+S.vault.length+' 条</h2>'+
+      '<button class="btn g sm" data-act="toggleAdd">+ 拆一条新的</button>'+
+    '</div>'+
+    '<div id="addBox" class="hide" style="margin-top:26px">'+
+      '<div class="card w">'+
+        '<div class="field"><label class="f">它讲的是什么（一句话）</label><input type="text" id="vTitle" placeholder="例：先给结论 + 讲机制 + 两个动作"></div>'+
+        '<div class="field"><label class="f">第一句原话</label><input type="text" id="vHook" placeholder="把它的开场照着抄下来，只抄这一句"></div>'+
+        '<div class="field"><label class="f">为什么有效</label><textarea id="vWhy" style="min-height:90px" placeholder="它抓住了什么情绪、给了什么确定性、在哪里转折"></textarea></div>'+
+        '<div class="field"><label class="f">我能抄的那一句（金句）</label><input type="text" id="vCopy" placeholder="一句能单独拿出来用的话"></div>'+
+        '<button class="btn p sm" data-act="saveVault">存进知识库</button>'+
+      '</div>'+
+    '</div>'+
+    '<div class="grid" style="margin-top:30px;gap:18px">'+
+      S.vault.map(function(v){
+        return '<div class="card w">'+
+          '<div style="display:flex;justify-content:space-between;gap:14px;align-items:flex-start">'+
+            '<div><h3 style="font-size:19px">'+esc(v.title)+'</h3>'+
+            (v.src ? '<div class="tiny" style="margin-bottom:12px">来源：'+esc(v.src)+'</div>' : '<div style="height:10px"></div>')+'</div>'+
+            '<button class="x" data-act="delVault" data-arg="'+esc(v.id)+'">删掉</button>'+
+          '</div>'+
+          (v.hook ? '<div class="lbl tiny" style="margin-bottom:4px">第一句</div><p style="font-size:14.5px;margin:0 0 14px">「'+esc(v.hook)+'」</p>' : '')+
+          (v.why ? '<div class="lbl tiny" style="margin-bottom:4px">为什么有效</div><p style="font-size:14.5px;margin:0 0 14px">'+esc(v.why)+'</p>' : '')+
+          (v.st && v.st.length ? '<div class="chips" style="margin-bottom:14px">'+v.st.map(function(x){ return '<span class="chip">'+esc(x)+'</span>'; }).join('')+'</div>' : '')+
+          (v.copy ? '<div style="border-top:1px solid var(--line2);padding-top:14px"><div class="lbl tiny" style="margin-bottom:4px">能直接拿走的一句</div><p style="font-size:15px;margin:0">'+esc(v.copy)+'</p></div>' : '')+
+        '</div>';
       }).join('')+
     '</div>'+
-    '<div class="hint" style="margin-top:8px">每一步只做一件事，做完点下一步。你只需要做「挑」和「拍」，其它我推。</div>'+
-  '</div>';
+  '</section></div>';
 }
 
-function findHTML(finding){
-  if(!finding.length){
-    return '<div class="panel" id="findBox"><h4><span class="dot"></span>③ 找低粉爆款</h4>'+
-      '<div class="empty">还没有走到这一步的题。先在池子里点「不错，找爆款」。</div></div>';
-  }
-  return '<div class="panel" id="findBox"><h4><span class="dot"></span>③ 找低粉爆款（'+finding.length+' 条在找）</h4>'+
-    '<div class="hint" style="margin-bottom:6px">找 1-3 条「粉丝少但播放高」的同题视频，把他的第一句和数据记下来。抄结构，不抄台词。</div>'+
-    finding.map(function(h){
-      var refs = h.refs || [];
-      return '<div class="script" style="margin-top:10px">'+
-        '<h5 style="margin:0 0 6px">'+esc(h.title)+'</h5>'+
-        (refs.length ? refs.map(function(r, i){
-          return '<div class="row" style="padding:8px 0"><div class="t"><b style="font-size:12.8px">'+(i+1)+'. '+esc(r.acc||'未填账号')+'</b>'+
-            '<div class="m">粉丝 '+esc(r.fans||'—')+'　·　播放 '+esc(r.play||'—')+'</div>'+
-            '<div class="m" style="color:#3FA98B">第一句：'+esc(r.hook||'—')+'</div></div>'+
-            '<button class="btn xs ghost" data-refdel="'+h.id+'|'+i+'">删</button></div>';
-        }).join('') : '<div class="empty" style="padding:4px 0">还没记参考。</div>')+
-        '<div class="form" style="margin-top:8px">'+
-          '<div><label>账号 / 名字</label><input data-rf="acc" data-hid="'+h.id+'" placeholder="比如：某某小号"></div>'+
-          '<div><label>粉丝量</label><input data-rf="fans" data-hid="'+h.id+'" placeholder="800"></div>'+
-          '<div><label>播放量</label><input data-rf="play" data-hid="'+h.id+'" placeholder="12 万"></div>'+
-          '<div class="wide"><label>他的第一句（逐字拄）</label><input data-rf="hook" data-hid="'+h.id+'" placeholder="只拄第一句，不拄整段"></div>'+
-        '</div>'+
-        '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">'+
-          '<button class="btn sm ghost" data-refadd="'+h.id+'">存下这条参考</button>'+
-          '<button class="btn sm" data-totopic="'+h.id+'">参考够了，转成选题</button>'+
-        '</div>'+
-      '</div>';
-    }).join('')+
-  '</div>';
-}
-
-function pageHot(b){
-  var list = S.hot.slice().reverse();
-  var pool = S.hot.filter(function(h){ return (h.stage||'pool')==='pool'; });
-  var finding = S.hot.filter(function(h){ return h.stage==='ref'; });
-
-  b.innerHTML =
-    trendHTML()+
-    pipeHTML()+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>② 热点池（'+pool.length+' 条待挑 / 共 '+S.hot.length+' 条）</h4>'+
-      '<div class="hint" style="margin-bottom:6px">看着顺眼的点右边「不错，找爆款」，它就会往下走一步。</div>'+
-      (list.length ? list.map(function(h){
-        var st = h.stage || 'pool';
-        var btn;
-        if(st==='pool') btn = '<button class="btn xs" data-next="'+h.id+'">不错，找爆款</button>';
-        else if(st==='ref') btn = '<button class="btn xs ghost" data-scroll="1">在下面找</button>';
-        else btn = '<span class="pill p2">已进选题库</span>';
-        return '<div class="row">'+
-          '<div class="t">'+esc(h.title)+
-            '<div class="m">'+esc(STAGE[st])+'　·　'+esc(h.platform)+'　·　'+esc(h.why||'')+'</div>'+
-          '</div>'+ btn +
-          '<button class="btn xs ghost" data-hdel="'+h.id+'">删</button>'+
+/* ---------------- money ---------------- */
+function pageMoney(){
+  var m = S.money;
+  return ''+
+  '<div class="wrap"><section>'+
+    '<p class="kicker">商业变现</p>'+
+    '<h1>什么时候能收钱，先卖什么。</h1>'+
+    '<p class="lead">三个阶段，每个阶段只有一件事要做。越级做，努力全白费。</p>'+
+    '<div class="grid g3" style="margin-top:34px">'+
+      '<div class="card"><div class="tiny" style="letter-spacing:.1em;margin-bottom:12px">01　0 – 1000 粉</div><h3 style="font-size:20px">先验证：有人愿意开口问你要</h3><p>这时候不卖东西。你只收一样东西——需求。有人反复问同一个问题，就是你的产品雏形。</p></div>'+
+      '<div class="card"><div class="tiny" style="letter-spacing:.1em;margin-bottom:12px">02　1000 – 1 万</div><h3 style="font-size:20px">第一次收钱：轻服务</h3><p>一次一对一诊断、一个 7 天小班、一份资料包。贵的不是内容，是你的时间。</p></div>'+
+      '<div class="card"><div class="tiny" style="letter-spacing:.1em;margin-bottom:12px">03　1 万以上</div><h3 style="font-size:20px">产品化：能复制的东西</h3><p>课程、社群、陪跑、带货、品牌合作。到这一步才谈「规模化」。</p></div>'+
+    '</div>'+
+  '</section>'+
+  '<section class="tight"><div class="hr" style="margin-bottom:40px"></div>'+
+    '<h2>三张对照表</h2>'+
+    '<p class="lead">每一栏都写清楚：能卖什么、门槛是什么、大概多少钱、今晚能做的一步。</p>'+
+    '<div class="grid" style="gap:18px">'+
+      [
+        ['01　0 – 1000 粉','需求','还没有能卖的东西，先攒证据：三个被反复追问的问题','免费','把你最近被问过的三个问题，写成三条选题'],
+        ['02　1000 – 1 万','轻服务','有人主动私信「能不能帮我看看」','一次诊断 199–299 / 小班 99–199（按你的时间定，别按感觉定）','把「我帮你看看」写成一句话，置顶在自己评论区'],
+        ['03　1 万以上','产品化','同一个问题被问过 50 次以上，答案已经稳定','按交付时长定，不做一次性买断的承诺','把你回答最多的那个问题，整理成一份清单']
+      ].map(function(r){
+        return '<div class="card w" style="display:grid;grid-template-columns:1fr;gap:0">'+
+          '<div class="tiny" style="letter-spacing:.1em;margin-bottom:10px">'+r[0]+'</div>'+
+          '<div class="li"><div class="n">卖</div><div><div class="h">能卖什么</div><p class="d">'+esc(r[1])+'</p></div></div>'+
+          '<div class="li"><div class="n">门</div><div><div class="h">先满足什么</div><p class="d">'+esc(r[2])+'</p></div></div>'+
+          '<div class="li"><div class="n">价</div><div><div class="h">大概多少钱</div><p class="d">'+esc(r[3])+'</p></div></div>'+
+          '<div class="li"><div class="n">今</div><div><div class="h">今晚的一步</div><p class="d">'+esc(r[4])+'</p></div></div>'+
         '</div>';
-      }).join('') : '<div class="empty">池子还空着。上面那 8 条，看着顺眼的点「存进热点池」。</div>')+
+      }).join('')+
     '</div>'+
-    findHTML(finding)+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>自己扔一条进来</h4>'+
-      '<div class="form">'+
-        '<div class="wide"><label>热点 / 灵感</label><input id="hTitle" placeholder="比如：年后跳槽季，副业焦虑"></div>'+
-        '<div><label>平台</label><select id="hPlat"><option>抖音</option><option>视频号</option><option>小红书</option><option>全平台</option></select></div>'+
-        '<div><label>为啥值得拍</label><input id="hWhy" placeholder="一句话"></div>'+
-      '</div>'+
-      '<button class="btn" id="hAdd">收进热点池</button>'+
-      '<div class="hint" style="margin-top:10px">规矩：跟人设对不上的热点别硬蹭；人和事都只讲方法层，不点名。</div>'+
+  '</section>'+
+  '<section class="tight"><div class="hr" style="margin-bottom:40px"></div>'+
+    '<h2>变现体检</h2>'+
+    '<p class="lead">三个问题，答完告诉你现在最该做哪一步。</p>'+
+    '<div class="card w" style="margin-top:26px">'+
+      moneyQ(0,'你现在多少粉？',['0 – 500','500 – 5000','5000 以上'])+
+      moneyQ(1,'有没有人主动问过你「能不能帮我 / 在哪买 / 怎么弄」？',['有，不止一次','有过一两次','从来没有'])+
+      moneyQ(2,'你愿意一对一跟人说话吗？',['愿意','只想做内容或产品','还没想好'])+
+      '<button class="btn p" data-act="check" style="margin-top:8px">看看我该做哪一步</button>'+
+      (m ? '<div style="margin-top:24px;border-top:1px solid var(--line2);padding-top:20px">'+
+        '<div class="tiny" style="letter-spacing:.1em;margin-bottom:8px">建议</div>'+
+        '<h3 style="font-size:19px">'+esc(m.title)+'</h3>'+
+        '<p style="font-size:14.5px;color:var(--ink2);margin:8px 0 14px">'+esc(m.body)+'</p>'+
+        '<p class="tiny">'+esc(m.next)+'</p></div>' : '')+
     '</div>'+
-    livePanelHTML();
-
-  $('#hAdd').onclick = function(){
-    var t = $('#hTitle').value.trim();
-    if(!t){ alert('先写一下这条热点是什么'); return; }
-    S.hot.push({id:Date.now(), title:t, platform:$('#hPlat').value, why:$('#hWhy').value.trim(), status:'待用', stage:'pool', refs:[]});
-    save(); badges(); pageHot(b);
-  };
-  b.querySelectorAll('[data-next]').forEach(function(el){
-    el.onclick = function(){
-      var id = el.getAttribute('data-next');
-      var h = S.hot.filter(function(x){ return String(x.id)===id; })[0];
-      h.stage = 'ref'; h.refs = h.refs || [];
-      save(); badges(); pageHot(b);
-    };
-  });
-  b.querySelectorAll('[data-scroll]').forEach(function(el){
-    el.onclick = function(){
-      var fb = document.getElementById('findBox');
-      if(fb) fb.scrollIntoView({behavior:'smooth', block:'start'});
-    };
-  });
-  b.querySelectorAll('[data-refadd]').forEach(function(el){
-    el.onclick = function(){
-      var id = el.getAttribute('data-refadd');
-      var card = el.closest('.script');
-      var get = function(k){ var i = card.querySelector('[data-rf="'+k+'"][data-hid="'+id+'"]'); return i ? i.value.trim() : ''; };
-      var r = {acc:get('acc'), fans:get('fans'), play:get('play'), hook:get('hook')};
-      if(!r.acc && !r.hook){ alert('至少填账号或他的第一句'); return; }
-      var h = S.hot.filter(function(x){ return String(x.id)===id; })[0];
-      h.refs = h.refs || []; h.refs.push(r);
-      save(); pageHot(b);
-    };
-  });
-  b.querySelectorAll('[data-refdel]').forEach(function(el){
-    el.onclick = function(){
-      var p = el.getAttribute('data-refdel').split('|');
-      var h = S.hot.filter(function(x){ return String(x.id)===p[0]; })[0];
-      if(h && h.refs){ h.refs.splice(+p[1], 1); save(); pageHot(b); }
-    };
-  });
-  b.querySelectorAll('[data-totopic]').forEach(function(el){
-    el.onclick = function(){
-      var id = el.getAttribute('data-totopic');
-      var h = S.hot.filter(function(x){ return String(x.id)===id; })[0];
-      if(!(h.refs && h.refs.length) && !confirm('还没记参考，直接进选题库？')) return;
-      var maxId = 0; S.topics.forEach(function(t){ if(t.id>maxId) maxId = t.id; });
-      var logic = (h.refs && h.refs.length) ? ('低粉爆款参考：'+h.refs.map(function(r){ return (r.acc||'某号')+'（'+(r.fans||'?')+'粉 / '+(r.play||'?')+'播放）'; }).join('；')) : '从热点池转过来';
-      var nt = {id:maxId+1, unit:'起号常见死法', title:h.title, logic:logic, pit:(h.why||'—'), status:'待拍'};
-      S.topics.push(nt);
-      h.stage = 'topic'; h.topicId = nt.id; h.status = '用过';
-      save(); badges();
-      alert('已进选题库，编号 '+nt.id+'。下一步：去选题库点这条的「写脚本」。');
-      pageHot(b);
-    };
-  });
-  b.querySelectorAll('[data-hdel]').forEach(function(el){
-    el.onclick = function(){
-      var id = +el.getAttribute('data-hdel');
-      S.hot = S.hot.filter(function(x){ return x.id!==id; });
-      save(); badges(); pageHot(b);
-    };
-  });
-
-  wireLive(b);
-  renderLive();
+  '</section></div>';
+}
+function moneyQ(i,q,os){
+  var cur = S.money && S.money.a ? S.money.a[i] : -1;
+  return '<div class="field"><label class="f" style="font-size:14.5px;color:var(--ink)">'+esc(q)+'</label>'+
+    '<div class="opts">'+os.map(function(o,k){
+      return '<button class="opt'+(cur===k?' on':'')+'" data-act="mq" data-arg="'+i+':'+k+'">'+esc(o)+'</button>';
+    }).join('')+'</div></div>';
 }
 
-function trendHTML(){
-  return '<div class="panel" style="border-color:#CFEDE3;background:linear-gradient(120deg,#FFFDF6,#F3FBF8)">'+
-    '<h4><span class="dot"></span>你这赛道现在在热什么'+
-      '<span style="margin-left:auto;font-size:11px;color:#9AAAA5;font-weight:400">我 11 月 2 日抓的</span></h4>'+
-    '<div class="hint" style="margin-bottom:4px">这些是跟你直接相关的：同样在问「没流量、起号、没人看」的人在关心什么，什么内容真的有人看。每条后面都写了能怎么变成你的题。</div>'+
-    TREND.map(function(x, i){
-      return '<div class="row" style="align-items:flex-start">'+
-        '<div class="t"><b style="font-size:13.6px">'+(i+1)+'. '+esc(x.t)+'</b>'+
-          '<div class="m">'+esc(x.p)+'　·　'+esc(x.stat)+'</div>'+
-          '<div class="m" style="color:#5F716C">能怎么变成你的：'+esc(x.angle)+'</div>'+
-        '</div>'+
-        '<button class="btn xs ghost" data-trend="'+i+'">存进热点池</button>'+
-      '</div>';
-    }).join('')+
-  '</div>';
-}
+/* ---------------- events ---------------- */
+document.addEventListener('click', function(e){
+  var el = e.target.closest ? e.target.closest('[data-act]') : null;
+  if(!el) return;
+  var act = el.getAttribute('data-act'), arg = el.getAttribute('data-arg');
 
-function wireLive(b){
-  b.querySelectorAll('[data-trend]').forEach(function(el){
-    el.onclick = function(){
-      var x = TREND[+el.getAttribute('data-trend')];
-      if(!x) return;
-      S.hot.push({id:Date.now(), title:x.t, platform:x.p, why:'赛道热题 · '+x.stat+'；'+x.angle, status:'待用'});
-      save(); badges();
-      el.textContent = '已存';
-      el.disabled = true;
-    };
-  });
-  b.querySelectorAll('[data-plat]').forEach(function(el){
-    el.onclick = function(){
-      HOT_PLAT = el.getAttribute('data-plat');
-      b.querySelectorAll('[data-plat]').forEach(function(x){ x.classList.toggle('on', x===el); });
-      HOT_SHOWN_AT = 0;
-      renderLive();
-    };
-  });
-  var lf = b.querySelector('#liveFilter');
-  if(lf) lf.onclick = function(){
-    hotOnlyMine = !hotOnlyMine;
-    lf.classList.toggle('on', hotOnlyMine);
-    paintLive();
-  };
-}
+  if(act === 'go'){ go(arg); return; }
 
-function hms(d){ return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getSeconds()); }
-
-function livePanelHTML(){
-  return '<div class="panel" style="border-color:#CFEDE3">'+
-    '<h4><span class="dot"></span>综合热榜（全网泛榜，跟你赛道不一定相关）'+
-      '<span id="liveTime" style="margin-left:auto;font-size:11px;color:#9AAAA5;font-weight:400"></span></h4>'+
-    '<div class="chips" id="livePlats">'+HOT_PLATFORMS.map(function(p){
-      return '<button class="chip'+(p.k===HOT_PLAT?' on':'')+'" data-plat="'+p.k+'">'+p.k+'</button>';
-    }).join('')+'</div>'+
-    '<div class="chips"><button class="chip'+(hotOnlyMine?' on':'')+'" id="liveFilter">只看我这方向</button></div>'+
-    '<div id="hotLive"><div class="empty">正在抓…</div></div>'+
-    '<div class="hint" style="margin-top:8px">这一层是全网泛榜（娱乐居多），用来看大环境。真正跟你相关的是上面那块「你这赛道在热什么」。榜是浏览器直接拉，没抓到就点重抓。</div>'+
-  '</div>';
-}
-
-function renderLive(){
-  var box = document.getElementById('hotLive');
-  if(!box) return;
-  if(HOT_CACHE[HOT_PLAT] && (Date.now() - HOT_SHOWN_AT) < 60000){ paintLive(); return; }
-  var p = HOT_PLATFORMS.filter(function(x){ return x.k===HOT_PLAT; })[0];
-  box.innerHTML = '<div class="empty">正在抓 '+HOT_PLAT+' 的热榜…</div>';
-  fetch(HOT_API + p.id, {cache:'no-store'})
-    .then(function(r){ return r.json(); })
-    .then(function(j){
-      HOT_CACHE[p.k] = (j && j.data) || [];
-      HOT_LAST[p.k] = new Date();
-      HOT_SHOWN_AT = Date.now();
-      paintLive();
-    })
-    .catch(function(){
-      box.innerHTML = '<div class="empty">这个接口这会儿没返回（网络或者它自己抽风）。重抓一次试试。</div><button class="btn sm ghost" id="liveRetry">重抓</button>';
-      var rt = document.getElementById('liveRetry');
-      if(rt) rt.onclick = function(){ HOT_SHOWN_AT = 0; renderLive(); };
-    });
-}
-
-function paintLive(){
-  var box = document.getElementById('hotLive');
-  if(!box) return;
-  var items = HOT_CACHE[HOT_PLAT] || [];
-  var list = hotOnlyMine ? items.filter(function(it){
-    var t = it.title || '';
-    return HOT_KEYS.some(function(k){ return t.indexOf(k) >= 0; });
-  }) : items;
-  LIVE_SHOWN = list.slice(0, 20);
-  var fallback = false;
-  if(hotOnlyMine && list.length < 3){ LIVE_SHOWN = items.slice(0, 10); fallback = true; }
-  var tEl = document.getElementById('liveTime');
-  if(tEl && HOT_LAST[HOT_PLAT]) tEl.textContent = '更新于 ' + hms(HOT_LAST[HOT_PLAT]);
-  if(!LIVE_SHOWN.length){
-    box.innerHTML = '<div class="empty">这会儿 '+esc(HOT_PLAT)+' 榜上没有明显对口你方向的题目。换个平台看看，或者等下一轮。</div>';
+  if(act === 'export'){
+    var blob = new Blob([JSON.stringify(S,null,2)], {type:'application/json'});
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = '苏小七工作台备份-' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
     return;
   }
-  var head = fallback ? '<div class="hint" style="padding-bottom:6px">这会儿榜上没有明显对口你方向的题目，先给你看全榜前 10。看全部把「只看我这方向」关掉。</div>' : '';
-  box.innerHTML = head + LIVE_SHOWN.map(function(it, i){
-    return '<div class="row">'+
-      '<div class="t"><span style="color:#9AAAA5;font-size:12px;margin-right:6px">'+esc(it.index||(i+1))+'</span>'+esc(it.title||'')+
-        '<div class="m">'+esc(HOT_PLAT)+'　·　热度 '+esc(it.hotValue||'—')+'</div></div>'+
-      '<button class="btn xs ghost" data-live="'+i+'">存进热点池</button>'+
-    '</div>';
-  }).join('') + ((!fallback && list.length < items.length) ?
-    '<div class="hint" style="padding-top:8px">另外 '+(items.length-list.length)+' 条没对上关键词（榜上偏娱乐的多）。想看全部，把「只看我这方向」关掉。</div>' : '');
-  box.querySelectorAll('[data-live]').forEach(function(el){
-    el.onclick = function(){
-      var it = LIVE_SHOWN[+el.getAttribute('data-live')];
-      if(!it) return;
-      S.hot.push({id:Date.now(), title:it.title, platform:HOT_PLAT, why:'实时榜 · 热度 '+(it.hotValue||'—'), status:'待用'});
-      save(); badges();
-      el.textContent = '已存';
-      el.disabled = true;
-    };
-  });
-}
 
-/* ============================================================
-   拆爆款
-============================================================ */
-function pageTear(b){
-  b.innerHTML =
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>拆一条：填六段</h4>'+
-      '<div class="hint" style="margin-bottom:10px">别抄台词，抄骨架。填完这一张，你就有了一条能换场景、换人群重发的结构。</div>'+
-      '<div class="form">'+
-        '<div class="wide"><label>来源（账号 / 链接 / 描述）</label><input id="tSrc" placeholder="比如：某号 · 一条 30 万播放的口播"></div>'+
-        '<div class="wide"><label>① 钩子第一句</label><input id="tHook" placeholder="他开口的第一句，逐字抄"></div>'+
-        '<div><label>② 戳的痛点</label><input id="tPain" placeholder="他先说中了什么处境"></div>'+
-        '<div><label>③ 给痛点起的名字</label><input id="tName" placeholder="有没有一句能记住的说法"></div>'+
-        '<div class="wide"><label>④ 案例 / 比喻</label><input id="tCase" placeholder="他用了哪个具体画面"></div>'+
-        '<div><label>⑤ 金句</label><input id="tLine" placeholder="那句能被截图的话"></div>'+
-        '<div><label>⑥ 结尾召唤</label><input id="tCall" placeholder="让人干了什么"></div>'+
-        '<div class="wide"><label>可复用点（自己填）</label><input id="tReuse" placeholder="比如：先否定三个误解 → 命名 → 比喻 → 改法对比"></div>'+
-      '</div>'+
-      '<button class="btn" id="tAdd">存成拆解卡</button>'+
-    '</div>'+
-    (S.tear.length ? S.tear.slice().reverse().map(function(t){
-      return '<div class="panel">'+
-        '<h4><span class="dot"></span>'+esc(t.src||'未命名来源')+
-          '<button class="btn xs ghost" style="margin-left:auto" data-tdel="'+t.id+'">删</button></h4>'+
-        '<div class="row"><div class="t"><b>钩子</b><div class="m" style="color:#2E3D39;font-size:12.8px">'+esc(t.hook||'—')+'</div></div></div>'+
-        '<div class="row"><div class="t"><b>痛点</b><div class="m" style="color:#2E3D39;font-size:12.8px">'+esc(t.pain||'—')+'</div></div></div>'+
-        '<div class="row"><div class="t"><b>命名</b><div class="m" style="color:#2E3D39;font-size:12.8px">'+esc(t.name||'—')+'</div></div></div>'+
-        '<div class="row"><div class="t"><b>案例 / 比喻</b><div class="m" style="color:#2E3D39;font-size:12.8px">'+esc(t.cases||'—')+'</div></div></div>'+
-        '<div class="row"><div class="t"><b>金句</b><div class="m" style="color:#2E3D39;font-size:12.8px">'+esc(t.line||'—')+'</div></div></div>'+
-        '<div class="row"><div class="t"><b>召唤</b><div class="m" style="color:#2E3D39;font-size:12.8px">'+esc(t.call||'—')+'</div></div></div>'+
-        '<div class="row"><div class="t"><b>可复用点</b><div class="m" style="color:#3FA98B;font-size:12.8px;font-weight:600">'+esc(t.reuse||'—')+'</div></div></div>'+
-      '</div>';
-    }).join('') : '<div class="panel"><div class="empty">还没有拆解卡。先拆自己那条 A 版，看看骨架长什么样。</div></div>');
+  if(act === 'ans'){ var p = arg.split(':'); answerQuiz(+p[0], +p[1]); return; }
+  if(act === 'resetQuiz'){ S.quiz=null; S.track=null; S.answers=[]; save(); go('quiz'); return; }
 
-  $('#tAdd').onclick = function(){
-    var src = $('#tSrc').value.trim();
-    if(!src){ alert('先写下来源，不然以后不知道拆的是谁'); return; }
-    S.tear.push({
-      id:Date.now(), src:src, hook:$('#tHook').value.trim(), pain:$('#tPain').value.trim(),
-      name:$('#tName').value.trim(), cases:$('#tCase').value.trim(), line:$('#tLine').value.trim(),
-      call:$('#tCall').value.trim(), reuse:$('#tReuse').value.trim()
-    });
-    save(); badges(); pageTear(b);
-  };
-  b.querySelectorAll('[data-tdel]').forEach(function(el){
-    el.onclick = function(){
-      var id = +el.getAttribute('data-tdel');
-      S.tear = S.tear.filter(function(x){ return x.id!==id; });
-      save(); badges(); pageTear(b);
-    };
-  });
-}
+  if(act === 'take'){ takeTopic(arg,'今日选题'); return; }
+  if(act === 'keep'){ takeTopic(arg,'先存着'); return; }
+  if(act === 'reroll'){ S.off += 3; save(); go('daily'); return; }
+  if(act === 'done'){
+    S.list.forEach(function(x){ if(x.id===arg) x.done = !x.done; });
+    save(); go('daily'); return;
+  }
+  if(act === 'del'){
+    S.list = S.list.filter(function(x){ return x.id!==arg; });
+    save(); go('daily'); return;
+  }
 
-/* ============================================================
-   建选题库
-============================================================ */
-function pageTopics(b){
-  var statuses = ['全部','待拍','已拍','已发','爆了'];
-  var units = ['全部'];
-  S.topics.forEach(function(t){ if(units.indexOf(t.unit)<0) units.push(t.unit); });
-  var list = S.topics.filter(function(t){ return topicFilter==='全部' || t.status===topicFilter; });
+  if(act === 'run'){
+    var ta = document.getElementById('cmt');
+    if(ta) S.cmt = ta.value;
+    save(); go('comment'); return;
+  }
+  if(act === 'sample'){
+    S.cmt = '我也是一发就没流量，不知道哪里错了\n这条讲得太对了，能不能出个模板\n求个链接，在哪买的\n说白了就是内容不行，扯这么多\n我也是这样，一模一样的开头\n我也是，每次开头都在报户口\n到底怎么改开头啊，有没有步骤\n多少钱，有没有清单\n这不对吧，我随便拍都有人看\n能分享下你的表格吗，我也想要';
+    save(); go('comment'); return;
+  }
+  if(act === 'fromCmt'){
+    var t = {求方法:'评论区问最多：到底怎么改', 说自己:'说的就是我的人，比你想象的多', 反对质疑:'有人不同意，我正面答一次', 要资源:'我把自己用的那份东西整理出来了'}[arg] || '从评论区来的一条';
+    S.list.push({id:'t'+Date.now(), title:t, unit:'来自评论区 · '+arg, from:'评论区洞察', done:false});
+    save(); go('daily'); return;
+  }
 
-  b.innerHTML =
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>按状态筛</h4>'+
-      '<div class="chips">'+statuses.map(function(s){
-        return '<button class="chip'+(topicFilter===s?' on':'')+'" data-f="'+s+'">'+s+'</button>';
-      }).join('')+'</div>'+
-      '<div class="hint">共 '+list.length+' 条　·　点右边标签切换：待拍 → 已拍 → 已发 → 爆了</div>'+
-    '</div>'+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>加一条自己的</h4>'+
-      '<div class="form">'+
-        '<div class="wide"><label>标题（说人话，一句话）</label><input id="nTitle" placeholder="你不是…你是…"></div>'+
-        '<div><label>所属单元</label><select id="nUnit">'+units.filter(function(u){return u!=='全部';}).map(function(u){ return '<option>'+esc(u)+'</option>'; }).join('')+'</select></div>'+
-        '<div><label>逻辑</label><input id="nLogic" placeholder="凭什么成立"></div>'+
-        '<div><label>避坑点</label><input id="nPit" placeholder="别人踩什么坑"></div>'+
-      '</div>'+
-      '<button class="btn" id="nAdd">加进选题库</button>'+
-    '</div>'+
-    '<div class="panel">'+
-      list.map(function(t){
-        var cls = {'待拍':'p0','已拍':'p1','已发':'p2','爆了':'p3'}[t.status] || 'p0';
-        return '<div class="row">'+
-          '<div class="t">'+t.id+'. '+esc(t.title)+
-            '<div class="m">'+esc(t.unit)+'　·　逻辑：'+esc(t.logic)+'　·　避坑点：'+esc(t.pit)+'</div>'+
-          '</div>'+
-          '<button class="btn xs" data-mkscript="'+t.id+'">写脚本</button>'+
-          '<span class="pill '+cls+'" data-id="'+t.id+'">'+t.status+'</span>'+
-        '</div>';
-      }).join('')+
-    '</div>';
+  if(act === 'toggleAdd'){ var b = document.getElementById('addBox'); if(b) b.classList.toggle('hide'); return; }
+  if(act === 'saveVault'){
+    var ti = document.getElementById('vTitle'), hk = document.getElementById('vHook'),
+        wy = document.getElementById('vWhy'), cp = document.getElementById('vCopy');
+    if(!ti || !ti.value.trim()){ alert('先给它一句话标题'); return; }
+    S.vault.unshift({id:'v'+Date.now(), title:ti.value.trim(), src:'我拆的',
+      hook:hk?hk.value.trim():'', why:wy?wy.value.trim():'', copy:cp?cp.value.trim():'', st:[]});
+    save(); go('vault'); return;
+  }
+  if(act === 'delVault'){
+    S.vault = S.vault.filter(function(v){ return String(v.id)!==String(arg); });
+    save(); go('vault'); return;
+  }
 
-  b.querySelectorAll('[data-f]').forEach(function(el){
-    el.onclick = function(){ topicFilter = el.getAttribute('data-f'); pageTopics(b); };
-  });
-  b.querySelectorAll('[data-id]').forEach(function(el){
-    el.onclick = function(){
-      var id = +el.getAttribute('data-id'), order = ['待拍','已拍','已发','爆了'];
-      var t = S.topics.filter(function(x){ return x.id===id; })[0];
-      t.status = order[(order.indexOf(t.status)+1)%order.length];
-      save(); badges(); pageTopics(b);
-    };
-  });
-  b.querySelectorAll('[data-mkscript]').forEach(function(el){
-    el.onclick = function(){
-      var id = +el.getAttribute('data-mkscript');
-      var t = S.topics.filter(function(x){ return x.id===id; })[0];
-      if(!t) return;
-      var exist = S.drafts.filter(function(d){ return d.topicId===id; })[0];
-      if(!exist){
-        S.drafts.push({id:Date.now(), topicId:id, title:t.title, s:[t.title, '', '', '', '', '']});
-        save(); badges();
-      }
-      go('script');
-    };
-  });
-  $('#nAdd').onclick = function(){
-    var title = $('#nTitle').value.trim();
-    if(!title){ alert('先写标题'); return; }
-    var maxId = 0;
-    S.topics.forEach(function(t){ if(t.id>maxId) maxId = t.id; });
-    S.topics.push({id:maxId+1, unit:$('#nUnit').value, title:title, logic:$('#nLogic').value.trim()||'—', pit:$('#nPit').value.trim()||'—', status:'待拍'});
-    save(); badges(); pageTopics(b);
-  };
-}
-
-/* ============================================================
-   脚本创作
-============================================================ */
-function pageScript(b){
-  var drafts = S.drafts || [];
-  b.innerHTML =
-    '<div class="panel" style="border-color:#CFEDE3">'+
-      '<h4><span class="dot"></span>⑤ 我的草稿（'+drafts.length+'）</h4>'+
-      '<div class="hint">从选题库点「写脚本」，这里就开一张。六段一格，填完点「进提词器」就能录。</div>'+
-      (drafts.length ? drafts.slice().reverse().map(function(d){
-        return '<div class="script" style="margin-top:10px">'+
-          '<div class="top"><span class="tag">新草稿</span>'+
-            '<button class="btn xs ghost" style="margin-left:auto" data-ddel="'+d.id+'">删本草稿</button></div>'+
-          '<h5 style="margin:8px 0">'+esc(d.title)+'</h5>'+
-          SECLABS.map(function(lb, i){
-            return '<div style="margin-bottom:8px"><label style="font-size:11.5px;color:#5F716C">'+lb+'</label>'+
-              '<textarea class="inline" data-df="'+d.id+'" data-ds="'+i+'" style="min-height:62px;margin-top:4px;line-height:1.7">'+esc(d.s[i]||'')+'</textarea></div>';
-          }).join('')+
-          '<div class="acts"><button class="btn sm" data-dpt="'+d.id+'">进提词器</button></div>'+
-        '</div>';
-      }).join('') : '<div class="empty" style="margin-top:8px">还没有草稿。去选题库点一条的「写脚本」，这里就开一张。</div>')+
-    '</div>'+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>六段结构自查</h4>'+
-      '<div class="hint">① 一句话结论（前 5 秒就说完）　② 场景痛点（你是不是也这样）　③ 给痛点命名（一看就懂的名字）　④ 2–3 个案例（只用“朋友/普遍现象”）　⑤ 金句（能被截图那句）　⑥ 召唤（勾下一条 + 咱一起，少走弯路）</div>'+
-    '</div>'+
-    SCRIPTS.map(function(s){
-      return '<div class="script">'+
-        '<div class="top"><span class="tag">'+s.ver+' 版 · '+esc(s.name)+'</span><span class="m" style="font-size:11.5px;color:#9AAAA5">'+esc(s.dur)+'</span></div>'+
-        '<h5>'+esc(s.title)+'</h5>'+
-        '<p>'+esc(s.when)+'</p>'+
-        (s.refs && s.refs.length ? '<div class="hint" style="margin-top:8px;padding:9px 11px;background:#F1F6F3;border-radius:12px;font-size:11.8px">参考：'+s.refs.map(esc).join('　｜　')+'</div>' : '')+
-        '<div class="acts">'+
-          '<button class="btn sm" data-pt="'+s.ver+'">进提词器</button>'+
-          '<button class="btn sm ghost" data-open="'+s.ver+'">看全文</button>'+
-        '</div>'+
-        '<div class="full hidden" id="full-'+s.ver+'">'+
-          s.body.map(function(l){ return l==='' ? '<div style="height:8px"></div>' : '<p>'+esc(l)+'</p>'; }).join('')+
-        '</div>'+
-      '</div>';
-    }).join('');
-
-  b.querySelectorAll('[data-open]').forEach(function(el){
-    el.onclick = function(){ $('#full-'+el.getAttribute('data-open')).classList.toggle('hidden'); };
-  });
-  b.querySelectorAll('[data-pt]').forEach(function(el){
-    el.onclick = function(){ openPrompter(el.getAttribute('data-pt')); };
-  });
-  b.querySelectorAll('[data-df]').forEach(function(el){
-    el.onchange = function(){
-      var id = el.getAttribute('data-df'), si = +el.getAttribute('data-ds');
-      var d = S.drafts.filter(function(x){ return String(x.id)===id; })[0];
-      if(!d) return;
-      d.s[si] = el.value;
-      save();
-    };
-  });
-  b.querySelectorAll('[data-dpt]').forEach(function(el){
-    el.onclick = function(){ openPrompterDraft(el.getAttribute('data-dpt')); };
-  });
-  b.querySelectorAll('[data-ddel]').forEach(function(el){
-    el.onclick = function(){
-      var id = el.getAttribute('data-ddel');
-      if(!confirm('删掉这张草稿？')) return;
-      S.drafts = S.drafts.filter(function(x){ return String(x.id)!==id; });
-      save(); badges(); pageScript(b);
-    };
-  });
-}
-
-var ptFont = 30, ptTimer = null;
-function openPrompterLines(lines){
-  $('#ptxt').innerHTML = lines.map(function(l){ return l==='' ? '<div style="height:18px"></div>' : '<p style="margin:0 0 2px">'+esc(l)+'</p>'; }).join('');
-  $('#prompter').classList.add('on');
-  $('#ptxt').style.fontSize = ptFont+'px';
-  $('#prompter').scrollTop = 0;
-}
-function openPrompter(ver){
-  var s = SCRIPTS.filter(function(x){ return x.ver===ver; })[0];
-  openPrompterLines(s.body);
-}
-function openPrompterDraft(id){
-  var d = S.drafts.filter(function(x){ return String(x.id)===String(id); })[0];
-  if(!d) return;
-  var lines = [];
-  d.s.forEach(function(txt, i){
-    if(!txt) return;
-    if(lines.length) lines.push('');
-    txt.split(/\n+/).forEach(function(x){ if(x.trim()) lines.push(x.trim()); });
-  });
-  if(!lines.length) lines = [d.title];
-  openPrompterLines(lines);
-}
-$('#ptExit').onclick = function(){
-  $('#prompter').classList.remove('on');
-  if(ptTimer){ clearInterval(ptTimer); ptTimer=null; $('#ptAuto').textContent='自动滚动'; }
-};
-$('#ptPlus').onclick = function(){ ptFont = Math.min(56,ptFont+3); $('#ptxt').style.fontSize = ptFont+'px'; };
-$('#ptMinus').onclick = function(){ ptFont = Math.max(18,ptFont-3); $('#ptxt').style.fontSize = ptFont+'px'; };
-$('#ptAuto').onclick = function(){
-  if(ptTimer){ clearInterval(ptTimer); ptTimer=null; this.textContent='自动滚动'; }
-  else{ this.textContent='暂停'; ptTimer = setInterval(function(){ $('#prompter').scrollTop += 1; }, 60); }
-};
-
-/* ============================================================
-   管资料
-============================================================ */
-function pageMats(b){
-  var cats = ['全部','金句','案例','回复模板','数据口径','自我提醒'];
-  var list = S.mats.filter(function(m){ return matFilter==='全部' || m.cat===matFilter; });
-  b.innerHTML =
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>素材库（'+S.mats.length+'）</h4>'+
-      '<div class="chips">'+cats.map(function(c){
-        return '<button class="chip'+(matFilter===c?' on':'')+'" data-cat="'+c+'">'+c+'</button>';
-      }).join('')+'</div>'+
-      '<div class="form">'+
-        '<div><label>分类</label><select id="mCat">'+cats.filter(function(c){return c!=='全部';}).map(function(c){ return '<option>'+c+'</option>'; }).join('')+'</select></div>'+
-        '<div class="wide"><label>内容</label><textarea id="mText" placeholder="粘一句能直接用的"></textarea></div>'+
-      '</div>'+
-      '<button class="btn" id="mAdd">存进素材库</button>'+
-    '</div>'+
-    '<div class="panel">'+
-      (list.length ? list.slice().reverse().map(function(m){
-        return '<div class="row">'+
-          '<div class="t"><span class="pill p2" style="margin-right:8px">'+esc(m.cat)+'</span>'+esc(m.text)+'</div>'+
-          '<button class="btn xs ghost" data-copy="'+m.id+'">复制</button>'+
-          '<button class="btn xs ghost" data-mdel="'+m.id+'">删</button>'+
-        '</div>';
-      }).join('') : '<div class="empty">这个分类还空着。</div>')+
-    '</div>';
-
-  b.querySelectorAll('[data-cat]').forEach(function(el){
-    el.onclick = function(){ matFilter = el.getAttribute('data-cat'); pageMats(b); };
-  });
-  $('#mAdd').onclick = function(){
-    var t = $('#mText').value.trim();
-    if(!t){ alert('先写内容'); return; }
-    S.mats.push({id:Date.now(), cat:$('#mCat').value, text:t});
-    save(); badges(); pageMats(b);
-  };
-  b.querySelectorAll('[data-copy]').forEach(function(el){
-    el.onclick = function(){
-      var id = +el.getAttribute('data-copy');
-      var m = S.mats.filter(function(x){ return x.id===id; })[0];
-      if(navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(m.text).then(function(){ el.textContent='已复制'; setTimeout(function(){ el.textContent='复制'; },1200); });
-      } else {
-        alert(m.text);
-      }
-    };
-  });
-  b.querySelectorAll('[data-mdel]').forEach(function(el){
-    el.onclick = function(){
-      var id = +el.getAttribute('data-mdel');
-      S.mats = S.mats.filter(function(x){ return x.id!==id; });
-      save(); badges(); pageMats(b);
-    };
-  });
-}
-
-/* ============================================================
-   做复盘
-============================================================ */
-function pageReview(b){
-  var rows = S.records.slice().reverse();
-  var last6 = rows.slice(0,6).reverse();
-
-  b.innerHTML =
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>记一条数据</h4>'+
-      '<div class="form">'+
-        '<div><label>标题 / 编号</label><input id="fTitle" placeholder="A 版 · 删了第8条"></div>'+
-        '<div><label>播放量</label><input id="fPlay" type="number" placeholder="0"></div>'+
-        '<div><label>5 秒完播率 %</label><input id="fS5" type="number" placeholder="0"></div>'+
-        '<div><label>完播率 %</label><input id="fFin" type="number" placeholder="0"></div>'+
-        '<div><label>新增关注</label><input id="fFans" type="number" placeholder="0"></div>'+
-        '<div><label>评论数</label><input id="fCmt" type="number" placeholder="0"></div>'+
-      '</div>'+
-      '<button class="btn" id="btnAdd">记下这条</button>'+
-      '<div class="hint" style="margin-top:10px">只填后台真能看到的字段，别编数。看清楚再填：<b>2 秒跳出率、5 秒完播率、完播率、播放、点赞、评论、新增关注</b>。</div>'+
-    '</div>'+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>最近 6 条趋势</h4>'+
-      (last6.length ?
-        '<div class="chart">'+last6.map(function(r){
-          var h1 = Math.max(3,Math.min(100,parseFloat(r.s5)||0));
-          var h2 = Math.max(3,Math.min(100,parseFloat(r.fin)||0));
-          return '<div class="barwrap"><div style="display:flex;gap:4px;align-items:flex-end;width:100%;justify-content:center;height:100%">'+
-            '<div class="bar" style="height:'+h1+'%"></div><div class="bar b2" style="height:'+h2+'%"></div></div>'+
-            '<div class="barlab">'+esc((r.date||'').slice(5))+'</div></div>';
-        }).join('')+'</div>'+
-        '<div class="legend"><span><i style="background:#5BC8A8"></i>5 秒完播率</span><span><i style="background:#FFC96B"></i>完播率</span></div>'
-        : '<div class="empty">还没有数据。发完第一条，48 小时后回来记一次。</div>')+
-    '</div>'+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>每条诊断</h4>'+
-      (rows.length ? rows.map(function(r){
-        var d = diag(r);
-        return '<div class="row">'+
-          '<div class="t">'+esc(r.title||'未命名')+
-            '<div class="m">播放 '+esc(r.play||0)+'　·　5 秒 '+esc(r.s5||0)+'%　·　完播 '+esc(r.fin||0)+'%　·　涨粉 '+esc(r.fans||0)+'</div>'+
-            '<div class="m" style="color:'+d.c+';font-weight:600">→ '+d.t+'</div>'+
-          '</div>'+
-          '<button class="btn sm ghost" data-del="'+r.rid+'">删</button>'+
-        '</div>';
-      }).join('') : '<div class="empty">暂无记录。</div>')+
-    '</div>';
-
-  $('#btnAdd').onclick = function(){
-    var title = $('#fTitle').value.trim();
-    if(!title){ alert('先写一下这条叫什么'); return; }
-    S.records.push({
-      rid: Date.now(), date: todayKey(), title: title,
-      play: $('#fPlay').value, s5: $('#fS5').value, fin: $('#fFin').value,
-      fans: $('#fFans').value || 0, cmt: $('#fCmt').value || 0
-    });
-    save(); badges(); pageReview(b);
-  };
-  b.querySelectorAll('[data-del]').forEach(function(el){
-    el.onclick = function(){
-      var rid = +el.getAttribute('data-del');
-      S.records = S.records.filter(function(x){ return x.rid!==rid; });
-      save(); badges(); pageReview(b);
-    };
-  });
-}
-
-/* ============================================================
-   洞察复盘
-============================================================ */
-function pageInsight(b){
-  var rs = S.records;
-  var posted = S.topics.filter(function(x){ return x.status==='已发'||x.status==='爆了'; }).length;
-  var best = null;
-  rs.forEach(function(r){ if(!best || (parseFloat(r.s5)||0) > (parseFloat(best.s5)||0)) best = r; });
-  var aS5 = avg(rs,'s5'), aFin = avg(rs,'fin');
-  var fans = 0; rs.forEach(function(r){ fans += parseFloat(r.fans)||0; });
-  var plays = 0; rs.forEach(function(r){ plays += parseFloat(r.play)||0; });
-
-  var concl;
-  if(!rs.length) concl = '还没有数据。发第一条、48 小时后回来记一次，这里就会开始说话。';
-  else if(aS5 < 25) concl = '平均 5 秒完播 '+aS5+'%，还在 25% 以下 —— 说明开头还在赶人。下一步只改开头那五个字，先别换选题、别换风格。';
-  else if(aFin < 10) concl = '5 秒完播 '+aS5+'% 还行，但完播只有 '+aFin+'% —— 开头留住了，中段把人放跑了。砍掉中间三分之一再发一条。';
-  else if(fans === 0) concl = '完播数据能看，但没涨粉 —— 内容没问题，衔接有问题。先把主页简介和三条置顶补上，再发下一条。';
-  else concl = '数据是通的：平均 5 秒完播 '+aS5+'%、完播 '+aFin+'%、累计涨粉 '+fans+'。保持这个开头方式，往选题深度走。';
-
-  b.innerHTML =
-    '<div class="kpis">'+
-      '<div class="kpi"><div class="n">'+rs.length+'</div><div class="l">记录条数</div></div>'+
-      '<div class="kpi"><div class="n">'+posted+'</div><div class="l">选题已发</div></div>'+
-      '<div class="kpi"><div class="n">'+(aS5||'—')+'</div><div class="l">平均 5 秒完播 %</div></div>'+
-      '<div class="kpi"><div class="n">'+(aFin||'—')+'</div><div class="l">平均完播 %</div></div>'+
-      '<div class="kpi"><div class="n">'+plays+'</div><div class="l">累计播放</div></div>'+
-      '<div class="kpi"><div class="n">'+fans+'</div><div class="l">累计涨粉</div></div>'+
-    '</div>'+
-    '<div class="panel" style="background:linear-gradient(120deg,#FFFDF6,#E9F8F2);border-color:#CFEDE3">'+
-      '<h4><span class="dot"></span>这一句结论</h4>'+
-      '<div class="hint" style="font-size:13.5px;color:#2E3D39;line-height:1.85">'+concl+'</div>'+
-    '</div>'+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>表现最好的一条</h4>'+
-      (best ? '<div class="row"><div class="t">'+esc(best.title||'未命名')+
-        '<div class="m">5 秒 '+esc(best.s5||0)+'%　·　完播 '+esc(best.fin||0)+'%　·　播放 '+esc(best.play||0)+'　·　涨粉 '+esc(best.fans||0)+'</div></div></div>'
-        : '<div class="empty">还没有数据。</div>')+
-    '</div>'+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>下一步三件事</h4>'+
-      '<div class="hint">'+
-        '① 数据最差的那条，只看开头，重录一遍同样的内容<br>'+
-        '② 表现最好的那条，换个场景/人群再拍一版（换血不换骨）<br>'+
-        '③ 一次只动一个变量，改完发一条再看数'+
-      '</div>'+
-    '</div>'+
-    '<div class="panel" style="background:#F3FBF8;border-color:#CFEDE3">'+
-      '<h4><span class="dot"></span>把这份数据发给 Cola</h4>'+
-      '<div class="hint">不用记数字，也不用找文件。点一下复制，直接粘到聊天里发出去就行。</div>'+
-      '<button class="btn" id="btnCopyData" style="margin-top:12px">复制数据</button>'+
-    '</div>';
-
-  var cbtn = b.querySelector('#btnCopyData');
-  if(cbtn) cbtn.onclick = function(){
-    var pack = {
-      来源: '苏小七自媒体工作台',
-      日期: todayKey(),
-      记录: S.records.map(function(r){ return { 标题:r.title, 日期:r.date, 播放:r.play, 五秒完播:r.s5, 完播:r.fin, 涨粉:r.fans, 评论:r.cmt }; }),
-      已发选题: S.topics.filter(function(t){ return t.status==='已发'||t.status==='爆了'; }).map(function(t){ return t.title; }),
-      排期: S.schedule
-    };
-    var txt = JSON.stringify(pack);
-    function done(){ cbtn.textContent = '已复制，粘到聊天里发我'; setTimeout(function(){ cbtn.textContent='复制数据'; }, 2500); }
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(txt).then(done, function(){ window.prompt('复制这段发给 Cola：', txt); });
-    } else {
-      window.prompt('复制这段发给 Cola：', txt);
+  if(act === 'mq'){
+    var q = arg.split(':');
+    if(!S.money) S.money = {a:[-1,-1,-1]};
+    S.money.a[+q[0]] = +q[1];
+    save(); go('money'); return;
+  }
+  if(act === 'check'){
+    if(!S.money || S.money.a.indexOf(-1) >= 0){ alert('三个问题都答一下'); return; }
+    var a = S.money.a, title, body, next;
+    if(a[1] === 0 && a[2] === 0){
+      title = '你现在就能收第一笔钱：做一次一对一诊断';
+      body = '已经有人主动开口问你了，这是最硬的信号——不用再做内容证明自己。先接三单试水，把每一次的问题记下来，那就是你未来的产品大纲。';
+      next = '今晚的一步：把「我帮你看看，一次一小时」写成一句话，置顶在自己的评论区。';
+    }else if(a[1] === 0 && a[2] !== 0){
+      title = '先别接一对一，把这个问题做成内容';
+      body = '有人问，但你不想一对一。那就用内容回答：同一个问题连做三条，看有没有第二批人来问。第二批比第一批重要。';
+      next = '今晚的一步：把被问的那句话原封不动当标题，拍第一条。';
+    }else if(a[1] === 1){
+      title = '先攒证据，别急着定价';
+      body = '问过一两次，说明有需求但不稳定。这时候定价容易定错——定高了没人买，定低了自己难受。先用三条内容把这个需求放大。';
+      next = '今晚的一步：把这个问题拆成三条选题，一周内发完，看谁再来问。';
+    }else if(a[0] >= 2 || a[2] === 1){
+      title = '现在先不谈变现，把内容做到有人主动问';
+      body = '这不是坏消息。没有需求信号的时候做产品，等于给空房间卖票。你现在唯一要练的是：一条视频让人看完、让人想存。';
+      next = '今晚的一步：去第二块挑一条题，只做一件事——把开头第一句改到不像自我介绍。';
+    }else{
+      title = '先攒证据，别急着定价';
+      body = '粉丝还少、也没人主动问，说明内容和人群还没对上。先别想卖什么，先想清楚你在替谁解决哪个具体麻烦。';
+      next = '今晚的一步：回到第一块重测一次赛道，再看第二块的三条题。';
     }
-  };
-}
-
-/* ============================================================
-   发布排期
-============================================================ */
-function pagePlan(b){
-  var days = [];
-  for(var i=0;i<7;i++){
-    var d = new Date(); d.setDate(d.getDate()+i);
-    days.push({key:d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()), label:(i===0?'今天 · ':'')+(d.getMonth()+1)+'/'+d.getDate()+' 周'+'日一二三四五六'[d.getDay()]});
+    S.money = {a:S.money.a, title:title, body:body, next:next};
+    save(); go('money'); return;
   }
-  var preset = {};
-  preset[days[0].key] = 'A 版 · 场景故事流';
-  preset[days[2].key] = 'B 版 · 干货清单流';
-  preset[days[4].key] = 'C 版 · 数据自查流（有数据后再发）';
+});
 
-  b.innerHTML =
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>这一周</h4>'+
-      '<div class="hint">别把 A 和 B 排在同一天 —— 同一天发等于自己跟自己抢流量。直接改框里的字。</div>'+
-      '<div style="margin-top:12px">'+
-        days.map(function(d){
-          var v = S.schedule[d.key] || preset[d.key] || '';
-          return '<div class="row"><div class="t" style="flex:0 0 92px;color:#6B7C77;font-size:12.5px">'+d.label+'</div>'+
-            '<input class="inline" data-day="'+d.key+'" value="'+esc(v)+'" placeholder="这天发什么？"></div>';
-        }).join('')+
-      '</div>'+
-    '</div>'+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>追剧式排期（按单元走）</h4>'+
-      '<div class="hint">每条结尾勾下一条，观众才会追着看。同一单元连着发，别跳。</div>'+
-      '<div style="margin-top:10px">'+
-        ['起步四连','起号常见死法','账号标签与流量','AI 降门槛','变现与闭环','心法与底层'].map(function(u,i){
-          var n = S.topics.filter(function(t){ return t.unit===u; }).length;
-          var doneN = S.topics.filter(function(t){ return t.unit===u && (t.status==='已发'||t.status==='爆了'); }).length;
-          return '<div class="row"><div class="t">第 '+(i+1)+' 单元 · '+esc(u)+
-            '<div class="m">'+n+' 条　·　已发 '+doneN+'</div></div>'+
-            '<div style="flex:0 0 80px"><div class="progress" style="margin:0"><i style="width:'+Math.round(doneN/n*100)+'%"></i></div></div>'+
-          '</div>';
-        }).join('')+
-      '</div>'+
-    '</div>';
+/* textarea 失焦时先存住，切页不丢 */
+document.addEventListener('input', function(e){
+  if(e.target && e.target.id === 'cmt'){ S.cmt = e.target.value; save(); }
+});
 
-  b.querySelectorAll('[data-day]').forEach(function(el){
-    el.onchange = function(){
-      var k = el.getAttribute('data-day');
-      if(el.value.trim()) S.schedule[k] = el.value.trim(); else delete S.schedule[k];
-      save();
-    };
-  });
-}
-
-/* ============================================================
-   注意力预算
-============================================================ */
-function pageFocus(b){
-  var cur = S.budget[todayKey()] || DEFAULT_BUDGET.map(function(x){ return {k:x.k,v:x.v}; });
-  var total = 0; cur.forEach(function(x){ total += (+x.v||0); });
-  var max = Math.max(total, 60);
-  var limit = 150;
-  var colorOf = function(k){
-    var f = DEFAULT_BUDGET.filter(function(x){ return x.k===k; })[0];
-    return f ? f.c : '#5BC8A8';
-  };
-
-  b.innerHTML =
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>今天的时间怎么用</h4>'+
-      '<div class="hint">默认按 <b>2.5 小时</b> 排。改数字就行，下面会算总账。</div>'+
-      '<div style="margin-top:14px">'+
-        cur.map(function(x,i){
-          var w = Math.round((+x.v||0)/max*100);
-          return '<div class="budget-row">'+
-            '<div class="nm">'+esc(x.k)+'</div>'+
-            '<div class="track"><i style="width:'+w+'%;background:'+colorOf(x.k)+'"></i></div>'+
-            '<div class="mn">'+
-              '<button data-m="'+i+'" data-d="-5">−</button>'+
-              '<input data-v="'+i+'" type="number" value="'+(+x.v||0)+'">'+
-              '<button data-m="'+i+'" data-d="5">＋</button>'+
-            '</div>'+
-          '</div>';
-        }).join('')+
-      '</div>'+
-      '<div class="row" style="border:0;padding-top:14px">'+
-        '<div class="t"><b>合计 '+(total/60).toFixed(1)+' 小时（'+total+' 分钟）</b>'+
-        '<div class="m">'+(total>limit ? '比 2.5 小时多出 '+(total-limit)+' 分钟 —— 排太满，第一天就会断' : '还有 '+(limit-total)+' 分钟缓冲，够处理杂事')+'</div></div>'+
-      '</div>'+
-    '</div>'+
-    '<div class="panel">'+
-      '<h4><span class="dot"></span>三条规矩</h4>'+
-      '<div class="hint">① 录制那块别超过 40 分钟 —— 越录越挑，最后一条都发不出去<br>'+
-      '② 剪辑和上字幕是最容易被 AI 接管的一块<br>'+
-      '③ 互动回复排进预算里，它决定你评论区能不能长起来</div>'+
-    '</div>';
-
-  b.querySelectorAll('[data-m]').forEach(function(el){
-    el.onclick = function(){
-      var i = +el.getAttribute('data-m'), d = +el.getAttribute('data-d');
-      var arr = S.budget[todayKey()];
-      arr[i].v = Math.max(0, (+arr[i].v||0) + d);
-      save(); pageFocus(b);
-    };
-  });
-  b.querySelectorAll('[data-v]').forEach(function(el){
-    el.onchange = function(){
-      var i = +el.getAttribute('data-v');
-      S.budget[todayKey()][i].v = Math.max(0, parseInt(el.value,10)||0);
-      save(); pageFocus(b);
-    };
-  });
-}
-
-/* ============================================================
-   定位与铁律
-============================================================ */
-function pageRule(b){
-  b.innerHTML =
-    '<div class="panel"><h4><span class="dot"></span>账号档案</h4><div class="hint">每次拍之前扫一眼，尤其是禁词和隐私两条。</div></div>'+
-    RULES.map(function(r){
-      return '<div class="panel" style="padding:16px 18px;margin-bottom:10px">'+
-        '<div style="font-size:13.5px;font-weight:700">'+esc(r[0])+'</div>'+
-        '<div style="font-size:13px;color:#2E3D39;line-height:1.8;margin-top:5px">'+esc(r[1])+'</div>'+
-      '</div>';
-    }).join('')+
-    '<div class="panel" style="background:#FFF4DB;border-color:#FFE1B8">'+
-      '<h4><span class="dot"></span>发之前最后一遍</h4>'+
-      '<div class="hint">① 第一句里有没有"我"字打头？有就换<br>② 有没有出现"教 / 老师"？<br>③ 有没有提到家庭、负债、学历？<br>④ 结尾有没有勾下一条？</div>'+
-    '</div>';
-}
-
-/* ============================================================
-   搜索
-============================================================ */
-function pageSearch(b){
-  var q = searchQ.trim().toLowerCase();
-  if(!q){ b.innerHTML = '<div class="panel"><div class="empty">输入关键词试试，比如"报户口"、"开头"、"闲鱼"。</div></div>'; return; }
-  var hitTopics = S.topics.filter(function(t){ return (t.title+t.logic+t.pit+t.unit).toLowerCase().indexOf(q)>=0; });
-  var hitMats   = S.mats.filter(function(m){ return (m.text+m.cat).toLowerCase().indexOf(q)>=0; });
-  var hitHot    = S.hot.filter(function(h){ return (h.title+(h.why||'')).toLowerCase().indexOf(q)>=0; });
-  var hitTear   = S.tear.filter(function(t){ return JSON.stringify(t).toLowerCase().indexOf(q)>=0; });
-  var hitScript = SCRIPTS.filter(function(s){ return (s.title+s.body.join('')).toLowerCase().indexOf(q)>=0; });
-
-  function sec(name, arr, fmt){
-    if(!arr.length) return '';
-    return '<div class="panel"><h4><span class="dot"></span>'+name+'（'+arr.length+'）</h4>'+arr.map(fmt).join('')+'</div>';
-  }
-
-  b.innerHTML =
-    sec('选题', hitTopics, function(t){ return '<div class="row"><div class="t">'+t.id+'. '+esc(t.title)+'<div class="m">'+esc(t.unit)+'　·　'+esc(t.pit)+'</div></div></div>'; })+
-    sec('素材', hitMats, function(m){ return '<div class="row"><div class="t"><span class="pill p2" style="margin-right:8px">'+esc(m.cat)+'</span>'+esc(m.text)+'</div></div>'; })+
-    sec('脚本', hitScript, function(s){ return '<div class="row"><div class="t">'+esc(s.ver)+' 版 · '+esc(s.title)+'<div class="m">'+esc(s.name)+'　·　'+esc(s.dur)+'</div></div><button class="btn xs" data-page2script="'+s.ver+'">打开</button></div>'; })+
-    sec('热点', hitHot, function(h){ return '<div class="row"><div class="t">'+esc(h.title)+'<div class="m">'+esc(h.platform)+'</div></div></div>'; })+
-    sec('拆解卡', hitTear, function(t){ return '<div class="row"><div class="t">'+esc(t.src)+'<div class="m">'+esc(t.reuse||'')+'</div></div></div>'; })+
-    (!hitTopics.length && !hitMats.length && !hitHot.length && !hitTear.length && !hitScript.length ?
-      '<div class="panel"><div class="empty">没搜到。换个词，或者直接去对应模块里加一条。</div></div>' : '');
-
-  b.querySelectorAll('[data-page2script]').forEach(function(el){
-    el.onclick = function(){ go('script'); };
-  });
-}
-
-/* ============================================================
-   导入导出
-============================================================ */
-$('#btnExport').onclick = function(){
-  var blob = new Blob([JSON.stringify(S,null,2)], {type:'application/json'});
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = '苏小七工作台备份-' + todayKey() + '.json';
-  a.click();
-};
-$('#btnImport').onclick = function(){ $('#fileImport').click(); };
-$('#fileImport').onchange = function(e){
-  var f = e.target.files[0]; if(!f) return;
-  var fr = new FileReader();
-  fr.onload = function(){
-    try{
-      var d = JSON.parse(fr.result);
-      if(!d.topics) throw new Error('format');
-      S = d; save(); go('home');
-      alert('导入成功');
-    }catch(err){ alert('这个文件读不出来，确认是从本工作台导出的备份'); }
-  };
-  fr.readAsText(f);
-};
-
-/* ============================================================
-   搜索框
-============================================================ */
-$('#q').oninput = function(){
-  searchQ = this.value;
-  if(searchQ.trim()){ go('search'); }
-  else if(CUR==='search'){ go('home'); }
-};
-
-/* ============================================================
-   启动
-============================================================ */
-init();
+renderTabs();
 go('home');
 </script>
 </body>
