@@ -518,6 +518,26 @@ var HOT_PLAT = '抖音';
 var hotOnlyMine = true;
 var HOT_CACHE = {}, HOT_LAST = {}, LIVE_SHOWN = [], HOT_SHOWN_AT = 0;
 
+/* ================= 赛道热题（我人工盯的垂类，不是泛榜） ================= */
+var TREND = [
+  {t:'小眼睛低于 100，是因为你发完笔记直接走了', p:'小红书', stat:'约 1.1 万赞 · 甜心茯苓',
+   angle:'同一个理换成口播：发完就关手机的人，等于自己放弃了第一波推流。你的题：发完那 30 分钟到底该干什么。'},
+  {t:'3 步让系统认为你是优质内容', p:'小红书', stat:'约 8800 赞 · 小七不摆烂了',
+   angle:'平台认不认你，看你有没有能被看完的内容。你的六段结构就是干这个的。'},
+  {t:'你没流量，是因为你日更了', p:'小红书', stat:'约 1600 赞 · 洁西带你聊IP',
+   angle:'日更等于把一条没跑通的内容重复十次。你的题：先跑通一条，再谈频率。'},
+  {t:'账号没流量，用好这 3 个阴招', p:'小红书', stat:'约 2600 赞 · 阿竹商业ip运营',
+   angle:'不学他的招，反着讲：「阴招」能给你一次流量，给不了下一个粉丝。'},
+  {t:'抖音被限流还可以这样恢复', p:'小红书', stat:'约 4900 赞 · 小媛',
+   angle:'限流焦虑是巨大的搜索需求。你的题：先分清「没流量」和「被限流」，别一急就狂改。'},
+  {t:'人一旦开窍，做自媒体真的很容易', p:'小红书', stat:'约 4700 赞 · 7ian要努力',
+   angle:'开窍那一刻多半就一件事：把「我想说」换成「他能拿走」。'},
+  {t:'小红书再无红利：50% 流量给千粉以下，严打 AI 生成与搬运', p:'行业报道', stat:'2026 年多家媒体在讲',
+   angle:'你的题：AI 能帮你写，但平台正在打击 AI 味——用工具不等于交工具。'},
+  {t:'每天坚持创作，但平台不给流量，你还会坚持吗', p:'知乎', stat:'持续高赞讨论',
+   angle:'不是要不要坚持，是要不要换开头。坚持一个错的开头十年也没用。'}
+];
+
 var SEED_TEAR = [
   {id:1, src:'自己的 A 版（就当练手）', hook:'你以为你的口播没人看，是因为声音不好听…都不是。',
    pain:'录了两小时，最后按删除键', name:'报户口式开头', cases:'饭店服务员先自我介绍不递菜单',
@@ -793,6 +813,7 @@ function pageHome(b){
 function pageHot(b){
   var list = S.hot.slice().reverse();
   b.innerHTML =
+    trendHTML()+
     livePanelHTML()+
     '<div class="panel">'+
       '<h4><span class="dot"></span>扔一条进来</h4>'+
@@ -844,7 +865,34 @@ function pageHot(b){
   renderLive();
 }
 
+function trendHTML(){
+  return '<div class="panel" style="border-color:#CFEDE3;background:linear-gradient(120deg,#FFFDF6,#F3FBF8)">'+
+    '<h4><span class="dot"></span>你这赛道现在在热什么'+
+      '<span style="margin-left:auto;font-size:11px;color:#9AAAA5;font-weight:400">我 11 月 2 日抓的</span></h4>'+
+    '<div class="hint" style="margin-bottom:4px">这些是跟你直接相关的：同样在问「没流量、起号、没人看」的人在关心什么，什么内容真的有人看。每条后面都写了能怎么变成你的题。</div>'+
+    TREND.map(function(x, i){
+      return '<div class="row" style="align-items:flex-start">'+
+        '<div class="t"><b style="font-size:13.6px">'+(i+1)+'. '+esc(x.t)+'</b>'+
+          '<div class="m">'+esc(x.p)+'　·　'+esc(x.stat)+'</div>'+
+          '<div class="m" style="color:#5F716C">能怎么变成你的：'+esc(x.angle)+'</div>'+
+        '</div>'+
+        '<button class="btn xs ghost" data-trend="'+i+'">存进热点池</button>'+
+      '</div>';
+    }).join('')+
+  '</div>';
+}
+
 function wireLive(b){
+  b.querySelectorAll('[data-trend]').forEach(function(el){
+    el.onclick = function(){
+      var x = TREND[+el.getAttribute('data-trend')];
+      if(!x) return;
+      S.hot.push({id:Date.now(), title:x.t, platform:x.p, why:'赛道热题 · '+x.stat+'；'+x.angle, status:'待用'});
+      save(); badges();
+      el.textContent = '已存';
+      el.disabled = true;
+    };
+  });
   b.querySelectorAll('[data-plat]').forEach(function(el){
     el.onclick = function(){
       HOT_PLAT = el.getAttribute('data-plat');
@@ -865,14 +913,14 @@ function hms(d){ return pad(d.getHours())+':'+pad(d.getMinutes())+':'+pad(d.getS
 
 function livePanelHTML(){
   return '<div class="panel" style="border-color:#CFEDE3">'+
-    '<h4><span class="dot"></span>平台实时热榜'+
+    '<h4><span class="dot"></span>综合热榜（全网泛榜，跟你赛道不一定相关）'+
       '<span id="liveTime" style="margin-left:auto;font-size:11px;color:#9AAAA5;font-weight:400"></span></h4>'+
     '<div class="chips" id="livePlats">'+HOT_PLATFORMS.map(function(p){
       return '<button class="chip'+(p.k===HOT_PLAT?' on':'')+'" data-plat="'+p.k+'">'+p.k+'</button>';
     }).join('')+'</div>'+
     '<div class="chips"><button class="chip'+(hotOnlyMine?' on':'')+'" id="liveFilter">只看我这方向</button></div>'+
     '<div id="hotLive"><div class="empty">正在抓…</div></div>'+
-    '<div class="hint" style="margin-top:8px">抓的是平台公开热榜，浏览器直接拉，不是等我一轮。没抓到时点一下重抓。</div>'+
+    '<div class="hint" style="margin-top:8px">这一层是全网泛榜（娱乐居多），用来看大环境。真正跟你相关的是上面那块「你这赛道在热什么」。榜是浏览器直接拉，没抓到就点重抓。</div>'+
   '</div>';
 }
 
