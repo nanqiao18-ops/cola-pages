@@ -1158,7 +1158,30 @@ function pageInsight(b){
         '② 表现最好的那条，换个场景/人群再拍一版（换血不换骨）<br>'+
         '③ 一次只动一个变量，改完发一条再看数'+
       '</div>'+
+    '</div>'+
+    '<div class="panel" style="background:#F3FBF8;border-color:#CFEDE3">'+
+      '<h4><span class="dot"></span>把这份数据发给 Cola</h4>'+
+      '<div class="hint">不用记数字，也不用找文件。点一下复制，直接粘到聊天里发出去就行。</div>'+
+      '<button class="btn" id="btnCopyData" style="margin-top:12px">复制数据</button>'+
     '</div>';
+
+  var cbtn = b.querySelector('#btnCopyData');
+  if(cbtn) cbtn.onclick = function(){
+    var pack = {
+      来源: '苏小七自媒体工作台',
+      日期: todayKey(),
+      记录: S.records.map(function(r){ return { 标题:r.title, 日期:r.date, 播放:r.play, 五秒完播:r.s5, 完播:r.fin, 涨粉:r.fans, 评论:r.cmt }; }),
+      已发选题: S.topics.filter(function(t){ return t.status==='已发'||t.status==='爆了'; }).map(function(t){ return t.title; }),
+      排期: S.schedule
+    };
+    var txt = JSON.stringify(pack);
+    function done(){ cbtn.textContent = '已复制，粘到聊天里发我'; setTimeout(function(){ cbtn.textContent='复制数据'; }, 2500); }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(done, function(){ window.prompt('复制这段发给 Cola：', txt); });
+    } else {
+      window.prompt('复制这段发给 Cola：', txt);
+    }
+  };
 }
 
 /* ============================================================
