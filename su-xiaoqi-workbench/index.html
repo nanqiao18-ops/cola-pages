@@ -1,0 +1,872 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>苏小七 · 自媒体工作台</title>
+<style>
+:root{
+  --mint:#5BC8A8; --mint-d:#3FA98B; --mint-l:#E9F8F2;
+  --cream:#FFFDF6; --yellow:#FFC96B; --yellow-l:#FFF4DB;
+  --coral:#FF8A7A; --coral-l:#FFEDE9;
+  --sky:#7EC8E3; --sky-l:#E8F6FB;
+  --ink:#2E3D39; --ink2:#6B7C77; --ink3:#9AAAA5;
+  --line:#E6EFEA; --card:#FFFFFF;
+  --shadow:0 10px 24px rgba(91,200,168,.10), 0 2px 6px rgba(46,61,57,.05);
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(900px 500px at 8% -8%, #E9F8F2 0%, rgba(233,248,242,0) 60%),
+    radial-gradient(800px 460px at 100% 0%, #FFF4DB 0%, rgba(255,244,219,0) 55%),
+    #FBFDFB;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:26px 20px 60px}
+
+/* ---------- 顶栏 ---------- */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px}
+.logo{
+  width:52px;height:52px;border-radius:18px;background:linear-gradient(140deg,#B8EBDC,#5BC8A8);
+  display:grid;place-items:center;box-shadow:0 8px 18px rgba(91,200,168,.35);transform:rotate(-6deg)
+}
+.brand h1{font-size:21px;margin:0;letter-spacing:.4px}
+.brand p{margin:3px 0 0;font-size:12.5px;color:var(--ink2)}
+.tools{display:flex;gap:8px}
+.tools button{
+  border:1.5px dashed var(--line);background:#fff;color:var(--ink2);font-size:12.5px;
+  padding:9px 14px;border-radius:14px;cursor:pointer;transition:.18s
+}
+.tools button:hover{border-color:var(--mint);color:var(--mint-d);transform:translateY(-1px)}
+
+/* ---------- 首页卡片 ---------- */
+.hero{
+  background:linear-gradient(120deg,#FFFFFF 0%,#FFFDF6 100%);
+  border:2px solid var(--line);border-radius:26px;padding:20px 22px;margin-bottom:22px;
+  box-shadow:var(--shadow);position:relative;overflow:hidden
+}
+.hero:before{
+  content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(circle,#FFF4DB, rgba(255,244,219,0) 70%)
+}
+.hero h2{margin:0 0 6px;font-size:16px}
+.hero p{margin:0;font-size:13.5px;color:var(--ink2);line-height:1.7}
+.hero b{color:var(--mint-d)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.card{
+  text-align:left;background:var(--card);border:2px solid var(--line);border-radius:24px;
+  padding:20px 20px 18px;cursor:pointer;transition:transform .2s ease, box-shadow .2s ease, border-color .2s;
+  box-shadow:0 4px 14px rgba(46,61,57,.04);font-family:inherit;position:relative;overflow:hidden
+}
+.card:hover{transform:translateY(-5px) rotate(-.5deg);border-color:var(--mint);box-shadow:0 16px 28px rgba(91,200,168,.18)}
+.card .ic{
+  width:46px;height:46px;border-radius:15px;display:grid;place-items:center;margin-bottom:14px;
+  transform:rotate(-5deg)
+}
+.card h3{margin:0 0 6px;font-size:15.5px}
+.card p{margin:0;font-size:12.5px;color:var(--ink2);line-height:1.7;min-height:40px;padding-right:8px;word-break:keep-all}
+.card .badge{
+  position:absolute;right:16px;top:16px;font-size:11px;color:var(--mint-d);
+  background:var(--mint-l);border-radius:999px;padding:3px 9px
+}
+.i-today{background:var(--yellow-l)} .i-topic{background:var(--mint-l)}
+.i-script{background:var(--sky-l)} .i-data{background:var(--coral-l)}
+.i-plan{background:#F1EEFF} .i-rule{background:#EAF6EE}
+
+/* ---------- 视图 ---------- */
+.view{display:none}
+.view.on{display:block;animation:pop .28s ease}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.view-head{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.back{
+  border:2px solid var(--line);background:#fff;border-radius:14px;padding:9px 14px;cursor:pointer;
+  font-size:13px;color:var(--ink2);font-family:inherit;transition:.18s
+}
+.back:hover{border-color:var(--mint);color:var(--mint-d)}
+.view-head h2{margin:0;font-size:18px}
+.panel{background:#fff;border:2px solid var(--line);border-radius:22px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.panel h4{margin:0 0 12px;font-size:14px;color:var(--ink)}
+.hint{font-size:12.5px;color:var(--ink3);line-height:1.7}
+
+/* ---------- 通用小件 ---------- */
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{
+  border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:6px 13px;font-size:12.5px;
+  color:var(--ink2);cursor:pointer;font-family:inherit;transition:.15s
+}
+.chip.on{background:var(--mint);border-color:var(--mint);color:#fff;font-weight:600}
+.row{display:flex;align-items:center;gap:10px;padding:12px 4px;border-bottom:1px dashed var(--line)}
+.row:last-child{border-bottom:0}
+.row .t{flex:1;font-size:13.5px;line-height:1.5}
+.row .m{font-size:11.5px;color:var(--ink3);margin-top:3px}
+.pill{
+  font-size:11px;border-radius:999px;padding:3px 10px;cursor:pointer;user-select:none;
+  border:1px solid transparent;white-space:nowrap
+}
+.p0{background:#F2F5F3;color:var(--ink2)}
+.p1{background:var(--yellow-l);color:#9A6B00}
+.p2{background:var(--sky-l);color:#2A7E9C}
+.p3{background:var(--coral-l);color:#B14E3E}
+.btn{
+  border:0;background:var(--mint);color:#fff;border-radius:14px;padding:11px 18px;font-size:13px;
+  cursor:pointer;font-family:inherit;font-weight:600;transition:.18s;box-shadow:0 6px 14px rgba(91,200,168,.28)
+}
+.btn:hover{background:var(--mint-d);transform:translateY(-1px)}
+.btn.ghost{background:#fff;color:var(--ink2);border:2px solid var(--line);box-shadow:none}
+.btn.ghost:hover{color:var(--mint-d);border-color:var(--mint)}
+.btn.sm{padding:7px 12px;font-size:12px;border-radius:11px}
+
+/* ---------- 今日 ---------- */
+.todo{display:flex;align-items:center;gap:12px;padding:11px 2px;border-bottom:1px dashed var(--line);cursor:pointer}
+.todo:last-child{border-bottom:0}
+.box{
+  width:20px;height:20px;border-radius:7px;border:2px solid var(--line);flex:0 0 auto;
+  display:grid;place-items:center;transition:.15s
+}
+.todo.done .box{background:var(--mint);border-color:var(--mint)}
+.todo.done .box:after{content:"";width:6px;height:10px;border-right:2.5px solid #fff;border-bottom:2.5px solid #fff;transform:rotate(45deg) translateY(-1px)}
+.todo.done span{color:var(--ink3);text-decoration:line-through}
+.progress{height:9px;border-radius:999px;background:#EFF5F1;overflow:hidden;margin:6px 0 14px}
+.progress i{display:block;height:100%;background:linear-gradient(90deg,#B8EBDC,#5BC8A8);border-radius:999px;transition:width .35s}
+
+/* ---------- 数据 ---------- */
+.form{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.form label{font-size:11.5px;color:var(--ink2);display:block;margin-bottom:5px}
+.form input,.form select{
+  width:100%;border:1.5px solid var(--line);border-radius:12px;padding:9px 11px;font-size:13px;
+  font-family:inherit;color:var(--ink);background:#FCFEFD;outline:none
+}
+.form input:focus,.form select:focus{border-color:var(--mint);background:#fff}
+.chart{display:flex;align-items:flex-end;gap:16px;height:150px;padding:8px 4px 0;border-bottom:2px solid var(--line)}
+.barwrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.bar{width:100%;max-width:46px;border-radius:10px 10px 4px 4px;background:linear-gradient(180deg,#B8EBDC,#5BC8A8);position:relative;min-height:3px;transition:.3s}
+.bar.b2{background:linear-gradient(180deg,#FFE1B8,#FFC96B)}
+.barlab{font-size:10.5px;color:var(--ink3);text-align:center;line-height:1.3}
+.legend{display:flex;gap:14px;font-size:11.5px;color:var(--ink2);margin-top:10px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px}
+
+/* ---------- 脚本 ---------- */
+.script{border:2px solid var(--line);border-radius:20px;padding:16px 18px;margin-bottom:12px;background:#fff}
+.script .top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tag{font-size:11px;border-radius:999px;padding:3px 10px;background:var(--mint-l);color:var(--mint-d)}
+.script h5{margin:0;font-size:14.5px}
+.script p{margin:8px 0 0;font-size:12.5px;color:var(--ink2);line-height:1.6}
+.script .acts{display:flex;gap:8px;margin-top:12px}
+
+/* ---------- 提词器 ---------- */
+.prompter{
+  position:fixed;inset:0;background:#111A18;color:#F3F7F4;display:none;z-index:50;
+  overflow-y:auto;padding:40px 24px 120px
+}
+.prompter.on{display:block}
+.prompter .ptxt{max-width:720px;margin:0 auto;font-size:30px;line-height:2;letter-spacing:.6px;font-weight:500}
+.prompter .ptxt p{margin:0 0 6px}
+.prompter .pbar{
+  position:fixed;right:20px;bottom:24px;display:flex;gap:8px;background:rgba(255,255,255,.10);
+  border-radius:16px;padding:8px;backdrop-filter:blur(6px)
+}
+.prompter .pbar button{
+  border:0;background:rgba(255,255,255,.14);color:#fff;border-radius:11px;padding:9px 13px;
+  font-size:13px;cursor:pointer;font-family:inherit
+}
+.prompter .pbar button:hover{background:rgba(255,255,255,.26)}
+.hidden{display:none!important}
+@media (max-width:560px){
+  .wrap{padding:18px 14px 50px}
+  .brand h1{font-size:18px}
+  .card p{min-height:auto}
+  .prompter .ptxt{font-size:24px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="logo">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+          <path d="M4 20c0-6 5-11 11-11"/><path d="M15 4c3 0 5 2 5 5-4 0-5-2-5-5z"/><path d="M9 15c-3 0-5-2-5-5 4 0 5 2 5 5z"/>
+        </svg>
+      </div>
+      <div>
+        <h1>苏小七 · 自媒体工作台</h1>
+        <p id="today"></p>
+      </div>
+    </div>
+    <div class="tools">
+      <button id="btnExport">导出备份</button>
+      <button id="btnImport">导入备份</button>
+      <input type="file" id="fileImport" accept=".json" class="hidden">
+    </div>
+  </div>
+
+  <!-- ================= 首页 ================= -->
+  <div id="home">
+    <div class="hero">
+      <h2 id="heroTitle"></h2>
+      <p id="heroSub"></p>
+    </div>
+    <div class="grid" id="cardGrid"></div>
+  </div>
+
+  <!-- ================= 视图容器 ================= -->
+  <div id="view" class="view">
+    <div class="view-head">
+      <button class="back" id="btnBack">← 返回</button>
+      <h2 id="viewTitle"></h2>
+    </div>
+    <div id="viewBody"></div>
+  </div>
+
+</div>
+
+<!-- ================= 提词器 ================= -->
+<div class="prompter" id="prompter">
+  <div class="ptxt" id="ptxt"></div>
+  <div class="pbar">
+    <button id="ptMinus">A－</button>
+    <button id="ptPlus">A＋</button>
+    <button id="ptAuto">自动滚动</button>
+    <button id="ptExit">退出</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   基础
+============================================================ */
+var $ = function(s){ return document.querySelector(s); };
+var KEY = 'suXiaoQi_workbench_v1';
+var state = null;
+
+function todayStr(d){
+  d = d || new Date();
+  var w = ['周日','周一','周二','周三','周四','周五','周六'][d.getDay()];
+  return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()) + ' ' + w;
+}
+function pad(n){ return n < 10 ? '0'+n : ''+n; }
+
+function load(){
+  var raw = null;
+  try { raw = localStorage.getItem(KEY); } catch(e){ raw = null; }
+  if(raw){
+    try { return JSON.parse(raw); } catch(e){}
+  }
+  return null;
+}
+function save(){
+  try { localStorage.setItem(KEY, JSON.stringify(state)); }
+  catch(e){ console.warn('保存失败', e); }
+}
+
+/* ============================================================
+   种子数据
+============================================================ */
+var SEED_TOPICS = [
+  {id:1,  unit:'起步四连', title:'删了第 8 条口播，前 7 条全栽在同一个坑里', logic:'开头不是表达，是交付', pit:'报户口式开头＝赶人', status:'待拍'},
+  {id:2,  unit:'起步四连', title:'你不是没定位，你是拍太少——定位是拍出来的', logic:'反馈大于脑子', pit:'坐那想三天，不如先拍三条', status:'待拍'},
+  {id:3,  unit:'起步四连', title:'你不是不会做，你是闭卷硬考——先抄到 60 分', logic:'开卷考试逻辑', pit:'硬原创就是自嗨', status:'待拍'},
+  {id:4,  unit:'起步四连', title:'你不是不会做，你是一次改太多——先发"烂的"', logic:'执行大于完美', pit:'同时改三个变量，数据必崩', status:'待拍'},
+  {id:5,  unit:'起号常见死法', title:'口播开头必死的 3 种说法，很多人第一条就中了', logic:'价值前置', pit:'别报户口、别道歉、别铺垫背景', status:'待拍'},
+  {id:6,  unit:'起号常见死法', title:'新手找对标别找大博主——低粉爆款才是参考答案', logic:'逆向拆解', pit:'大博主有粉丝底子，数据不纯', status:'待拍'},
+  {id:7,  unit:'起号常见死法', title:'抄爆款不是照搬，是换血不换骨', logic:'像素级复刻结构、换案例', pit:'原封不动搬＝被判搬运', status:'待拍'},
+  {id:8,  unit:'起号常见死法', title:'你不是没选题，你是没养一个"素材号"', logic:'让算法替你挑素材', pit:'靠脑子想选题，三天就空', status:'待拍'},
+  {id:9,  unit:'账号标签与流量', title:'你号做不起来，可能是"一鱼多吃"害的', logic:'一个号只做一个赛道', pit:'今天职场明天育儿，标签乱', status:'待拍'},
+  {id:10, unit:'账号标签与流量', title:'流量忽高忽低？你卡在"不够深也不够泛"', logic:'泛钩子＋垂落点', pit:'两头不靠', status:'待拍'},
+  {id:11, unit:'账号标签与流量', title:'你发的东西，"垂"的成分不能是 0', logic:'纯泛内容会污染人设', pit:'刷着爽，带不来精准人群', status:'待拍'},
+  {id:12, unit:'账号标签与流量', title:'三个置顶视频不拍，等于门店没招牌', logic:'主页承接', pit:'流量进来没处落', status:'待拍'},
+  {id:13, unit:'账号标签与流量', title:'价值观不对的爆款，再火也是负资产', logic:'底色', pit:'跟人设对不上的热点别蹭', status:'待拍'},
+  {id:14, unit:'AI 降门槛', title:'AI 写的稿为啥像机器念的？因为你把"先写"省了', logic:'先发散后蒸馏', pit:'让 AI 先写，你就被框死', status:'待拍'},
+  {id:15, unit:'AI 降门槛', title:'普通人怎么用 AI 一天出 3 条口播稿，还不像机器念', logic:'喂三个信息：我是谁、讲给谁、一个点', pit:'稿子通顺但没人味', status:'待拍'},
+  {id:16, unit:'AI 降门槛', title:'AI 生图总翻车？不是提示词不行，是你没给参考图', logic:'一图胜万言', pit:'写一百个形容词，不如一张标杆图', status:'待拍'},
+  {id:17, unit:'AI 降门槛', title:'搭知识库最容易犯的错：还没用就先搭一堆文件夹', logic:'知识库是长出来的', pit:'贪大求全，最后不用', status:'待拍'},
+  {id:18, unit:'AI 降门槛', title:'做自媒体每天只要 2-4 小时，剩下的让 AI 扛', logic:'把机械活丢出去', pit:'自己扛全部，三天就累垮', status:'待拍'},
+  {id:19, unit:'变现与闭环', title:'想赚钱前先问一句：你手里有什么能跟人交换', logic:'价值交换', pit:'空谈变现，没想清能提供啥', status:'待拍'},
+  {id:20, unit:'变现与闭环', title:'普通人变现，从闲鱼卖闲置开始', logic:'先练定价和成交的手感', pit:'一上来就想卖课', status:'待拍'},
+  {id:21, unit:'变现与闭环', title:'你的内容为啥没人转？你没给人"尝一口就信你"的东西', logic:'每条先给一口能马上用的', pit:'只讲道理，不给动作', status:'待拍'},
+  {id:22, unit:'变现与闭环', title:'怎么判断一个副业值不值得做', logic:'副业避坑', pit:'要你先交钱、拉人头、画大饼', status:'待拍'},
+  {id:23, unit:'变现与闭环', title:'你焦虑"视频没火"，是因为你把短视频当终点了', logic:'短视频是起点', pit:'盯着播放量，忘了后面的事', status:'待拍'},
+  {id:24, unit:'变现与闭环', title:'怎么选副业：用"最想做、离结果近、已跑通"三把尺', logic:'副业聚焦', pit:'四个方向都舍不得砍', status:'待拍'},
+  {id:25, unit:'变现与闭环', title:'数据差别乱改——先看闭环断在哪一环', logic:'闭环诊断', pit:'完播低和关注低，问题不在同一处', status:'待拍'},
+  {id:26, unit:'心法与底层', title:'你有没有过"拆一条拆不明白"——新手只想拆 60 秒', logic:'拆爆款要拆得进去也装得回来', pit:'拆得太碎，学不到骨架', status:'待拍'},
+  {id:27, unit:'心法与底层', title:'你不是不会抄，你是每次都缺了一步', logic:'换场景、换人群、换形式', pit:'五样一样都没换就先别发', status:'待拍'},
+  {id:28, unit:'心法与底层', title:'先别聊"认知升级"——你先把第一条发出去', logic:'10 分永远大于 0 分', pit:'等准备好了再发，永远发不出去', status:'待拍'}
+];
+
+var SCRIPTS = [
+  {
+    ver:'A', name:'场景故事流', dur:'约 2 分 30 秒', when:'今晚 8:00 首发',
+    title:'删了第 8 条口播，前 7 条全栽在同一个坑里',
+    body:[
+      '你以为你的口播没人看，是因为声音不好听、长得不上镜、平台不推你。',
+      '都不是。',
+      '是因为你开口的头五个字，正在赶人。',
+      '',
+      '你是不是也这样——',
+      '晚上十点坐下，提词器打开，录到十一点半，剪了两个小时，',
+      '最后手指停在删除键上，按了。',
+      '那是第 8 条。前面 7 条，你自己都不好意思再看一遍。',
+      '',
+      '然后你开始怀疑三件事：是不是我声音不好听？是不是我不上镜？是不是平台不给我推？',
+      '三个都不是。',
+      '',
+      '你错在开头那五个字："大家好我是"。',
+      '这种开头，说白了就是先报户口。',
+      '你去饭店点菜，服务员上来第一句不是递菜单，是——"我叫某某，我在这儿上班三年了，我家还有俩孩子。"',
+      '你心里是不是在想：关我啥事，菜单给我。',
+      '"大家好我是"，就是报户口。而观众等的，是你把菜单递过去。',
+      '',
+      '因为刷到你的人，前五秒只判断一件事：这条跟我有没有关系。',
+      '"大家好我是"回答的是"我是谁"。可他压根不关心你是谁。',
+      '他手指一划，你准备了两小时的内容，一句都没进他耳朵。',
+      '',
+      '改法只有一句话：把"我是谁"，换成"你能拿走什么"。',
+      '原来的开头："大家好我是某某，今天想跟你们分享一个我最近觉得挺好的副业。"',
+      '改成："下班累成狗还想搞副业，结果越搞越穷？我踩过的那些坑，今天告诉你哪几个别踩。"',
+      '后面一个字都不用动。同一台手机，同一个你，同一张脸。变的只是他第一秒听到的那句话。',
+      '',
+      '观众点你进来，不是来认识你的，是来捡东西的。',
+      '自我介绍是你想被认识，先说好处是他想被满足。',
+      '他不欠你一个认识你的机会，你欠他一个听下去的理由。',
+      '',
+      '你上一次删掉的那条，开头第一句是什么？打在评论区，我帮你看是不是在报户口。',
+      '下期咱聊——拍了一堆视频越拍越空，怎么把卡壳那一下，变成下一条视频。',
+      '咱一起，少走弯路。'
+    ]
+  },
+  {
+    ver:'B', name:'干货清单流', dur:'约 2 分 20 秒', when:'第 3 天发，别和 A 同一天',
+    title:'口播开头必死的 3 种说法，很多人第一条就中了',
+    body:[
+      '口播开头，有三种说法，一说出来人就走。今天一次讲完，看完直接改，今天就能重录。',
+      '',
+      '第一种，一开口先报户口。',
+      '"大家好我是某某，我做电商五年了，今天想跟你们聊聊选品……"',
+      '为什么死？观众刷到你的那一下，只想知道这条跟他有没有关系。"某某"是谁、干了几年——他不关心。',
+      '你先报了一遍自己，他才反应过来：这跟我没关系。手指就抬起来了。',
+      '比如改成："选品选到脑壳疼还不出单？我五年踩过的坑，今天告诉你哪几个别踩。"',
+      '',
+      '第二种，一开口先道歉。',
+      '"不好意思啊今天有点感冒，声音有点哑，你们多担待……"',
+      '为什么死？你不是来探病的，你是来拿东西的。他不在乎你哑不哑，他在乎第一句有没有他要的。',
+      '你一道歉，等于先告诉他：这条可以往后放。往后放，就是不会再看了。',
+      '比如改成："声音是有点哑，但这条你听完——三个让你白花钱的副业坑。"',
+      '',
+      '第三种，一开口先铺垫背景。',
+      '"我带娃每天只有两小时，为了家里能多一份收入，我决定开始做自媒体……"',
+      '为什么死？铺垫三十秒才进正题，人已经走完了。你的处境，等他认识你以后自然会知道。',
+      '第一次见面，他不想知道你家几口人，只想知道你能帮他什么。',
+      '比如改成："带娃每天只有两小时，怎么搞副业不被割？三个信号，帮你筛掉九成的坑。"',
+      '',
+      '说到这儿你会发现，这三种其实是同一件事。',
+      '报户口是讲自己，道歉是讲自己，铺垫背景还是讲自己。开口第一句全是"我"，不是"你"。',
+      '所以只记一条就够了：第一句话里，把"我"换成"你"。',
+      '',
+      '别报户口，别道歉，别铺垫背景。第一句就给他能拿走的东西。',
+      '你第一条视频的第一句是什么？打在评论区，我帮你看是不是在讲自己。',
+      '下期咱聊——拍了一堆视频越拍越空，怎么把卡壳那一下，变成下一条视频。',
+      '咱一起，少走弯路。'
+    ]
+  },
+  {
+    ver:'C', name:'数据自查流', dur:'约 2 分 10 秒', when:'有 3 条以上数据后再发',
+    title:'你的口播为什么没人看，后台这三个数早就告诉你了',
+    body:[
+      '你的口播为什么没人看，后台早就告诉你了。不用问别人，三个数，今晚花两分钟就能看。',
+      '',
+      '第一个，5 秒完播率。多少人在你这五秒里没划走。',
+      '这个数低，问题只可能在一个地方——开头。你开口那五个字，没让他觉得这事跟他有关。',
+      '',
+      '第二个，完播率。多少人从头看到尾。',
+      '5 秒完播率还行、完播率很低，说明开头留住了，中段把人放跑了。',
+      '通常就是中间开始讲道理、讲背景、讲自己怎么想的。',
+      '',
+      '第三个，关注转化。看完的人里，有多少个愿意点关注。',
+      '这个数低，说明内容还行，可他不知道关注你能得到什么。',
+      '问题不在视频里，在你的主页、你的简介、在你没告诉他下一条讲什么。',
+      '',
+      '三个数，对应三个动作，别搞混：',
+      '5 秒完播率低——改开头。完播率低——砍中段。关注少——补主页。',
+      '一次只动一个。改完发一条，再看数。三个一起改，数变了你也说不清是哪一步起的作用。',
+      '',
+      '还有个坑：别拿不同时长的视频比。一条三十秒，一条三分钟，完播率没法直接比。比自己同类时长的那些，才有意义。',
+      '',
+      '今晚花两分钟，打开后台，把这三个数看一眼。看一眼你就知道下一条该改哪儿。',
+      '你的 5 秒完播率大概多少？打在评论区，报个数，我帮你看卡在哪一环。',
+      '下期咱聊——拍了一堆视频越拍越空，怎么把卡壳那一下，变成下一条视频。',
+      '咱一起，少走弯路。'
+    ]
+  }
+];
+
+var RULES = [
+  ['一句话定位','帮想做自媒体 / 搞副业的普通人避坑——讲"哪些坑别踩、为什么、怎么绕"。'],
+  ['人设姿态','避坑博主，不是老师。同路人：关注我，少走弯路。'],
+  ['受众','想做自媒体 / 想搞副业、但一直卡住的上班族、宝妈。'],
+  ['三大卡点','① 不知道自己该做什么定位 ② 不知道发什么 ③ 第一条口播迈不出去'],
+  ['内容双支柱','① 自媒体从零到一 ② 用 AI 降门槛'],
+  ['脚本六段','一句话结论 → 场景痛点 → 给坑命名 → 2-3 个案例 → 金句 → 召唤行动'],
+  ['六条准则','场景化 / 活人感 / 普通人视角 / 代入感 / 大白话 / 避坑叙事 / 同路人姿态'],
+  ['禁词','教、教学、老师、教你、教会你 → 换成"一起避坑、少走弯路、你试试看"'],
+  ['隐私铁律','绝不出负债、家庭、学历、失业、逆袭等私人处境；案例只用"朋友/同事"或"某某"'],
+  ['判据','这句"我以前"讲的是做内容的方法 → 可以讲；讲的是我的人生 → 删掉'],
+  ['形式','短视频口播，抖音 + 视频号；单条 ≥ 2 分钟；小红书图文同步'],
+  ['现阶段变现','不卖货、无产品；先跑通发布和内容反馈，变现是结果不是起点']
+];
+
+var TODO_ITEMS = [
+  '定今天拍哪一条（从选题库挑）',
+  '把脚本改成自己的话，念顺',
+  '录制 1 条（原相机 / 竖屏 / 一镜到底）',
+  '剪辑 + 上字幕（改错别字）',
+  '发布（晚 8:00 前后）',
+  '发完 30 分钟内守评论区',
+  '记三个数：5 秒完播率 / 完播率 / 新增关注'
+];
+
+/* ============================================================
+   初始化
+============================================================ */
+function init(){
+  state = load();
+  if(!state || !state.topics){
+    state = {
+      topics: JSON.parse(JSON.stringify(SEED_TOPICS)),
+      records: [],
+      todos: {},
+      schedule: {},
+      startedAt: new Date().toISOString().slice(0,10)
+    };
+    save();
+  }
+  if(!state.records) state.records = [];
+  if(!state.todos) state.todos = {};
+  if(!state.schedule) state.schedule = {};
+}
+
+/* ============================================================
+   首页
+============================================================ */
+var CARDS = [
+  {key:'today',  title:'今日',      desc:'今天拍哪条、做到哪一步、三问收尾', ic:'i-today',  svg:'M7 3v3M17 3v3M4 8h16M5 5h14a1 1 0 011 1v13a1 1 0 01-1 1H5a1 1 0 01-1-1V6a1 1 0 011-1z'},
+  {key:'topics', title:'选题库',    desc:'28 条选题，标状态、按单元筛',  ic:'i-topic',  svg:'M9 18h6M10 21h4M12 3a6 6 0 00-3 11v2h6v-2a6 6 0 00-3-11z'},
+  {key:'scripts',title:'脚本库',    desc:'A / B / C 三版定稿，直接进提词器', ic:'i-script', svg:'M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1zM14 3v5h5'},
+  {key:'data',   title:'数据看板',  desc:'录入播放和完播率，自动诊断卡在哪', ic:'i-data',   svg:'M4 20V10M10 20V4M16 20v-7M22 20H2'},
+  {key:'plan',   title:'发布排期',  desc:'这一周发哪条，别自己跟自己抢',    ic:'i-plan',   svg:'M8 4h8M6 8h12M5 12h14M5 16h9M5 20h6'},
+  {key:'rule',   title:'定位与铁律',desc:'定位、六段结构、禁词、红线',      ic:'i-rule',   svg:'M12 3l8 4v6c0 4-3 7-8 8-5-1-8-4-8-8V7l8-4zM9 12l2 2 4-4'}
+];
+
+function renderHome(){
+  $('#today').textContent = todayStr() + ' · 第一条今天发';
+  var t = state.schedule[todayKey()];
+  var tShow = (t||'').replace(/^#\d+\s*/,'');
+  $('#heroTitle').textContent = tShow ? ('今天要发：' + tShow) : '今天还没定拍哪条';
+  var done = todoDoneCount();
+  $('#heroSub').innerHTML = '待办完成 <b>' + done + ' / ' + TODO_ITEMS.length + '</b>　·　数据记录 <b>' + state.records.length + '</b> 条　·　选题还剩 <b>' +
+    state.topics.filter(function(x){return x.status==='待拍';}).length + '</b> 条没拍';
+
+  var g = $('#cardGrid');
+  g.innerHTML = CARDS.map(function(c){
+    var badge = '';
+    if(c.key==='topics') badge = state.topics.length + ' 条';
+    if(c.key==='scripts') badge = '3 版';
+    if(c.key==='data') badge = state.records.length + ' 条';
+    return '<button class="card" data-go="'+c.key+'">'+
+      '<div class="ic '+c.ic+'"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5BC8A8" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="'+c.svg+'"/></svg></div>'+
+      (badge ? '<span class="badge">'+badge+'</span>' : '') +
+      '<h3>'+c.title+'</h3><p>'+c.desc+'</p></button>';
+  }).join('');
+}
+
+/* ============================================================
+   导航
+============================================================ */
+var TITLES = {today:'今日',topics:'选题库',scripts:'脚本库',data:'数据看板',plan:'发布排期',rule:'定位与铁律'};
+var current = '';
+
+document.addEventListener('click', function(e){
+  var go = e.target.closest('[data-go]');
+  if(go){ open(go.getAttribute('data-go')); }
+});
+
+function open(key){
+  current = key;
+  $('#home').classList.add('hidden');
+  $('#view').classList.add('on');
+  $('#viewTitle').textContent = TITLES[key] || '';
+  var b = $('#viewBody');
+  if(key==='today') renderToday(b);
+  if(key==='topics') renderTopics(b);
+  if(key==='scripts') renderScripts(b);
+  if(key==='data') renderData(b);
+  if(key==='plan') renderPlan(b);
+  if(key==='rule') renderRule(b);
+  window.scrollTo(0,0);
+}
+$('#btnBack').onclick = function(){
+  $('#view').classList.remove('on');
+  $('#home').classList.remove('hidden');
+  renderHome();
+  window.scrollTo(0,0);
+};
+
+/* ============================================================
+   今日
+============================================================ */
+function todayKey(){ return new Date().toISOString().slice(0,10); }
+function todoState(){
+  var k = todayKey();
+  if(!state.todos[k]) state.todos[k] = {};
+  return state.todos[k];
+}
+function todoDoneCount(){
+  var s = todoState(), n = 0;
+  for(var i=0;i<TODO_ITEMS.length;i++){ if(s[i]) n++; }
+  return n;
+}
+function renderToday(b){
+  var s = todoState();
+  var done = todoDoneCount();
+  var pct = Math.round(done / TODO_ITEMS.length * 100);
+
+  b.innerHTML =
+    '<div class="panel">'+
+      '<h4>今天的节奏</h4>'+
+      '<div class="progress"><i style="width:'+pct+'%"></i></div>'+
+      '<div class="hint">完成 '+done+' / '+TODO_ITEMS.length+'　·　点一下就是打勾</div>'+
+      '<div class="todoList" style="margin-top:10px">'+
+        TODO_ITEMS.map(function(t,i){
+          return '<div class="todo'+(s[i]?' done':'')+'" data-todo="'+i+'"><div class="box"></div><span>'+t+'</span></div>';
+        }).join('')+
+      '</div>'+
+    '</div>'+
+    '<div class="panel">'+
+      '<h4>今天发什么</h4>'+
+      '<div class="hint" style="margin-bottom:10px">从选题库里选一条放进今天；选了会同步到发布排期。</div>'+
+      '<select id="pickTopic" style="width:100%;border:1.5px solid #E6EFEA;border-radius:12px;padding:10px;font-size:13px;font-family:inherit">'+
+        '<option value="">— 还没选 —</option>'+
+        state.topics.map(function(t){
+          return '<option value="'+t.id+'"'+(state.schedule[todayKey()]===('#'+t.id+' '+t.title)?' selected':'')+'>'+t.id+'. '+t.title+'</option>';
+        }).join('')+
+      '</select>'+
+    '</div>'+
+    '<div class="panel">'+
+      '<h4>睡前三个数（记到数据看板）</h4>'+
+      '<div class="hint">① 今天最好那条的<b>选题</b>是什么　② 加微信 / 新增关注几个　③ 有没有人掏钱</div>'+
+    '</div>';
+
+  b.querySelectorAll('[data-todo]').forEach(function(el){
+    el.onclick = function(){
+      var i = el.getAttribute('data-todo');
+      var s2 = todoState();
+      s2[i] = !s2[i];
+      save();
+      renderToday(b);
+    };
+  });
+  var pick = b.querySelector('#pickTopic');
+  if(pick){
+    pick.onchange = function(){
+      var id = pick.value;
+      if(!id){ delete state.schedule[todayKey()]; save(); return; }
+      var t = state.topics.filter(function(x){ return String(x.id)===String(id); })[0];
+      state.schedule[todayKey()] = '#'+t.id+' '+t.title;
+      save();
+    };
+  }
+}
+
+/* ============================================================
+   选题库
+============================================================ */
+var topicFilter = '全部';
+function renderTopics(b){
+  var statuses = ['全部','待拍','已拍','已发','爆了'];
+  var units = ['全部'];
+  state.topics.forEach(function(t){ if(units.indexOf(t.unit)<0) units.push(t.unit); });
+
+  var list = state.topics.filter(function(t){
+    return topicFilter==='全部' || t.status===topicFilter;
+  });
+
+  b.innerHTML =
+    '<div class="panel">'+
+      '<h4>按状态筛</h4>'+
+      '<div class="chips">'+ statuses.map(function(s){
+        return '<button class="chip'+(topicFilter===s?' on':'')+'" data-f="'+s+'">'+s+'</button>';
+      }).join('') +'</div>'+
+      '<div class="hint">共 '+list.length+' 条。点右边的状态标签可以切换：待拍 → 已拍 → 已发 → 爆了。</div>'+
+    '</div>'+
+    '<div class="panel">'+
+      list.map(function(t){
+        var cls = {'待拍':'p0','已拍':'p1','已发':'p2','爆了':'p3'}[t.status] || 'p0';
+        return '<div class="row">'+
+          '<div class="t">'+t.id+'. '+t.title+
+            '<div class="m">'+t.unit+'　·　逻辑：'+t.logic+'　·　避坑点：'+t.pit+'</div>'+
+          '</div>'+
+          '<span class="pill '+cls+'" data-id="'+t.id+'">'+t.status+'</span>'+
+        '</div>';
+      }).join('')+
+    '</div>';
+
+  b.querySelectorAll('[data-f]').forEach(function(el){
+    el.onclick = function(){ topicFilter = el.getAttribute('data-f'); renderTopics(b); };
+  });
+  b.querySelectorAll('[data-id]').forEach(function(el){
+    el.onclick = function(){
+      var id = +el.getAttribute('data-id');
+      var order = ['待拍','已拍','已发','爆了'];
+      var t = state.topics.filter(function(x){ return x.id===id; })[0];
+      t.status = order[(order.indexOf(t.status)+1) % order.length];
+      save();
+      renderTopics(b);
+    };
+  });
+}
+
+/* ============================================================
+   脚本库 + 提词器
+============================================================ */
+function renderScripts(b){
+  b.innerHTML =
+    '<div class="panel"><h4>三版定稿</h4><div class="hint">点"提词器"进全屏大字模式，可以开自动滚动。字太小按 A＋。</div></div>'+
+    SCRIPTS.map(function(s){
+      return '<div class="script">'+
+        '<div class="top"><span class="tag">'+s.ver+' 版 · '+s.name+'</span><span class="m" style="font-size:11.5px;color:#9AAAA5">'+s.dur+'</span></div>'+
+        '<h5 style="margin-top:8px">'+s.title+'</h5>'+
+        '<p>'+s.when+'</p>'+
+        '<div class="acts">'+
+          '<button class="btn sm" data-pt="'+s.ver+'">进提词器</button>'+
+          '<button class="btn sm ghost" data-open="'+s.ver+'">看全文</button>'+
+        '</div>'+
+        '<div class="full hidden" id="full-'+s.ver+'" style="margin-top:12px;font-size:13px;line-height:1.9;color:#2E3D39">'+
+          s.body.map(function(l){ return l==='' ? '<br>' : '<p style="margin:0 0 4px">'+l+'</p>'; }).join('')+
+        '</div>'+
+      '</div>';
+    }).join('');
+
+  b.querySelectorAll('[data-open]').forEach(function(el){
+    el.onclick = function(){
+      var d = $('#full-'+el.getAttribute('data-open'));
+      d.classList.toggle('hidden');
+    };
+  });
+  b.querySelectorAll('[data-pt]').forEach(function(el){
+    el.onclick = function(){ openPrompter(el.getAttribute('data-pt')); };
+  });
+}
+
+var ptFont = 30, ptTimer = null;
+function openPrompter(ver){
+  var s = SCRIPTS.filter(function(x){ return x.ver===ver; })[0];
+  $('#ptxt').innerHTML = s.body.map(function(l){ return l==='' ? '<p style="height:16px"></p>' : '<p>'+l+'</p>'; }).join('');
+  $('#prompter').classList.add('on');
+  $('#ptxt').style.fontSize = ptFont + 'px';
+  $('#prompter').scrollTop = 0;
+}
+$('#ptExit').onclick = function(){
+  $('#prompter').classList.remove('on');
+  if(ptTimer){ clearInterval(ptTimer); ptTimer = null; $('#ptAuto').textContent = '自动滚动'; }
+};
+$('#ptPlus').onclick = function(){ ptFont = Math.min(56, ptFont+3); $('#ptxt').style.fontSize = ptFont+'px'; };
+$('#ptMinus').onclick = function(){ ptFont = Math.max(18, ptFont-3); $('#ptxt').style.fontSize = ptFont+'px'; };
+$('#ptAuto').onclick = function(){
+  if(ptTimer){ clearInterval(ptTimer); ptTimer = null; this.textContent='自动滚动'; }
+  else{
+    this.textContent = '暂停';
+    ptTimer = setInterval(function(){ $('#prompter').scrollTop += 1; }, 60);
+  }
+};
+
+/* ============================================================
+   数据看板
+============================================================ */
+function diag(r){
+  if(r.s5 === '' || r.s5 === null || isNaN(r.s5)) return {t:'还没填 5 秒完播率', c:'#6B7C77'};
+  if(+r.s5 < 25) return {t:'开头还在赶人：改头五个字，别改选题', c:'#B14E3E'};
+  if(r.fin !== '' && +r.fin < 10) return {t:'中段太拖：把中间砍掉三分之一', c:'#9A6B00'};
+  if(+r.fans === 0) return {t:'内容行、承接不行：先补主页简介和三置顶', c:'#2A7E9C'};
+  return {t:'结构没问题：保持这个开头方式', c:'#3FA98B'};
+}
+
+function renderData(b){
+  var rows = state.records.slice().reverse();
+  var last6 = rows.slice(0,6).reverse();
+
+  b.innerHTML =
+    '<div class="panel">'+
+      '<h4>记一条数据</h4>'+
+      '<div class="form">'+
+        '<div><label>标题 / 编号</label><input id="fTitle" placeholder="A 版 · 删了第8条"></div>'+
+        '<div><label>播放量</label><input id="fPlay" type="number" placeholder="0"></div>'+
+        '<div><label>5 秒完播率 %</label><input id="fS5" type="number" placeholder="0"></div>'+
+        '<div><label>完播率 %</label><input id="fFin" type="number" placeholder="0"></div>'+
+        '<div><label>新增关注</label><input id="fFans" type="number" placeholder="0"></div>'+
+        '<div><label>评论数</label><input id="fCmt" type="number" placeholder="0"></div>'+
+      '</div>'+
+      '<button class="btn" id="btnAdd">记下这条</button>'+
+      '<div class="hint" style="margin-top:10px">只填平台上真实能看到的字段：2 秒跳出率、5 秒完播率、完播率、播放、点赞、评论、新增关注。</div>'+
+    '</div>'+
+    '<div class="panel">'+
+      '<h4>最近 6 条趋势</h4>'+
+      (last6.length ?
+        '<div class="chart">'+ last6.map(function(r){
+          var h1 = Math.max(3, Math.min(100, +r.s5 || 0));
+          var h2 = Math.max(3, Math.min(100, +r.fin || 0));
+          return '<div class="barwrap">'+
+            '<div style="display:flex;gap:4px;align-items:flex-end;width:100%;justify-content:center;height:100%">'+
+              '<div class="bar" style="height:'+h1+'%"></div>'+
+              '<div class="bar b2" style="height:'+h2+'%"></div>'+
+            '</div>'+
+            '<div class="barlab">'+(r.date||'').slice(5)+'</div>'+
+          '</div>';
+        }).join('') +'</div>'+
+        '<div class="legend"><span><i style="background:#5BC8A8"></i>5 秒完播率</span><span><i style="background:#FFC96B"></i>完播率</span></div>'
+        : '<div class="hint">还没有数据。发完第一条，48 小时后回来记一次。</div>')+
+    '</div>'+
+    '<div class="panel">'+
+      '<h4>每条诊断</h4>'+
+      (rows.length ? rows.map(function(r,i){
+        var d = diag(r);
+        return '<div class="row">'+
+          '<div class="t">'+(r.title||'未命名')+
+            '<div class="m">播放 '+(r.play||0)+'　·　5 秒 '+(r.s5||0)+'%　·　完播 '+(r.fin||0)+'%　·　涨粉 '+(r.fans||0)+'</div>'+
+            '<div class="m" style="color:'+d.c+';font-weight:600">→ '+d.t+'</div>'+
+          '</div>'+
+          '<button class="btn sm ghost" data-del="'+r.rid+'">删</button>'+
+        '</div>';
+      }).join('') : '<div class="hint">暂无记录。</div>')+
+    '</div>';
+
+  $('#btnAdd').onclick = function(){
+    var r = {
+      rid: Date.now(),
+      date: todayKey(),
+      title: $('#fTitle').value.trim(),
+      play: $('#fPlay').value,
+      s5: $('#fS5').value,
+      fin: $('#fFin').value,
+      fans: $('#fFans').value || 0,
+      cmt: $('#fCmt').value || 0
+    };
+    if(!r.title){ alert('先写一下这条叫什么'); return; }
+    state.records.push(r);
+    save();
+    renderData(b);
+  };
+  b.querySelectorAll('[data-del]').forEach(function(el){
+    el.onclick = function(){
+      var rid = +el.getAttribute('data-del');
+      state.records = state.records.filter(function(x){ return x.rid !== rid; });
+      save();
+      renderData(b);
+    };
+  });
+}
+
+/* ============================================================
+   发布排期
+============================================================ */
+function renderPlan(b){
+  var days = [];
+  for(var i=0;i<7;i++){
+    var d = new Date(); d.setDate(d.getDate()+i);
+    days.push({key:d.toISOString().slice(0,10), label:(i===0?'今天 · ':'') + (d.getMonth()+1)+'/'+d.getDate()+' '+'日一二三四五六'[d.getDay()]});
+  }
+  var preset = {};
+  if(days[0]) preset[days[0].key] = 'A 版 · 场景故事流（晚 8:00 首发）';
+  if(days[2]) preset[days[2].key] = 'B 版 · 干货清单流';
+  if(days[4]) preset[days[4].key] = 'C 版 · 数据自查流（有数据后再发）';
+
+  b.innerHTML =
+    '<div class="panel">'+
+      '<h4>这一周</h4>'+
+      '<div class="hint">别把 A 和 B 排在同一天——同一天发等于自己跟自己抢流量。点方框直接改。</div>'+
+      '<div style="margin-top:14px">'+
+        days.map(function(d){
+          var v = state.schedule[d.key] || preset[d.key] || '';
+          return '<div class="row"><div class="t" style="flex:0 0 92px;color:#6B7C77;font-size:12.5px">'+d.label+'</div>'+
+            '<input data-day="'+d.key+'" value="'+(v||'')+'" placeholder="这天发什么？" '+
+            'style="flex:1;border:1.5px solid #E6EFEA;border-radius:12px;padding:9px 11px;font-size:13px;font-family:inherit;background:#FCFEFD">'+
+          '</div>';
+        }).join('')+
+      '</div>'+
+    '</div>'+
+    '<div class="panel">'+
+      '<h4>追剧式排期（按单元走）</h4>'+
+      '<div class="hint">每条结尾勾下一条，观众才会追着看。同一单元连着发，别跳。</div>'+
+      '<div style="margin-top:10px">'+
+        ['起步四连','起号常见死法','账号标签与流量','AI 降门槛','变现与闭环','心法与底层'].map(function(u,i){
+          var n = state.topics.filter(function(t){ return t.unit===u; }).length;
+          return '<div class="row"><div class="t">第 '+(i+1)+' 单元 · '+u+'<div class="m">'+n+' 条</div></div></div>';
+        }).join('')+
+      '</div>'+
+    '</div>';
+
+  b.querySelectorAll('[data-day]').forEach(function(el){
+    el.onchange = function(){
+      var k = el.getAttribute('data-day');
+      if(el.value.trim()) state.schedule[k] = el.value.trim();
+      else delete state.schedule[k];
+      save();
+    };
+  });
+}
+
+/* ============================================================
+   定位与铁律
+============================================================ */
+function renderRule(b){
+  b.innerHTML =
+    '<div class="panel"><h4>账号档案</h4><div class="hint">每次拍之前扫一眼，尤其是禁词和隐私两条。</div></div>'+
+    RULES.map(function(r){
+      return '<div class="panel" style="padding:16px 18px"><div class="row" style="border:0;padding:0">'+
+        '<div class="t"><b style="font-size:13.5px">'+r[0]+'</b><div class="m" style="font-size:13px;color:#2E3D39;line-height:1.75;margin-top:5px">'+r[1]+'</div></div>'+
+      '</div></div>';
+    }).join('')+
+    '<div class="panel" style="background:#FFF4DB;border-color:#FFE1B8">'+
+      '<h4>发之前最后一遍</h4>'+
+      '<div class="hint">① 第一句里有没有"我"字打头？有就换② 有没有出现"教/老师"？③ 有没有提到自己的家庭、负债、学历？④ 结尾有没有勾下一条？</div>'+
+    '</div>';
+}
+
+/* ============================================================
+   导入导出
+============================================================ */
+$('#btnExport').onclick = function(){
+  var blob = new Blob([JSON.stringify(state,null,2)], {type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '苏小七工作台备份-' + todayKey() + '.json';
+  a.click();
+};
+$('#btnImport').onclick = function(){ $('#fileImport').click(); };
+$('#fileImport').onchange = function(e){
+  var f = e.target.files[0]; if(!f) return;
+  var fr = new FileReader();
+  fr.onload = function(){
+    try{
+      var d = JSON.parse(fr.result);
+      if(!d.topics) throw new Error('格式不对');
+      state = d; save(); renderHome();
+      alert('导入成功');
+    }catch(err){ alert('这个文件读不出来，确认是从本工作台导出的备份'); }
+  };
+  fr.readAsText(f);
+};
+
+/* ============================================================
+   启动
+============================================================ */
+init();
+renderHome();
+</script>
+</body>
+</html>
