@@ -513,7 +513,7 @@ var HOT_PLATFORMS = [
   {k:'百度', id:'Jb0vmloB1G'},
   {k:'B站',  id:'74KvxwokxM'}
 ];
-var HOT_KEYS = ['AI','人工智能','机器人','大模型','智能体','算法','副业','兼职','自媒体','短视频','直播','口播','剪辑','涨粉','博主','网红','带货','小红书','抖音','视频号','搞钱','赚钱','存钱','省钱','消费','职场','打工','上班','裁员','就业','面试','创业','开店','摆摊','宝妈','带娃','焦虑','知识','技能','学习','考公','退休','中年','工资','房租'];
+var HOT_KEYS = ['AI','人工智能','大模型','智能体','算法','副业','兼职','自媒体','短视频','口播','剪辑','涨粉','博主','网红','带货','搞钱','赚钱','存钱','省钱','消费','职场','打工','上班','裁员','失业','就业','面试','跳槽','转行','创业','开店','摆摊','宝妈','带娃','焦虑','工资','房租','中年','退休','考公','学历','经济'];
 var HOT_PLAT = '抖音';
 var hotOnlyMine = true;
 var HOT_CACHE = {}, HOT_LAST = {}, LIVE_SHOWN = [], HOT_SHOWN_AT = 0;
@@ -906,19 +906,22 @@ function paintLive(){
     return HOT_KEYS.some(function(k){ return t.indexOf(k) >= 0; });
   }) : items;
   LIVE_SHOWN = list.slice(0, 20);
+  var fallback = false;
+  if(hotOnlyMine && list.length < 3){ LIVE_SHOWN = items.slice(0, 10); fallback = true; }
   var tEl = document.getElementById('liveTime');
   if(tEl && HOT_LAST[HOT_PLAT]) tEl.textContent = '更新于 ' + hms(HOT_LAST[HOT_PLAT]);
   if(!LIVE_SHOWN.length){
-    box.innerHTML = '<div class="empty">这会儿 '+esc(HOT_PLAT)+' 榜上没有明显对口你方向的题目。点「只看我这方向」切到全部看看，或者换个平台。</div>';
+    box.innerHTML = '<div class="empty">这会儿 '+esc(HOT_PLAT)+' 榜上没有明显对口你方向的题目。换个平台看看，或者等下一轮。</div>';
     return;
   }
-  box.innerHTML = LIVE_SHOWN.map(function(it, i){
+  var head = fallback ? '<div class="hint" style="padding-bottom:6px">这会儿榜上没有明显对口你方向的题目，先给你看全榜前 10。看全部把「只看我这方向」关掉。</div>' : '';
+  box.innerHTML = head + LIVE_SHOWN.map(function(it, i){
     return '<div class="row">'+
       '<div class="t"><span style="color:#9AAAA5;font-size:12px;margin-right:6px">'+esc(it.index||(i+1))+'</span>'+esc(it.title||'')+
         '<div class="m">'+esc(HOT_PLAT)+'　·　热度 '+esc(it.hotValue||'—')+'</div></div>'+
       '<button class="btn xs ghost" data-live="'+i+'">存进热点池</button>'+
     '</div>';
-  }).join('') + (list.length < items.length ?
+  }).join('') + ((!fallback && list.length < items.length) ?
     '<div class="hint" style="padding-top:8px">另外 '+(items.length-list.length)+' 条没对上关键词（榜上偏娱乐的多）。想看全部，把「只看我这方向」关掉。</div>' : '');
   box.querySelectorAll('[data-live]').forEach(function(el){
     el.onclick = function(){
