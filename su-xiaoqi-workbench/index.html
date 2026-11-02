@@ -544,9 +544,173 @@ var PRICE = [
   ['1 万以上','带货 / 品牌合作','按粉丝量、完播、人群匹配定价','按单谈，不接不熟的品']
 ];
 
+/* ===== 现成口播脚本库（可直接念） ===== */
+var SCRIPTS_LIB = [
+  {id:'s3', track:'口播', title:'你的口播没人看完，问题常出在第三句', dur:'约 2 分 10 秒',
+   cover:['前两句他留下了','第三句把人送走'], pin:'把你最近那条的第三句打在评论里，我帮你看它有没有给新东西。', body:[
+    '你的视频不是开头劝退的，是第三句把人送走的。',
+    '',
+    '你拍完自己回看，觉得还挺好。第二天看数据：前两秒跳出四成，完播百分之八。',
+    '你以为开头不行，于是反复换开头。换了五版，还是这个数。',
+    '',
+    '这不是开头的问题。这个叫「第三句空转」。',
+    '开头给了一个结论，第二句补了一句背景，第三句开始——绕。',
+    '',
+    '为什么第三句这么关键？前两句观众是在等“你到底要说什么”。第三句如果没给新东西，他就知道后面都是铺垫。',
+    '我刚开始拍的时候，第三句总是“其实这个事情呢，说起来也比较复杂”。',
+    '一句话，把前面全废了。',
+    '后来我给自己定了个硬规矩：第三句必须给出一个具体的东西——一个数字、一个动作、一个反例，三样里至少一样。',
+    '定下这个规矩之后，我第三条视频的完播从百分之八到了百分之二十一。',
+    '',
+    '前两句让他留下，第三句决定他要不要继续。',
+    '第三句不给新东西，前面两句就白说了。',
+    '',
+    '今天回去看你上一条，把第三句抄下来，看它有没有给新东西。',
+    '抄完打在评论区，我帮你看。',
+    '下期就聊：你给了三个方法，他为什么一个都不用。',
+    '咱一起，少走弯路。'
+  ]},
+  {id:'s4', track:'生活', title:'我不做时间管理，我只做任务合并', dur:'约 2 分 05 秒',
+   cover:['时间不是省出来的','是合并出来的'], pin:'你每天必做的三件事是什么？挑两件能合的，试一天。', body:[
+    '别再学时间管理了，我做的不是管理，是合并。',
+    '',
+    '早上六点起来，做饭、送孩子、回消息、拍视频。一天下来累得不行，事还没做完。',
+    '你以为是时间不够。',
+    '',
+    '这个叫「任务并列」——你把每件事当成一个独立项目，一件一件排队做，中间全是切换。',
+    '',
+    '我改了一个规则：能一起做的，合成一件事。',
+    '烧水的时候回消息，不是我“边做饭边看手机”。是我把两件事合并成了“厨房那十五分钟”。',
+    '煮面八分钟，我在旁边把今天要说的最后一句写出来。',
+    '以前我以为这是偷时间。后来才明白，这是少切换五次。',
+    '切换一次，人就得重新进入状态，真正贵的是那一次次的重新开始。',
+    '',
+    '时间不是省出来的，是合并出来的。',
+    '你不是没时间，你是把时间切得太碎了。',
+    '',
+    '今晚列一下你每天必做的三件事，写下来，看哪两件能合着做。',
+    '合成了哪两件，打在评论区。',
+    '下期咱聊：我一天只拍十五秒，七天剪成一条。',
+    '咱一起，少走弯路。'
+  ]},
+  {id:'s5', track:'测评', title:'先说“什么人别买”，比夸好用十倍', dur:'约 2 分 10 秒',
+   cover:['好用的东西','不一定是你的'], pin:'你最近买错过什么？说一个，我帮你看看当初该看哪一条。', body:[
+    '测评最有用的一句，不是“它好用”，是“什么人千万别买”。',
+    '',
+    '你看了一个博主夸得天花乱坠，下单，收到货发现根本不适合自己。',
+    '不是你选错了，是没人告诉你不适合谁。',
+    '',
+    '这个叫「只说好处」。只说好处，等于没说。',
+    '',
+    '为什么“别买”更有用？因为观众要的不是一个好东西，是“适合我的东西”。',
+    '你说它快、它好、它划算，这是产品的属性。',
+    '你说“每天用超过两小时的人别买，会烫手”，这是替他在做决定。',
+    '我上个月讲过一个杯子，只讲了三条，第二条是“你习惯带在包里就别买，它会漏”。',
+    '就这一条，评论区一半人在问“那我这种能买吗”。',
+    '',
+    '推荐是替产品说话，排除是替人说话。',
+    '人只信替自己说话的那个人。',
+    '',
+    '下次测评，先写一句“什么人别买”，再写优点。',
+    '写完把那句打在评论区，我帮你看够不够具体。',
+    '下期聊：用了三个月再说，比开箱那天值钱。',
+    '咱一起，少走弯路。'
+  ]},
+  {id:'s6', track:'剧情', title:'“我先看看”这四个字，至少有四种意思', dur:'约 1 分 40 秒',
+   cover:['听懂一句话','少丢一单'], pin:'你听过最难接的一句话是什么？打在评论区，我下条演给你看。', body:[
+    '镜头：你坐在桌前，对方站在对面。',
+    '你：“你考虑得怎么样？”',
+    '他：“我先看看。”',
+    '旁白：“我先看看”这四个字，至少有四种意思。',
+    '',
+    '第一种，他真的会看。',
+    '他：“多少钱？我回头找你。”',
+    '旁白：这种人值得跟，把重点发给他，等两天。',
+    '',
+    '第二种，他在客气。',
+    '镜头：他一边说，一边在看门口。',
+    '旁白：这时候别追问，问了就是为难。',
+    '',
+    '第三种，他觉得贵，但不好意思说。',
+    '旁白：你只要一句“要不要我帮你算一下你真正要的那部分”，他会松一口气。',
+    '',
+    '第四种，他在等别人给意见。',
+    '旁白：你说“你回去跟家里人商量，我把重点整理给你”，反而成。',
+    '',
+    '听懂“我先看看”是哪一种，比会说话重要。',
+    '同一句话，回错了，单就没了。',
+    '',
+    '你听过最难接的一句话是什么？打在评论区。',
+    '下条我演给你看，教你怎么接。',
+    '咱一起，少走弯路。'
+  ]},
+  {id:'s7', track:'通用', title:'先做 10 条再谈定位：定位是拍出来的', dur:'约 2 分 15 秒',
+   cover:['定位不是想出来的','是拍出来的'], pin:'把你最近三条的播放和评论数打出来，我帮你看交集在哪。', body:[
+    '定位不是想出来的，是拍到第十条那天，自己浮出来的。',
+    '',
+    '你打开备忘录写定位，写了三天。删了改，改了删。',
+    '最后纸上留下一句：“我好像也不知道自己擅长什么。”',
+    '',
+    '这个叫「先装修再住人」。位置还没去，家具先买了一屋子。',
+    '',
+    '定位的本质是别人对你的印象。你没法自己定，只能算出来。',
+    '你拍十条，数据会告诉你三件事：哪条看完的人多、哪条有人说话、哪条有人在问你要东西。',
+    '三个东西一交集，那就是你的定位。',
+    '我前十条拍的题，跟我现在做的完全不是一回事。',
+    '真正让我定下来的，是第七条。我自己觉得最普通的那条，评论最多。',
+    '',
+    '定位是被数据认出来的，不是被自己想出来的。',
+    '',
+    '别再写了。这周拍三条，下周三我们再一起看数据。',
+    '三条的播放和评论数，打在评论区，我帮你看交集在哪。',
+    '咱一起，少走弯路。'
+  ]},
+  {id:'s8', track:'通用', title:'拍之前先写最后一句，前面就不会跑偏', dur:'约 2 分 05 秒',
+   cover:['先写最后一句','再写第一句'], pin:'开拍前先在纸上写一句：看完这条他要做什么。写下来打在评论区。', body:[
+    '先想清楚最后一句说什么，中间自然就顺了。',
+    '',
+    '你一打开录制就卡。讲两句不知道往哪走，最后收尾收得莫名其妙——“大概就是这样吧”。',
+    '不是你准备得不够，是你没定落点。',
+    '',
+    '这个叫「没有落点」。',
+    '',
+    '写文章先写结尾，拍视频先写落点。',
+    '落点是“看完他要做什么”，只能是一件。',
+    '比如这条的最后一句是“今晚就在纸上写一句话”。前面所有话都是为了把它推出来。',
+    '有了落点，你就知道哪句话该留、哪句话该砍。',
+    '我有一条讲了八分钟，最后剪到两分钟，就是因为落点清楚，中间全是可砍的。',
+    '',
+    '没有落点的视频，拍得越认真越拖。',
+    '',
+    '今晚开拍前，先在纸上写一句：看完这条，他要做什么。',
+    '写完就开拍，别的都不用想。',
+    '你写下来的是什么，打在评论区。',
+    '咱一起，少走弯路。'
+  ]}
+];
+
+/* 六段骨架提示 */
+var SEG6 = [
+  ['① 一句话结论','只做一件事：把观点先说出去。不要自我介绍、不要铺垫。','0–10 秒'],
+  ['② 场景代入','说一个他正在经历的具体场面，让他对号入座。','10–35 秒'],
+  ['③ 给痛点命名','把这个麻烦起个名字，让他觉得“原来这叫这个”。','35–55 秒'],
+  ['④ 案例 / 机制','讲一个真事，或讲清为什么会这样。用“朋友”“普遍现象”，不编数字。','55–95 秒'],
+  ['⑤ 金句','一句能单独被截下来的话。慢一点，说完停半秒。','95–120 秒'],
+  ['⑥ 召唤行动','一个今天就能做的动作，加一句下期钩子。','120–140 秒']
+];
+
+/* 发之前自查（“能不能爆”的前置检查） */
+var SELFTEST = [
+  '第一句里有“我”吗（“大家好我是…”这种）？',
+  '第一句给的是结论或好处，不是背景？',
+  '全程只讲了一件事，没跑题？',
+  '给了一个今天就能做的动作？',
+  '有一句能被单独截下来的话？'
+];
+
 /* ---------------- state ---------------- */
 function fresh(){
-  return {quiz:null, answers:[], track:null, off:0, list:[], mine:[], vault:VAULT0.slice(), cmt:'', money:null, libT:'全部', libU:'全部', libQ:''};
+  return {quiz:null, answers:[], track:null, off:0, list:[], mine:[], vault:VAULT0.slice(), cmt:'', money:null, libT:'全部', libU:'全部', libQ:'', sel:null, drafts:[], self:[]};
 }
 var S = (function(){
   try{
@@ -581,7 +745,7 @@ function addedCount(){ return S.mine.length; }
 /* ---------------- chrome ---------------- */
 var PAGES = [
   ['home','首页'],['quiz','赛道自测'],['daily','每日选题'],
-  ['comment','评论区洞察'],['vault','爆款知识库'],['money','商业变现']
+  ['vault','爆款知识库'],['script','脚本工坊'],['comment','评论区洞察'],['money','商业变现']
 ];
 var CUR = 'home';
 
@@ -594,7 +758,7 @@ function renderTabs(){
 function go(page){
   CUR = page;
   renderTabs();
-  var f = {home:pageHome, quiz:pageQuiz, daily:pageDaily, comment:pageComment, vault:pageVault, money:pageMoney}[page] || pageHome;
+  var f = {home:pageHome, quiz:pageQuiz, daily:pageDaily, comment:pageComment, vault:pageVault, money:pageMoney, script:pageScript}[page] || pageHome;
   document.getElementById('app').innerHTML = f();
   if(page === 'daily') renderLib();
   window.scrollTo({top:0,behavior:'smooth'});
@@ -605,18 +769,19 @@ function pageHome(){
   var t = S.track ? TRACKS[S.track].name : '还没测';
   var d = todays();
   var cards = [
-    ['01','赛道自测','不知道做什么赛道。八道题，出一句话定位、三条起步题。','quiz'],
-    ['02','每日选题','不知道今天拍什么。每天给你三条，带「为什么现在拍」和第一句。','daily'],
-    ['03','评论区洞察','把评论粘进来，自动分出四类，每条都能变成选题。','comment'],
-    ['04','爆款知识库','不知道怎么拆爆款。拆结构，不抄句子，拆完能直接用。','vault'],
-    ['05','商业变现','什么时候能收钱，先卖什么。按阶段给动作，不画饼。','money']
+    ['01','赛道自测','不知道做什么赛道。八道题，出定位、三个切面、七坑、30 天路线。','quiz'],
+    ['02','每日选题','不知道今天拍什么。每天三条，也可以从 92 条里自己筛。','daily'],
+    ['03','爆款知识库','不知道怎么拆爆款。12 条真拆解 + 6 个结构 + 12 种开头 + 24 个标题。','vault'],
+    ['04','脚本工坊','不想自己写稿。6 份现成口播稿直接念，或输入选题一键出六段骨架。','script'],
+    ['05','评论区洞察','拍完不知道怎么看评论。粘进来自动分四类，每条都能变成下一条选题。','comment'],
+    ['06','商业变现','什么时候能收钱、先卖什么。按阶段给动作，不画饼。','money']
   ];
   return ''+
   '<div class="wrap">'+
     '<div class="hero">'+
       '<p class="kicker">苏小七 · 内容工作台</p>'+
       '<h1>不知道拍什么，<br>是因为你还没先答清楚「拍给谁看」。</h1>'+
-      '<p class="lead">这里不给你一堆理论。五块，一块只解决一个问题：先测出你的赛道，再每天给你三条能开机的题，拍完知道去哪看数据，看懂了知道怎么收钱。</p>'+
+      '<p class="lead">这里不给你一堆理论。六块，一块只解决一个问题：先测出赛道，再每天给题，拍之前拆结构、出脚本，拍完看评论，最后才谈收钱。</p>'+
       '<div class="acts">'+
         '<button class="btn p" data-act="go" data-arg="quiz">开始赛道自测</button>'+
         '<button class="btn g" data-act="go" data-arg="daily">看今天拍什么</button>'+
@@ -638,12 +803,12 @@ function pageHome(){
       '<h2>一条视频是怎么从「没想法」变成「能开机」的</h2>'+
       '<p class="lead">这五块不是并列的，是一条链子。你不用每天想创意，按顺序往下走就行。</p>'+
       '<div class="grid g3">'+
-        '<div class="card"><h3>① 先定赛道</h3><p>赛道不定，选题就没有方向。测完你会拿到一句话定位，和三条今晚就能拍的题。</p></div>'+
-        '<div class="card"><h3>② 每天有题</h3><p>每天三条，带「为什么现在拍」和第一句该怎么开口。挑一条，点「今天拍这条」。</p></div>'+
-        '<div class="card"><h3>③ 没题就翻评论</h3><p>评论区的每一句抱怨和追问，都是下一条视频。粘进来，自动归类。</p></div>'+
-        '<div class="card"><h3>④ 拍之前先拆</h3><p>拆爆款只拆结构：钩子、节奏、落点。抄结构不算抄，抄句子才叫洗稿。</p></div>'+
-        '<div class="card"><h3>⑤ 有人问再收钱</h3><p>没流量时先做产品等于给空房间卖票。什么时候能收、先卖什么，看第五块。</p></div>'+
-        '<div class="card w"><h3>每天只做三件事</h3><p>挑一条题、拍完发出去、守半小时评论。其他都不用管。</p></div>'+
+        '<div class="card"><h3>① 先定赛道</h3><p>赛道不定，选题就没方向。测完你会拿到一句话定位，和九条今晚就能拍的题。</p></div>'+
+        '<div class="card"><h3>② 每天有题</h3><p>每天三条，带「为什么现在拍」和第一句。挑一条，不想写稿就往下走。</p></div>'+
+        '<div class="card"><h3>③ 先拆再拍</h3><p>拆爆款只拆结构：钩子、节奏、落点。抄结构不算抄，抄句子才叫洗稿。</p></div>'+
+        '<div class="card"><h3>④ 稿子不用自己写</h3><p>现成稿直接念；没有就用你的选题一键生成六段骨架，标题、开头、封面全排好。</p></div>'+
+        '<div class="card"><h3>⑤ 拍完看评论</h3><p>评论区的每一句抱怨和追问，都是下一条视频。粘进来，自动归类。</p></div>'+
+        '<div class="card w"><h3>⑥ 有人问再收钱</h3><p>没流量时先做产品等于给空房间卖票。什么时候能收、先卖什么，看第六块。</p></div>'+
       '</div>'+
     '</div></section>'+
   '</div>';
@@ -763,6 +928,7 @@ function pageDaily(){
           '<div class="lbl">第一句</div><p class="val">「'+esc(p.hook)+'」</p>'+
           '<div class="acts">'+
             '<button class="btn sm p" data-act="take" data-arg="'+p.id+'">今天拍这条</button>'+
+            '<button class="btn sm g" data-act="toScript" data-arg="'+p.id+'">直接出脚本</button>'+
             '<button class="btn sm g" data-act="keep" data-arg="'+p.id+'">先存着</button>'+
           '</div>'+
         '</div>';
@@ -780,6 +946,7 @@ function pageDaily(){
         '<div class="chk'+(x.done?' on':'')+'" data-act="done" data-arg="'+x.id+'">✓</div>'+
         '<div style="flex:1"><div class="t">'+esc(x.title)+'</div>'+
           '<div class="m">'+esc(x.unit||'')+' · 来自'+esc(x.from||'选题池')+'</div></div>'+
+        '<button class="btn sm g" data-act="toScriptText" data-arg="'+esc(x.title)+'">出脚本</button>'+
         '<button class="x" data-act="del" data-arg="'+x.id+'">删掉</button>'+
       '</div>';
     }).join('')+'</div>' : '<p class="sub" style="margin-top:16px">还没有存过题。上面三条挑一条点「今天拍这条」，它就会出现在这里。</p>')+
@@ -838,6 +1005,208 @@ function takeTopic(id, from){
     S.list.push({id:'t'+Date.now(), title:p.title, unit:p.unit, from:from||'选题池', done:false});
   }
   save(); go('daily');
+}
+
+/* ---------------- script ---------------- */
+function genScript(topic, track){
+  var t = (topic||'').trim();
+  var hooks = [
+    '关于「'+t+'」，我先说结论：',
+    '如果你正卡在「'+t+'」，这条是给你的。',
+    '「'+t+'」——不是你不行，是顺序不对。'
+  ];
+  var titles = [
+    t,
+    '关于「'+t+'」，我只说三句',
+    '不是你不努力，是「'+t+'」的顺序错了',
+    '「'+t+'」：一条讲清就够了'
+  ];
+  var ex = [
+    '句式：X 不是问题，Y 才是问题。',
+    '句式：你（在做什么的时候），（出现了什么）。',
+    '句式：这个叫「（四五个字的名字）」。',
+    '句式：我朋友也这样，他（改了什么），（结果怎样）。',
+    '句式：（一句能被单独截图的话）。',
+    '句式：今晚就做一件事：（一个具体动作）。'
+  ];
+  var segs = SEG6.map(function(s,i){ return [s[0], s[1], s[2], ex[i]]; });
+  return {topic:t, track:track||'通用', hooks:hooks, titles:titles, segs:segs,
+    cover:['第一行：他现在的状态，4–8 字','第二行：看完能得到的结果，4–10 字']};
+}
+
+function pageScript(){
+  var s = S.sel;
+  var tracks = ['口播','生活','测评','剧情','通用'];
+  var html = ''+
+  '<div class="wrap"><section>'+
+    '<p class="kicker">脚本工坊</p>'+
+    '<h1>你只负责开口，稿子在这。</h1>'+
+    '<p class="lead">两条路：拿一份现成的直接念（标了时长和封面），或者把你的选题输进去，生成一份六段骨架——标题、开头、封面、每段该说什么，全给你排好。</p>'+
+    '<h2 style="margin-top:56px">现成的 '+SCRIPTS_LIB.length+' 份，拿来就念</h2>'+
+    '<p class="lead">每一份都是完整口播稿，直接进提词器。念不顺口就改字，别改结构。</p>'+
+    '<div class="grid g2">'+SCRIPTS_LIB.map(function(sc){
+      return '<div class="card w">'+
+        '<div class="tiny" style="margin-bottom:10px">'+esc(sc.track==='通用'?'通用':TRACKS[sc.track].name)+' · '+esc(sc.dur)+'</div>'+
+        '<h3 style="font-size:18.5px;line-height:1.45">'+esc(sc.title)+'</h3>'+
+        '<p style="margin:10px 0 0;font-size:13.5px;color:var(--ink3)">封面：'+esc(sc.cover[0])+' / '+esc(sc.cover[1])+'</p>'+
+        '<div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">'+
+          '<button class="btn sm p" data-act="openPrompt" data-arg="'+sc.id+'">全屏念</button>'+
+          '<button class="btn sm g" data-act="copyScript" data-arg="'+sc.id+'">复制全文</button>'+
+        '</div></div>';
+    }).join('')+'</div>'+
+    '<h2 style="margin-top:72px">用你的选题，生成一份</h2>'+
+    '<p class="lead">选一条待拍的题，或者直接手写一句话。生成的是骨架＋句式提示，不是现成稿——但个小白照着填也能填完。</p>'+
+    '<div class="card" style="margin-top:22px">'+
+      '<div class="field"><label class="f">你的选题（一句话）</label>'+
+        '<input type="text" id="genTopic" placeholder="例：我的口播没人看完" value="'+esc(s?s.topic:'')+'"></div>'+
+      '<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">'+
+        '<span class="tiny">赛道</span>'+
+        '<select id="genTrack" style="border:1px solid var(--line2);border-radius:12px;padding:9px 14px;font-size:14px;font-family:inherit;background:#fff">'+
+          tracks.map(function(t){ return '<option value="'+t+'"'+((s&&s.track===t)?' selected':'')+'>'+t+'</option>'; }).join('')+
+        '</select>'+
+        '<button class="btn p" data-act="gen">生成脚本</button>'+
+      '</div>'+
+    '</div>';
+
+  if(s){
+    html += '<div style="margin-top:40px">'+
+      '<h2>你的这份</h2>'+
+      '<p class="lead">先看标题和第一句。标题定不住，后面全不对。</p>'+
+      '<div class="card w"><h3>四个标题，选一个</h3><div class="chips" style="margin-top:12px">'+
+        s.titles.map(function(t){ return '<span class="chip" style="cursor:pointer;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.04)" data-act="copy" data-arg="'+esc(t)+'">'+esc(t)+'</span>'; }).join('')+
+      '</div></div>'+
+      '<div class="card w" style="margin-top:16px"><h3>三句开头，选一个</h3>'+
+        s.hooks.map(function(h,i){ return '<p style="margin:10px 0 0;font-size:15px;color:var(--ink)">'+(i+1)+'. '+esc(h)+'……</p>'; }).join('')+
+      '</div>'+
+      '<div class="card w" style="margin-top:16px"><h3>封面两行</h3>'+
+        '<p style="margin-top:8px">'+esc(s.cover[0])+'<br>'+esc(s.cover[1])+'</p>'+
+        '<p class="tiny" style="margin-top:10px">自己别写字太多，封面上不要出现完整句子。</p>'+
+      '</div>'+
+      '<div class="card w" style="margin-top:16px"><h3>六段骨架</h3>'+
+        '<div style="margin-top:10px">'+s.segs.map(function(g){
+          return '<div class="li"><div class="n">'+esc(g[2])+'</div><div>'+
+            '<div class="h">'+esc(g[0])+'</div>'+
+            '<p class="d">'+esc(g[1])+'</p>'+
+            '<p class="d" style="color:var(--ink3);margin-top:4px">'+esc(g[3])+'</p></div></div>';
+        }).join('')+'</div>'+
+        '<p class="tiny" style="margin-top:12px">填的时候，每段只写一两句。写满三句就是太多了。</p>'+
+      '</div>'+
+      '<div class="card w" style="margin-top:16px"><h3>发之前自查五问</h3>'+
+        '<p style="margin-top:8px">五个都过了再发。全过也不保证爆，但能避掉九成的“没人看”。</p>'+
+        '<div style="margin-top:12px">'+SELFTEST.map(function(q,i){
+          var v = (S.self && S.self[i]!==undefined) ? S.self[i] : -1;
+          return '<div style="display:flex;gap:12px;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line2)">'+
+            '<span style="font-size:14.5px;color:var(--ink2);flex:1">'+(i+1)+'. '+esc(q)+'</span>'+
+            '<button class="btn sm '+(v===1?'p':'g')+'" data-act="self" data-arg="'+i+':1">是</button>'+
+            '<button class="btn sm '+(v===0?'p':'g')+'" data-act="self" data-arg="'+i+':0">否</button></div>';
+        }).join('')+'</div>'+
+        (selfScore()!==null ? '<p style="margin-top:14px;font-size:14.5px;color:var(--ink)">'+esc(selfScore())+'</p>' : '')+
+      '</div>'+
+      '<div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">'+
+        '<button class="btn p" data-act="genPrompt">全屏念这份</button>'+
+        '<button class="btn g" data-act="saveDraft">存进我的脚本</button>'+
+      '</div></div>';
+  }
+
+  html += '<h2 style="margin-top:72px">我存的脚本（'+S.drafts.length+'）</h2>';
+  html += S.drafts.length ? '<div style="margin-top:10px">'+S.drafts.map(function(d){
+      return '<div class="row"><div style="flex:1"><div class="t">'+esc(d.title)+'</div>'+
+        '<div class="m">'+esc(d.at)+'</div></div>'+
+        '<button class="btn sm g" data-act="openDraft" data-arg="'+d.id+'">全屏念</button>'+
+        '<button class="x" data-act="delDraft" data-arg="'+d.id+'">删掉</button></div>';
+    }).join('')+'</div>' : '<p class="sub" style="margin-top:12px">还没有存过。生成一份之后点「存进我的脚本」，下次直接念。</p>';
+
+  html += '</section></div>';
+  return html;
+}
+
+function selfScore(){
+  if(!S.self || S.self.length < SELFTEST.length) return null;
+  for(var i=0;i<S.self.length;i++) if(S.self[i]<0) return null;
+  var sc = 0;
+  for(var j=0;j<SELFTEST.length;j++){
+    sc += (j===0 ? (S.self[j]===0 ? 1 : 0) : (S.self[j]===1 ? 1 : 0));
+  }
+  var msg = {
+    5:'五问全过。这条可以发。发完守三十分钟评论，然后看数据。',
+    4:'过了四条。差的那一条通常是结尾——补一句能被截图的话再发。',
+    3:'过半了。先别发，把第一句和结尾重写一遍，比多拍一条有用。',
+    2:'两条没过。你现在发出去，大概率就是又一条“没人看”。改完再发。',
+    1:'别再改了，重新选一条题。这条不是写的问题，是题本身不对。',
+    0:'别再改了，重新选一条题。这条不是写的问题，是题本身不对。'
+  }[sc];
+  return '自查结果：'+sc+' / 5　'+msg;
+}
+
+/* 提词器 */
+function openPrompt(title, lines){
+  closePrompt();
+  var box = document.createElement('div');
+  box.id = 'promptBox';
+  box.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:300;display:flex;flex-direction:column;font-family:inherit';
+  box.innerHTML = '<div style="display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid #E8E8ED">'+
+      '<span style="font-size:13px;color:#86868B">'+esc(title)+'</span>'+
+      '<span style="font-size:12.5px;color:#86868B">点屏幕或按空格：下一句　·　Esc 退出</span></div>'+
+    '<div id="promptBody" style="flex:1;display:flex;align-items:center;justify-content:center;padding:6vh 8vw;cursor:pointer"></div>'+
+    '<div style="padding:16px 24px;border-top:1px solid #E8E8ED;display:flex;gap:10px;justify-content:center">'+
+      '<button class="btn sm g" id="pPrev">上一句</button>'+
+      '<button class="btn sm g" id="pNext">下一句</button>'+
+      '<button class="btn sm p" id="pClose">退出</button></div>';
+  document.body.appendChild(box);
+  window.__prompt = {lines:((lines||[]).filter(function(x){ return String(x).trim() !== ''; })).length ? (lines||[]).filter(function(x){ return String(x).trim() !== ''; }) : ['（没有内容）'], i:0};
+  renderPrompt();
+  box.querySelector('#promptBody').addEventListener('click', function(){ promptStep(1); });
+  box.querySelector('#pPrev').addEventListener('click', function(){ promptStep(-1); });
+  box.querySelector('#pNext').addEventListener('click', function(){ promptStep(1); });
+  box.querySelector('#pClose').addEventListener('click', closePrompt);
+  document.addEventListener('keydown', promptKey);
+}
+function promptKey(e){
+  if(e.key === 'Escape'){ closePrompt(); }
+  if(e.key === ' '){ e.preventDefault(); promptStep(1); }
+  if(e.key === 'Backspace'){ e.preventDefault(); promptStep(-1); }
+}
+function promptStep(d){
+  if(!window.__prompt) return;
+  var p = window.__prompt;
+  p.i = Math.max(0, Math.min(p.lines.length-1, p.i + d));
+  renderPrompt();
+}
+function renderPrompt(){
+  var p = window.__prompt; if(!p) return;
+  var el = document.getElementById('promptBody'); if(!el) return;
+  var line = p.lines[p.i] || '';
+  el.innerHTML = '<div style="max-width:900px;text-align:center">'+
+    '<div style="font-size:clamp(26px,4.4vw,46px);line-height:1.6;font-weight:500;letter-spacing:-.01em;color:#1D1D1F;white-space:pre-wrap">'+esc(line)+'</div>'+
+    '<div style="margin-top:32px;font-size:12.5px;color:#86868B">'+(p.i+1)+' / '+p.lines.length+'</div></div>';
+}
+function closePrompt(){
+  var b = document.getElementById('promptBox');
+  if(b) b.remove();
+  document.removeEventListener('keydown', promptKey);
+  window.__prompt = null;
+}
+
+function genLines(s){
+  var out = [s.hooks[0] + '（第一句就说这句）', ''];
+  s.segs.forEach(function(g){
+    out.push(g[0] + '　' + g[2]);
+    out.push(g[1]);
+    out.push(g[3]);
+    out.push('');
+  });
+  out.push('（说完停半秒，再说下一句）');
+  return out;
+}
+function doCopy(txt){
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ toast('已复制'); }, function(){ alert(txt); });
+  }else{
+    var t = document.createElement('textarea');
+    t.value = txt; document.body.appendChild(t); t.select();
+    try{ document.execCommand('copy'); toast('已复制'); }catch(e){ alert(txt); }
+    document.body.removeChild(t);
+  }
 }
 
 /* ---------------- comment ---------------- */
@@ -1117,20 +1486,59 @@ document.addEventListener('click', function(e){
 
   if(act === 'ans'){ var p = arg.split(':'); answerQuiz(+p[0], +p[1]); return; }
   if(act === 'copy'){
-    var txt = arg || '';
-    if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(txt).then(function(){ toast('已复制'); }, function(){ alert(txt); });
-    }else{
-      var ta0 = document.createElement('textarea');
-      ta0.value = txt; document.body.appendChild(ta0); ta0.select();
-      try{ document.execCommand('copy'); toast('已复制'); }catch(e){ alert(txt); }
-      document.body.removeChild(ta0);
-    }
+    doCopy(arg || '');
     return;
   }
   if(act === 'resetQuiz'){ S.quiz=null; S.track=null; S.answers=[]; save(); go('quiz'); return; }
 
   if(act === 'take'){ takeTopic(arg,'今日选题'); return; }
+  if(act === 'toScript'){
+    var pp = findPool(arg);
+    if(pp){ S.sel = genScript(pp.title, pp.track); S.self = []; save(); go('script'); }
+    return;
+  }
+  if(act === 'toScriptText'){ S.sel = genScript(arg, S.track || '通用'); S.self = []; save(); go('script'); return; }
+  if(act === 'gen'){
+    var gt = document.getElementById('genTopic'), gr = document.getElementById('genTrack');
+    var tv = gt ? gt.value.trim() : '';
+    if(!tv){ alert('先写一句选题'); return; }
+    S.sel = genScript(tv, gr ? gr.value : '通用'); S.self = []; save(); go('script'); return;
+  }
+  if(act === 'self'){
+    var sq = arg.split(':');
+    if(!S.self) S.self = [];
+    S.self[+sq[0]] = +sq[1];
+    save(); go('script'); return;
+  }
+  if(act === 'openPrompt'){
+    var sc = null;
+    for(var si=0;si<SCRIPTS_LIB.length;si++) if(SCRIPTS_LIB[si].id===arg) sc = SCRIPTS_LIB[si];
+    if(sc) openPrompt(sc.title + '　·　' + sc.dur, sc.body);
+    return;
+  }
+  if(act === 'copyScript'){
+    var sc2 = null;
+    for(var sj=0;sj<SCRIPTS_LIB.length;sj++) if(SCRIPTS_LIB[sj].id===arg) sc2 = SCRIPTS_LIB[sj];
+    if(sc2){ doCopy(sc2.body.join('\n')); }
+    return;
+  }
+  if(act === 'genPrompt'){
+    if(S.sel) openPrompt(S.sel.titles[0], genLines(S.sel));
+    return;
+  }
+  if(act === 'saveDraft'){
+    if(!S.sel) return;
+    S.drafts.unshift({id:'d'+Date.now(), title:S.sel.titles[0], at:today(), lines:genLines(S.sel)});
+    save(); go('script'); return;
+  }
+  if(act === 'openDraft'){
+    S.drafts.forEach(function(d){ if(d.id===arg) openPrompt(d.title, d.lines); });
+    return;
+  }
+  if(act === 'delDraft'){
+    S.drafts = S.drafts.filter(function(d){ return d.id!==arg; });
+    save(); go('script'); return;
+  }
   if(act === 'libT'){ S.libT = arg; save(); go('daily'); return; }
   if(act === 'libU'){ S.libU = arg; save(); go('daily'); return; }
   if(act === 'keep'){ takeTopic(arg,'先存着'); return; }
