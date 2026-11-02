@@ -460,6 +460,49 @@ var SEED_HOT = [
   {id:4, title:'年终总结：今年最值得做的一件小事', platform:'视频号', why:'年底复盘话题常青，适合做收尾单元', status:'待用'}
 ];
 
+var RECO = [
+  {id:'r1', unit:'AI 降门槛', title:'有人半个月涨 65 万粉，靠的是“Vibe 知识”—— 但有一步你千万别跟着学',
+   logic:'AI 把知识可视化的成本打下来了，但火的还是内容密度', pit:'以为换个花哨形式就能火，内容还是空的',
+   hook:'有人半个月涨了 65 万粉，用的工具你手机里可能就有。但他有一件事，你千万别跟着学。',
+   why:'“Vibe 知识”正被抖音、B 站、小红书一起推，新号也能起，这波流量现在最热'},
+  {id:'r2', unit:'账号标签与流量', title:'平台现在看“收藏”，不看你粉丝多少 —— 你的选题能不能被存下来',
+   logic:'收藏率高→平台判定有用→推给精准的人', pit:'只给情绪不给方法，看完就忘',
+   hook:'你的视频没人收藏，不是拍得差，是你只给了情绪，没给能存下来以后用的东西。',
+   why:'平台规则往“长效价值”改，收藏率权重变高，现在讲正好赶上大家的焦虑点'},
+  {id:'r3', unit:'起号常见死法', title:'“零粉也能爆”这句话骗了不少人：它只在一个前提下成立',
+   logic:'零粉能爆的前提是前五秒不赶人', pit:'拿“零粉也能爆”当不准备的借口',
+   hook:'都说零粉也能爆。没人告诉你，它只在你前五秒不赶人的时候才成立。',
+   why:'算法越来越不看粉丝基数，这句话传得很歪，正是澄清的好时机'},
+  {id:'r4', unit:'AI 降门槛', title:'AI 替你出镜、AI 替你探店，省下来的时间够你失去一个账号',
+   logic:'省时间不等于建立信任，真人感是现在的稀缺资源', pit:'全量交给 AI，观众第一眼就觉得“这不是人”',
+   hook:'用 AI 替你出镜，确实省时间。但省下来的那些时间，可能刚好够你丢掉一个账号。',
+   why:'AI 探店、数字人口播最近集中冒头，大厂工具扎堆上线，正好讲“边界在哪”'},
+  {id:'r5', unit:'心法与底层', title:'工具已经能一个人干完一个剧组，但它替不了你开口那一下',
+   logic:'“一人剧组”把技术门槛降到零，剩下的门槛变成“你敢不敢说”', pit:'等技术完美，结果一条没发',
+   hook:'现在的工具，一个人就能干完一个剧组的活。可它替不了你一件事：你敢开口说第一句。',
+   why:'“从一键成片到一人剧组”成了今年 AI 大会的主线话题，大家都盯工具，没人讲人这一环'},
+  {id:'r6', unit:'起号常见死法', title:'同样是讲知识，他 3 秒留住人，你 30 秒还没进正题——差在哪一步',
+   logic:'知识类内容拼的不是信息量，是前五秒给不给结论', pit:'从头铺垫背景，把结论放最后',
+   hook:'同样是讲知识，他三秒就把人留住了，你三十秒还没进正题。差的不是水平，是一个顺序。',
+   why:'知识赛道新号暴增，同质化来得快，现在讲“怎么不被划走”最有人听'},
+  {id:'r7', unit:'AI 降门槛', title:'AI 写稿为啥越写越像机器？因为你把顺序搞反了',
+   logic:'先自己写一版烂的，再让 AI 改；反过来就废', pit:'一上来让 AI 从零写，人味全丢',
+   hook:'AI 写的稿子像机器念的，不是它不行，是你把它放错了位置。',
+   why:'用 AI 写稿的人越来越多，满屏一个腔调，现在讲“顺序”差异化最大'},
+  {id:'r8', unit:'账号标签与流量', title:'能被收藏的选题，都有三个共同点（能照做、有清单、带一点反常识）',
+   logic:'收藏是平台判断“有用”的最硬信号', pit:'选题太大，看完不知道下一步干什么',
+   hook:'能被收藏的选题，看完都有一个共同点：他知道自己下一步要干什么。',
+   why:'与收藏率权重上升同步，既能蹭机制又能给方法，属于可反复用的常青题'},
+  {id:'r9', unit:'AI 降门槛', title:'别追工具，追工具解决的那件麻烦事',
+   logic:'工具一周出三个，追不完；麻烦事十年不变', pit:'天天试新工具，一条视频没发',
+   hook:'新工具一周出三个，你追得完吗？追不完。但你只要盯住一件事就够。',
+   why:'今年大厂 AI 创作工具扎堆发布，普通人最容易陷进去的就是“试用疲劳”'},
+  {id:'r10', unit:'起步四连', title:'你第一条视频不需要爆，需要“能被存下来”',
+   logic:'第一条的任务是被人记住，不是被人转发', pit:'拿播放量当唯一标准，三条就放弃了',
+   hook:'你第一条视频不用爆。它只需要做到一件事：让人愿意把它存起来。',
+   why:'适合当“起步四连”的收尾，给刚发完第一条的人一个不放弃的理由'}
+];
+
 var SEED_TEAR = [
   {id:1, src:'自己的 A 版（就当练手）', hook:'你以为你的口播没人看，是因为声音不好听…都不是。',
    pain:'录了两小时，最后按删除键', name:'报户口式开头', cases:'饭店服务员先自我介绍不递菜单',
@@ -526,6 +569,7 @@ function init(){
   ['topics','records','hot','tear','mats','todos','schedule','budget'].forEach(function(k){
     if(!S[k]) S[k] = (k==='todos'||k==='schedule'||k==='budget') ? {} : [];
   });
+  if(!S.recoTaken) S.recoTaken = [];
   if(!S.budget[todayKey()]){
     S.budget[todayKey()] = DEFAULT_BUDGET.map(function(b){ return {k:b.k, v:b.v}; });
     save();
@@ -636,6 +680,25 @@ function pageHome(b){
       svg:'M12 3a9 9 0 100 18 9 9 0 000-18zM12 7v5l3 2'}
   ];
 
+  var reco = RECO.filter(function(r){ return S.recoTaken.indexOf(r.id)<0; });
+  var recoHtml =
+    '<div class="panel" style="border-color:#CFEDE3;background:linear-gradient(120deg,#FFFDF6,#F3FBF8)">'+
+      '<h4><span class="dot"></span>我替你盯的（'+reco.length+' 条待挑）</h4>'+
+      '<div class="hint" style="margin-bottom:4px">这一轮盯出来的，每条都写了<b>为什么现在拍</b>和<b>第一句怎么说</b>。你只需要挑一条。</div>'+
+      (reco.length ? reco.map(function(r,i){
+        return '<div class="row" style="align-items:flex-start">'+
+          '<div class="t"><b style="font-size:13.8px">'+(i+1)+'. '+esc(r.title)+'</b>'+
+            '<div class="m" style="color:#5F716C">为什么现在：'+esc(r.why)+'</div>'+
+            '<div class="m" style="color:#3FA98B">第一句：'+esc(r.hook)+'</div>'+
+          '</div>'+
+          '<div style="display:flex;gap:6px;flex:0 0 auto">'+
+            '<button class="btn xs" data-recotoday="'+r.id+'">就拍这条</button>'+
+            '<button class="btn xs ghost" data-reco="'+r.id+'">先存着</button>'+
+          '</div>'+
+        '</div>';
+      }).join('') : '<div class="empty">这批全被你收走了。下一轮我再盯。</div>')+
+    '</div>';
+
   b.innerHTML =
     '<div class="hero">'+
       '<h3>'+(tShow ? '今天要发：'+esc(tShow) : '今天还没定拍哪条')+'</h3>'+
@@ -647,6 +710,7 @@ function pageHome(b){
       '<div class="kpi"><div class="n">'+(bestS5?bestS5+'%':'—')+'</div><div class="l">最高 5 秒完播</div></div>'+
       '<div class="kpi"><div class="n">'+S.hot.filter(function(x){return x.status==='待用';}).length+'</div><div class="l">热点待用</div></div>'+
     '</div>'+
+    recoHtml+
     '<div class="grid" style="margin-bottom:16px">'+
       tiles.map(function(c){
         return '<button class="tile" data-page="'+c.k+'">'+
@@ -688,6 +752,24 @@ function pageHome(b){
     var x = S.topics.filter(function(t){ return String(t.id)===String(id); })[0];
     S.schedule[todayKey()] = '#'+x.id+' '+x.title; save(); pageHome(b);
   };
+
+  function takeReco(id, today){
+    var r = RECO.filter(function(x){ return x.id===id; })[0];
+    if(!r) return;
+    var maxId = 0;
+    S.topics.forEach(function(t){ if(t.id>maxId) maxId = t.id; });
+    var nt = {id:maxId+1, unit:r.unit, title:r.title, logic:r.logic, pit:r.pit, status:'待拍'};
+    S.topics.push(nt);
+    if(S.recoTaken.indexOf(id)<0) S.recoTaken.push(id);
+    if(today) S.schedule[todayKey()] = '#'+nt.id+' '+nt.title;
+    save(); badges(); pageHome(b);
+  }
+  b.querySelectorAll('[data-reco]').forEach(function(el){
+    el.onclick = function(){ takeReco(el.getAttribute('data-reco'), false); };
+  });
+  b.querySelectorAll('[data-recotoday]').forEach(function(el){
+    el.onclick = function(){ takeReco(el.getAttribute('data-recotoday'), true); };
+  });
 }
 
 /* ============================================================
